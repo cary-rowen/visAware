@@ -1,0 +1,152 @@
+# NVDA add-on template SCONSTRUCT file
+# Copyright (C) 2012-2025 Rui Batista, Noelia Martinez, Joseph Lee
+# This file is covered by the GNU General Public License.
+# See the file COPYING.txt for more details.
+
+import os
+import os.path
+import sys
+from pathlib import Path
+from collections.abc import Iterable
+from typing import Final
+
+# While names imported below are available by default in every SConscript
+# Linters aren't aware about them.
+# To avoid PyRight `reportUndefinedVariable` errors about them they are imported explicitly.
+# When using other  Scons functions please add them to the line below.
+from SCons.Script import EnsurePythonVersion, Variables, BoolVariable, Environment, Copy
+
+# Imports for type hints
+from SCons.Node import FS
+
+# Add-on localization exchange facility and the template requires Python 3.10.
+# For best practice, use Python 3.11 or later to align with NVDA development.
+EnsurePythonVersion(3, 10)
+
+# Bytecode should not be written for build vars module to keep the repository root folder clean.
+sys.dont_write_bytecode = True
+
+import buildVars  # NOQA: E402
+
+
+def validateVersionNumber(key: str, val: str, _):
+	# Used to make sure version major.minor.patch are integers to comply with NV Access add-on store.
+	# Ignore all this if version number is not specified.
+	if val == "0.0.0":
+		return
+	versionNumber = val.split(".")
+	if len(versionNumber) < 3:
+		raise ValueError(f"{key} must have three parts (major.minor.patch)")
+	if not all([part.isnumeric() for part in versionNumber]):
+		raise ValueError(f"{key} (major.minor.patch) must be integers")
+
+
+def expandGlobs(patterns: Iterable[str], rootdir: Path = Path(".")) -> list[FS.Entry]:
+	return [env.Entry(e) for pattern in patterns for e in rootdir.glob(pattern.lstrip('/'))]
+
+
+addonDir: Final = Path("addon/")
+localeDir: Final = addonDir / "locale"
+docsDir: Final = addonDir / "doc"
+
+
+vars = Variables()
+vars.Add("version", "The version of this build", buildVars.addon_info["addon_version"])
+vars.Add("versionNumber", "Version number of the form major.minor.patch", "0.0.0", validateVersionNumber)
+vars.Add(BoolVariable("dev", "Whether this is a daily development version", False))
+vars.Add("channel", "Update channel for this build", buildVars.addon_info["addon_updateChannel"])
+
+env = Environment(variables=vars, ENV=os.environ, tools=["gettexttool", "NVDATool"])
+env.Append(
+	addon_info=buildVars.addon_info,
+	brailleTables=buildVars.brailleTables,
+	symbolDictionaries=buildVars.symbolDictionaries,
+	speechDictionaries=buildVars.speechDictionaries,
+)
+
+if env["dev"]:
+	from datetime import date
+
+	versionTimestamp = date.today().strftime('%Y%m%d')
+	version = f"{versionTimestamp}.0.0"
+	env["addon_info"]["addon_version"] = version
+	env["versionNumber"] = version
+	env["channel"] = "dev"
+elif env["version"] is not None:
+	env["addon_info"]["addon_version"] = env["version"]
+if "channel" in env and env["channel"] is not None:
+	env["addon_info"]["addon_updateChannel"] = env["channel"]
+
+# This is necessary for further use in formatting file names.
+env.Append(**env["addon_info"])
+
+
+addonFile = env.File("${addon_name}-${addon_version}.nvda-addon")
+addon = env.NVDAAddon(addonFile, env.Dir(addonDir), excludePatterns=buildVars.excludedFiles)
+
+langDirs: list[FS.Dir] = [env.Dir(d) for d in env.Glob(localeDir/"*/") if d.isdir()]
+
+# Allow all NVDA's gettext po files to be compiled in source/locale, and manifest files to be generated
+moByLang: dict[str, FS.File] = {}
+for dir in langDirs:
+	poFile = dir.File(os.path.join("LC_MESSAGES", "nvda.po"))
+	moTarget = env.gettextMoFile(poFile)
+	moFile = env.File(moTarget[0])
+	moByLang[dir.name] = moFile
+	env.Depends(moTarget, poFile)
+	translatedManifest = env.NVDATranslatedManifest(
+		dir.File("manifest.ini"), [moFile, "manifest-translated.ini.tpl"]
+	)
+	env.Depends(translatedManifest, ["buildVars.py"])
+	env.Depends(addon, [translatedManifest, moTarget])
+
+pythonFiles = expandGlobs(buildVars.pythonSources)
+for file in pythonFiles:
+	env.Depends(addon, file)
+
+# Convert markdown files to html
+# We need at least doc in English and should enable the Help button for the add-on in Add-ons Manager
+if (cssFile := Path("style.css")).is_file():
+	cssPath = docsDir / cssFile
+	cssTarget = env.Command(str(cssPath), str(cssFile), Copy("$TARGET", "$SOURCE"))
+	env.Depends(addon, cssTarget)
+
+if (readmeFile := Path("readme.md")).is_file():
+	readmePath = docsDir / buildVars.baseLanguage / readmeFile
+	readmeTarget = env.Command(str(readmePath), str(readmeFile), Copy("$TARGET", "$SOURCE"))
+	env.Depends(addon, readmeTarget)
+
+for mdFile in env.Glob(docsDir/"*/*.md"):
+	# the title of the html file is translated based on the contents of something in the moFile for a language.
+	# Thus, we find the moFile for this language and depend on it if it exists.
+	lang = mdFile.dir.name
+	moFile = moByLang.get(lang)
+	htmlFile = env.md2html(mdFile, moFile=moFile, mdExtensions=buildVars.markdownExtensions)
+	env.Depends(htmlFile, mdFile)
+	if moFile:
+		env.Depends(htmlFile, moFile)
+	env.Depends(addon, htmlFile)
+
+# Pot target
+i18nFiles = expandGlobs(buildVars.i18nSources)
+gettextvars: dict[str, str] = {
+	"gettext_package_bugs_address": "nvda-translations@groups.io",
+	"gettext_package_name": buildVars.addon_info["addon_name"],
+	"gettext_package_version": buildVars.addon_info["addon_version"],
+}
+
+pot = env.gettextPotFile("${addon_name}.pot", i18nFiles, **gettextvars)
+env.Alias("pot", pot)
+env.Depends(pot, i18nFiles)
+mergePot = env.gettextMergePotFile("${addon_name}-merge.pot", i18nFiles, **gettextvars)
+env.Alias("mergePot", mergePot)
+env.Depends(mergePot, i18nFiles)
+
+# Generate Manifest path
+manifest = env.NVDAManifest(env.File(addonDir/"manifest.ini"), "manifest.ini.tpl")
+# Ensure manifest is rebuilt if buildVars is updated.
+env.Depends(manifest, "buildVars.py")
+
+env.Depends(addon, manifest)
+env.Default(addon)
+env.Clean(addon, [".sconsign.dblite", "addon/doc/" + buildVars.baseLanguage + "/"])
