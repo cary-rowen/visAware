@@ -61,8 +61,8 @@ you use a remote Ollama address hosted by someone else, data is sent to that
 remote service.
 
 Use **Ollama Vision** for image description, OCR, and recognition of charts or
-mathematical formulas. The recognition result dialog can present formulas and
-tables in a form fully navigable with a screen reader.
+mathematical formulas. When text results are shown in a browsable message,
+supported formulas and tables are available for navigation with a screen reader.
 
 The Google Gemma engine currently provides **Gemma 4 26B A4B IT** (recommended,
 faster) and **Gemma 4 31B IT** (higher quality, slower). Ollama model names
@@ -83,13 +83,13 @@ The following commands have default gestures:
 The following commands have no default gesture:
 
 * Describe the content of the current navigator object.
-* Describe an image in the clipboard.
+* Describe clipboard images.
 * Recognize the content of the current navigator object with OCR.
 * Recognize text in a clipboard image with OCR.
 * Show the previous recognition result.
 * Cancel the current recognition.
 
-After assigning a gesture to **Describe an image in the clipboard**, press it
+After assigning a gesture to **Describe clipboard images**, press it
 once to open a recognition result document or twice in quick succession for a
 plain-text result.
 
@@ -111,8 +111,8 @@ OCR results with coordinates can be activated from the recognition result
 document: when coordinates are available, press `enter` or `space` to activate
 (normally click) the text at the cursor.
 
-Plain-text results are announced directly by default, or shown in a browseable
-message when that option is enabled. Browseable messages render supported
+Plain-text results are announced directly by default, or shown in a browsable
+message when that option is enabled. Browsable messages render supported
 Markdown and mathematical formulas. Results can also be copied to the
 clipboard, and recognition result documents can be read automatically.
 
@@ -121,12 +121,12 @@ The follow-up question command opens a multi-turn dialog for supported image
 description engines and streams spoken answers when supported. In that dialog,
 `control+enter` sends a question and `escape` cancels the request or closes the
 dialog. Use **Open rendered answer** to view the answer as a formatted
-browseable message.
+browsable message.
 
 Follow-up questions are supported by Google Gemini, Google Gemma, VIVO BlueLLM
 Vision, and Ollama Vision. For main recognition results, streaming speech is
 supported by Google Gemini image description, VIVO BlueLLM Vision, Ollama
-Vision, and Ollama OCR when streaming is enabled and browseable messages are
+Vision, and Ollama OCR when streaming is enabled and browsable messages are
 not in use.
 
 ## Automatic recognition
@@ -141,6 +141,11 @@ mode cursor, or navigator object moves to a supported image, graphic, or
 image-like control. The result is announced automatically and saved as the
 previous result; follow-up questions are available when supported by the
 engine.
+
+For web graphics, Vis Aware normally uses the image URL exposed by the object
+and falls back to an object screenshot when no usable URL is available.
+**Prefer screenshots for web image objects** uses the visible rendering first
+and falls back to the URL if the screenshot cannot be captured.
 
 ## AI Agent mode
 
