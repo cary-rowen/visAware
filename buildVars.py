@@ -29,16 +29,13 @@ addon_info = AddonInfo(
 	# Translators: Long description to be shown for this add-on on add-on information from add-on store
 	addon_description=_("""Visual Recognition add-on with OCR and AI image description."""),
 	# version
-	addon_version="0.6.0",
+	addon_version="0.6.1",
 	# Brief changelog for this version
 	# Translators: what's new content for the add-on version to be shown in the add-on store
-	addon_changelog=_("""### 0.6.0
+	addon_changelog=_("""### 0.6.1
 
-* Added PaddleOCR / PaddleOCR-VL and Google Gemma engines.
-* Added Markdown rendering for supported recognition and image description results.
-* Added follow-up question support for conversational image description engines.
-* Added per-engine enable / disable controls so unused engines can be hidden from normal use and engine cycling.
-* Improved engine settings handling and result presentation reliability."""),
+* Removed the separate AI Agent start/stop command from Input Gestures; use the main Vis Aware command in Agent mode.
+* Updated the English and Simplified Chinese documentation for commands, automatic recognition, settings, data handling, and the recommended Gemma 4 setup through Ollama."""),
 	# Author(s)
 	addon_author="cary-rowen <manchen_0528@outlook.com>",
 	# URL for the add-on documentation support

@@ -509,15 +509,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		finally:
 			gui.mainFrame.postPopup()
 
-	@script(
-		# Translators: Describes a command in the Input Gestures dialog for starting or stopping the AI agent.
-		description=_("Start or stop the AI agent for the current foreground window."),
-		category=CATEGORY_NAME,
-		gestures=[],
-	)
-	def script_toggleAgent(self, gesture: "inputCore.InputGesture") -> None:
-		self._promptAndStartAgent()
-
 	def _promptAndStartAgent(self) -> None:
 		if self._stopAgent(isUserInitiated=True):
 			return

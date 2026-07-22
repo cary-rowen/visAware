@@ -1,3 +1,8 @@
+### 0.6.1
+
+* Removed the separate AI Agent start/stop command from Input Gestures; use the main Vis Aware command in Agent mode.
+* Updated the English and Simplified Chinese documentation for commands, automatic recognition, settings, data handling, and the recommended Gemma 4 setup through Ollama.
+
 ### 0.6.0
 
 * Added PaddleOCR / PaddleOCR-VL and Google Gemma engines.
