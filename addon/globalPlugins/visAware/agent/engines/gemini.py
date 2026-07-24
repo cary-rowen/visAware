@@ -10,14 +10,13 @@ from typing import Any
 
 import addonHandler
 
-from ...engineGUIHelper import ChoiceEngineSetting, NumericEngineSetting, TextInputEngineSetting
+from ...engineGUIHelper import ChoiceEngineSetting, TextInputEngineSetting
 from ...geminiModels import (
 	DEFAULT_GEMINI_MEDIA_RESOLUTION,
 	DEFAULT_GEMINI_MODEL,
 	getGeminiMediaResolutionChoices,
 	getGeminiModelChoices,
 )
-from ..actions import JPEG_QUALITY
 from ..gemini import GeminiAgentClient, GeminiAgentSettings
 from ..settings import BaseAgentEngine
 
@@ -33,7 +32,6 @@ class AgentEngine(BaseAgentEngine):
 
 	_apiKey: str = ""
 	_model: str = DEFAULT_GEMINI_MODEL
-	_imageQuality: int = JPEG_QUALITY
 	_mediaResolution: str = DEFAULT_GEMINI_MEDIA_RESOLUTION
 
 	@property
@@ -82,17 +80,6 @@ class AgentEngine(BaseAgentEngine):
 			self._model = value
 
 	@property
-	def imageQuality(self) -> int:
-		return self._imageQuality
-
-	@imageQuality.setter
-	def imageQuality(self, value: int) -> None:
-		try:
-			self._imageQuality = max(1, min(int(value), 95))
-		except (TypeError, ValueError):
-			self._imageQuality = JPEG_QUALITY
-
-	@property
 	def mediaResolution(self) -> str:
 		return self._mediaResolution
 
@@ -139,12 +126,3 @@ class AgentEngine(BaseAgentEngine):
 				source="Agent Gemini engine settings",
 			),
 		)
-
-	@staticmethod
-	def _imageQualitySetting() -> NumericEngineSetting:
-		# Translators: The label for the JPEG quality used for Agent screenshots.
-		setting = NumericEngineSetting("imageQuality", _("Screenshot quality"))
-		setting.minVal = 1
-		setting.maxVal = 95
-		setting.configSpec = f"integer(default={JPEG_QUALITY},min=1,max=95)"
-		return setting

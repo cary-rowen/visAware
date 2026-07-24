@@ -440,15 +440,3 @@ class CustomContentRecognizer(BaseDescriber):
 			return contentString
 
 		return contentString
-
-	def _convertToLineResultFormat(self, apiResult: dict) -> list:
-		"""
-		Converts the API response into NVDA's rich format.
-
-		:param apiResult: The parsed JSON dictionary from the API.
-		:returns: A list of lines, where each line contains a single word dictionary.
-		"""
-		text = self.extractText(apiResult)
-		if not text:
-			return []
-		return [[{"x": 0, "y": 0, "width": 1, "height": 1, "text": text}]]

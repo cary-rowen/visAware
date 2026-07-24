@@ -806,6 +806,13 @@ class BaseDescriber(BaseRecognizer):
 	supportsQuestions: bool = False
 	supportsQuestionStreaming: bool = False
 
+	def _convertToLineResultFormat(self, apiResult: dict) -> list:
+		"""Converts plain image-description text into a single-line virtual document result."""
+		text = self.extractText(apiResult)
+		if not text:
+			return []
+		return [[{"x": 0, "y": 0, "width": 1, "height": 1, "text": text}]]
+
 	def askQuestion(
 		self,
 		context: Any,

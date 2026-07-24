@@ -10,8 +10,7 @@ from typing import Any
 
 import addonHandler
 
-from ...engineGUIHelper import BooleanEngineSetting, NumericEngineSetting
-from ..actions import JPEG_QUALITY
+from ...engineGUIHelper import BooleanEngineSetting
 from ..settings import BaseAgentEngine
 from ..vivo import VivoAgentClient, VivoAgentSettings
 
@@ -25,7 +24,6 @@ class AgentEngine(BaseAgentEngine):
 	# Translators: The description of the Vivo Agent engine.
 	description = _("Vivo BlueLM Vision (NVDACN)")
 
-	_imageQuality: int = JPEG_QUALITY
 	_enableThinking: bool = False
 
 	@property
@@ -43,17 +41,6 @@ class AgentEngine(BaseAgentEngine):
 				displayNameWithAccelerator=_("Enable model &thinking"),
 			),
 		]
-
-	@property
-	def imageQuality(self) -> int:
-		return self._imageQuality
-
-	@imageQuality.setter
-	def imageQuality(self, value: int) -> None:
-		try:
-			self._imageQuality = max(1, min(int(value), 95))
-		except (TypeError, ValueError):
-			self._imageQuality = JPEG_QUALITY
 
 	@property
 	def enableThinking(self) -> bool:
@@ -81,12 +68,3 @@ class AgentEngine(BaseAgentEngine):
 				source="Agent Vivo engine settings",
 			),
 		)
-
-	@staticmethod
-	def _imageQualitySetting() -> NumericEngineSetting:
-		# Translators: The label for the JPEG quality used for Agent screenshots.
-		setting = NumericEngineSetting("imageQuality", _("Screenshot quality"))
-		setting.minVal = 1
-		setting.maxVal = 95
-		setting.configSpec = f"integer(default={JPEG_QUALITY},min=1,max=95)"
-		return setting

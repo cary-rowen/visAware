@@ -181,13 +181,6 @@ class CustomContentRecognizer(OllamaEngineMixin, BaseDescriber):
 		"""Extracts plain text from an Ollama chat response."""
 		return extractOllamaChatText(apiResult)
 
-	def _convertToLineResultFormat(self, apiResult: dict) -> list:
-		"""Converts Ollama text output into a single-line virtual document result."""
-		text = self.extractText(apiResult)
-		if not text:
-			return []
-		return [[{"x": 0, "y": 0, "width": 1, "height": 1, "text": text}]]
-
 	def processStreamChunk(self, chunk: bytes, request: RecognitionRequest) -> str | None:
 		"""Processes one Ollama chat stream chunk."""
 		return parseOllamaChatStreamChunk(chunk)

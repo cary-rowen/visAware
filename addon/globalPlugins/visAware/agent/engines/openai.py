@@ -17,10 +17,8 @@ import wx
 from ...engineGUIHelper import (
 	ButtonEngineSetting,
 	EditableChoiceEngineSetting,
-	NumericEngineSetting,
 	TextInputEngineSetting,
 )
-from ..actions import JPEG_QUALITY
 from ..openai import (
 	DEFAULT_OPENAI_BASE_URL,
 	DEFAULT_OPENAI_MODEL,
@@ -47,7 +45,6 @@ class AgentEngine(BaseAgentEngine):
 	_apiKey: str = ""
 	_baseUrl: str = DEFAULT_OPENAI_BASE_URL
 	_model: str = DEFAULT_OPENAI_MODEL
-	_imageQuality: int = JPEG_QUALITY
 	_knownModels: list[str]
 
 	@property
@@ -100,17 +97,6 @@ class AgentEngine(BaseAgentEngine):
 	@model.setter
 	def model(self, value: str) -> None:
 		self._model = value.strip() or DEFAULT_OPENAI_MODEL
-
-	@property
-	def imageQuality(self) -> int:
-		return self._imageQuality
-
-	@imageQuality.setter
-	def imageQuality(self, value: int) -> None:
-		try:
-			self._imageQuality = max(1, min(int(value), 95))
-		except (TypeError, ValueError):
-			self._imageQuality = JPEG_QUALITY
 
 	@property
 	def availableModels(self) -> dict:
@@ -220,12 +206,3 @@ class AgentEngine(BaseAgentEngine):
 
 	def _getKnownModels(self) -> list[str]:
 		return list(getattr(self, "_knownModels", []))
-
-	@staticmethod
-	def _imageQualitySetting() -> NumericEngineSetting:
-		# Translators: The label for the JPEG quality used for Agent screenshots.
-		setting = NumericEngineSetting("imageQuality", _("Screenshot quality"))
-		setting.minVal = 1
-		setting.maxVal = 95
-		setting.configSpec = f"integer(default={JPEG_QUALITY},min=1,max=95)"
-		return setting
