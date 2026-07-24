@@ -121,7 +121,38 @@ def load_gemini_module():
 	return module
 
 
+def load_gemini_models_module():
+	_install_module_stubs()
+	modulePath = (
+		Path(__file__).resolve().parents[1] / "addon" / "globalPlugins" / "visAware" / "geminiModels.py"
+	)
+	spec = importlib.util.spec_from_file_location("addon.globalPlugins.visAware.geminiModels", modulePath)
+	if spec is None or spec.loader is None:
+		raise RuntimeError("Failed to load geminiModels.py")
+	module = importlib.util.module_from_spec(spec)
+	sys.modules[spec.name] = module
+	spec.loader.exec_module(module)
+	return module
+
+
 class GeminiAgentInteractionsTestCase(unittest.TestCase):
+	def test_current_model_presets(self) -> None:
+		module = load_gemini_models_module()
+
+		self.assertEqual(module.DEFAULT_GEMINI_MODEL, "gemini-3.6-flash")
+		self.assertEqual(
+			list(module.getGeminiModelChoices())[:2],
+			["gemini-3.6-flash", "gemini-3.5-flash-lite"],
+		)
+		self.assertEqual(
+			module.getGeminiLowLatencyThinkingConfig("gemini-3.6-flash"),
+			{"thinkingLevel": "medium"},
+		)
+		self.assertEqual(
+			module.getGeminiLowLatencyThinkingConfig("gemini-3.5-flash-lite"),
+			{"thinkingLevel": "minimal"},
+		)
+
 	def test_next_action_continues_interaction_with_function_result(self) -> None:
 		module = load_gemini_module()
 		payloads = []
@@ -180,6 +211,8 @@ class GeminiAgentInteractionsTestCase(unittest.TestCase):
 		firstPayload, secondPayload = payloads
 		self.assertNotIn("max_output_tokens", firstPayload["generation_config"])
 		self.assertNotIn("max_output_tokens", secondPayload["generation_config"])
+		self.assertNotIn("temperature", firstPayload["generation_config"])
+		self.assertNotIn("temperature", secondPayload["generation_config"])
 		self.assertNotIn("previous_interaction_id", firstPayload)
 		self.assertEqual(secondPayload["previous_interaction_id"], "interaction-1")
 		self.assertEqual(secondPayload["input"][0]["type"], "function_result")

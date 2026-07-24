@@ -227,7 +227,6 @@ def _buildSystemInstruction() -> str:
 
 def _buildGenerationConfig(model: str) -> dict[str, Any]:
 	generationConfig: dict[str, Any] = {
-		"temperature": 0,
 		"thinking_summaries": "none",
 		"tool_choice": {
 			"allowed_tools": {

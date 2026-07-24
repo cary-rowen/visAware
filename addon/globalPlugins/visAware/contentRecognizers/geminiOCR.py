@@ -199,7 +199,6 @@ class CustomContentRecognizer(BaseRecognizer):
 				},
 			],
 			"generationConfig": {
-				"temperature": 0,
 				"responseMimeType": "application/json",
 				"responseJsonSchema": OCR_RESULT_SCHEMA,
 			},

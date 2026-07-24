@@ -1,3 +1,7 @@
+### 0.6.2
+
+* Updated the available Gemini models, with Gemini 3.6 Flash as the new default and Gemini 3.5 Flash-Lite as a low-cost option.
+
 ### 0.6.1
 
 * Removed the separate AI Agent start/stop command from Input Gestures; use the main Vis Aware command in Agent mode.

@@ -29,13 +29,12 @@ addon_info = AddonInfo(
 	# Translators: Long description to be shown for this add-on on add-on information from add-on store
 	addon_description=_("""Visual Recognition add-on with OCR and AI image description."""),
 	# version
-	addon_version="0.6.1",
+	addon_version="0.6.2",
 	# Brief changelog for this version
 	# Translators: what's new content for the add-on version to be shown in the add-on store
-	addon_changelog=_("""### 0.6.1
+	addon_changelog=_("""### 0.6.2
 
-* Removed the separate AI Agent start/stop command from Input Gestures; use the main Vis Aware command in Agent mode.
-* Updated the English and Simplified Chinese documentation for commands, automatic recognition, settings, data handling, and the recommended Gemma 4 setup through Ollama."""),
+* Updated the available Gemini models, with Gemini 3.6 Flash as the new default and Gemini 3.5 Flash-Lite as a low-cost option."""),
 	# Author(s)
 	addon_author="cary-rowen <manchen_0528@outlook.com>",
 	# URL for the add-on documentation support

@@ -10,7 +10,7 @@ import addonHandler
 
 addonHandler.initTranslation()
 
-DEFAULT_GEMINI_MODEL = "gemini-3.5-flash"
+DEFAULT_GEMINI_MODEL = "gemini-3.6-flash"
 DEFAULT_GEMINI_MEDIA_RESOLUTION = "MEDIA_RESOLUTION_HIGH"
 
 
@@ -23,7 +23,11 @@ def getGeminiModelChoices() -> OrderedDict[str, str]:
 	return OrderedDict(
 		{
 			# Translators: The display name for a Gemini model preset.
-			"gemini-3.5-flash": _("Gemini 3.5 Flash (Recommended)"),
+			"gemini-3.6-flash": _("Gemini 3.6 Flash (Recommended)"),
+			# Translators: The display name for a Gemini model preset.
+			"gemini-3.5-flash-lite": _("Gemini 3.5 Flash-Lite (fast, lower cost)"),
+			# Translators: The display name for a Gemini model preset.
+			"gemini-3.5-flash": _("Gemini 3.5 Flash"),
 			# Translators: The display name for a Gemini model preset.
 			"gemini-flash-latest": _("Gemini Flash Latest"),
 			# Translators: The display name for a Gemini model preset.
@@ -70,9 +74,11 @@ def getGeminiLowLatencyThinkingConfig(model: str) -> dict[str, int | str] | None
 	:returns: A Gemini thinkingConfig object, or None for models without a known low-latency setting.
 	"""
 	model = model.lower()
+	if model == "gemini-flash-latest" or model.startswith("gemini-3.6"):
+		return {"thinkingLevel": "medium"}
 	if model == "gemini-pro-latest" or model.startswith("gemini-3.1-pro") or model.startswith("gemini-3-pro"):
 		return {"thinkingLevel": "low"}
-	if model in ("gemini-flash-latest", "gemini-flash-lite-latest") or model.startswith("gemini-3"):
+	if model == "gemini-flash-lite-latest" or model.startswith("gemini-3"):
 		return {"thinkingLevel": "minimal"}
 	if model.startswith("gemini-2.5-flash"):
 		return {"thinkingBudget": 0}
