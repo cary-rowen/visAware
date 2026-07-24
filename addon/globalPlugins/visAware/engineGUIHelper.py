@@ -122,12 +122,7 @@ class EngineSetting:
 
 	name: str
 	displayNameWithAccelerator: str
-	displayName: str = ""
 	configSpec: str = field(init=False, default="string(default=None)")
-
-	def __post_init__(self):
-		if not self.displayName:
-			self.displayName = self.displayNameWithAccelerator.replace("&", "")
 
 
 @dataclass
@@ -137,12 +132,7 @@ class ChoiceEngineSetting:
 	name: str
 	displayNameWithAccelerator: str
 	optionsPropertyName: str
-	displayName: str = ""
 	configSpec: str = field(init=False, default="string(default=None)")
-
-	def __post_init__(self):
-		if not self.displayName:
-			self.displayName = self.displayNameWithAccelerator.replace("&", "")
 
 
 @dataclass
@@ -156,12 +146,7 @@ class TextInputEngineSetting:
 
 	name: str
 	displayNameWithAccelerator: str
-	displayName: str = ""
 	configSpec: str = field(init=False, default="string(default=None)")
-
-	def __post_init__(self):
-		if not self.displayName:
-			self.displayName = self.displayNameWithAccelerator.replace("&", "")
 
 
 @dataclass
@@ -170,12 +155,7 @@ class ReadOnlyEngineSetting:
 
 	name: str
 	displayNameWithAccelerator: str
-	displayName: str = ""
 	configSpec: str = field(init=False, default="string(default=None)")
-
-	def __post_init__(self):
-		if not self.displayName:
-			self.displayName = self.displayNameWithAccelerator.replace("&", "")
 
 
 @dataclass
@@ -184,19 +164,14 @@ class NumericEngineSetting:
 
 	name: str
 	displayNameWithAccelerator: str
-	displayName: str = ""
 	minStep: int = 1
-	normalStep: int = 5
 	largeStep: int = 10
 	minVal: int = field(init=False, default=0)
 	maxVal: int = field(init=False, default=100)
 	configSpec: str = field(init=False, default="integer(default=50,min=0,max=100)")
 
 	def __post_init__(self):
-		if not self.displayName:
-			self.displayName = self.displayNameWithAccelerator.replace("&", "")
-		self.normalStep = max(self.normalStep, self.minStep)
-		self.largeStep = max(self.largeStep, self.normalStep)
+		self.largeStep = max(self.largeStep, self.minStep)
 
 
 @dataclass
@@ -205,12 +180,7 @@ class BooleanEngineSetting:
 
 	name: str
 	displayNameWithAccelerator: str
-	displayName: str = ""
 	configSpec: str = field(init=False, default="boolean(default=False)")
-
-	def __post_init__(self):
-		if not self.displayName:
-			self.displayName = self.displayNameWithAccelerator.replace("&", "")
 
 
 @dataclass
@@ -220,12 +190,7 @@ class CheckListEngineSetting:
 	name: str
 	displayNameWithAccelerator: str
 	optionsPropertyName: str
-	displayName: str = ""
 	configSpec: str = field(init=False, default="list(default=list())")
-
-	def __post_init__(self):
-		if not self.displayName:
-			self.displayName = self.displayNameWithAccelerator.replace("&", "")
 
 
 @dataclass
@@ -234,9 +199,4 @@ class ButtonEngineSetting:
 
 	name: str
 	displayNameWithAccelerator: str
-	displayName: str = ""
 	configSpec: str = field(init=False, default="string(default=None)")
-
-	def __post_init__(self):
-		if not self.displayName:
-			self.displayName = self.displayNameWithAccelerator.replace("&", "")

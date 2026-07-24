@@ -394,9 +394,10 @@ def _formatHistoryEntry(stepIndex: int, action: AgentAction, screenshot) -> str:
 
 
 def _formatActionScreenDetails(action: AgentAction, screenshot) -> str:
-	trace = _getActionTrace(action, screenshot)
-	point = trace.get("screenPoint")
-	if not point:
+	args = action.arguments
+	try:
+		point = _normalizedPointToScreen(screenshot, args.get("x"), args.get("y"))
+	except (TypeError, ValueError):
 		return "screenPoint=unknown"
 	return f"screenPoint=({point[0]}, {point[1]})"
 
@@ -426,41 +427,6 @@ def _formatDragScreenDistance(action: AgentAction, screenshot) -> str:
 		f"screenStart=({startX}, {startY}), screenEnd=({endX}, {endY}), "
 		f"screenDelta=({endX - startX}, {endY - startY})"
 	)
-
-
-def _getActionTrace(action: AgentAction, screenshot) -> dict[str, object]:
-	trace: dict[str, object] = {
-		"name": action.name,
-		"args": _safeTraceArgs(action.arguments),
-	}
-	args = action.arguments
-	if "x" in args and "y" in args:
-		try:
-			trace["screenPoint"] = list(_normalizedPointToScreen(screenshot, args.get("x"), args.get("y")))
-		except (TypeError, ValueError):
-			pass
-	if action.name in ("drag_and_drop", "drag_to") and "destination_x" in args and "destination_y" in args:
-		try:
-			trace["screenDestination"] = list(
-				_normalizedPointToScreen(screenshot, args.get("destination_x"), args.get("destination_y")),
-			)
-		except (TypeError, ValueError):
-			pass
-	elif action.name == "drag_by" and "screenPoint" in trace:
-		try:
-			startX, startY = trace["screenPoint"]
-			deltaX = round(float(args.get("delta_x") or 0))
-			deltaY = round(float(args.get("delta_y") or 0))
-			trace["screenDestination"] = [startX + deltaX, startY + deltaY]
-		except (TypeError, ValueError):
-			pass
-	return trace
-
-
-def _safeTraceArgs(args: dict) -> dict[str, object]:
-	return {
-		key: f"<{len(str(value))} chars>" if key in {"text", "url"} else value for key, value in args.items()
-	}
 
 
 def _normalizedPointToScreen(screenshot, xValue, yValue) -> tuple[int, int]:

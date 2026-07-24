@@ -389,14 +389,6 @@ class AbstractEngineHandler(baseObject.AutoPropertyObject):
 		elif cls.currentEngine:
 			cls.currentEngine.loadSettings(onlyChanged=True)
 
-	def getHandlerConfigSpec(self) -> dict:
-		"""
-		Returns a copy of the handler's base config spec.
-
-		:returns: A dictionary with the base config spec.
-		"""
-		return self.configSpec.copy()
-
 
 class AbstractEngine(baseObject.AutoPropertyObject, ABC):
 	"""Abstract base class for a single recognition engine."""

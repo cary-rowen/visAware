@@ -8,7 +8,6 @@ from abc import ABC, abstractmethod
 import addonHandler
 import base64
 import config
-from collections import OrderedDict
 from collections.abc import Iterator
 from collections.abc import Mapping, Sequence
 from contentRecog import ContentRecognizer, LinesWordsResult, RecogImageInfo
@@ -246,7 +245,6 @@ class BaseRecognizer(ContentRecognizer, AbstractEngine, ABC):
 	"""Abstract base class for all online recognition engines."""
 
 	description: str = ""
-	isURLSupported: bool = False
 	configSectionName: str = "OCR"
 	supportsStreaming: bool = False
 	isStreaming: bool = False
@@ -270,8 +268,6 @@ class BaseRecognizer(ContentRecognizer, AbstractEngine, ABC):
 	maxSize: int = 4 * 1024 * 1024
 	uploadBase64EncodeImage: bool = True
 	uploadImageFormat: str = "PNG"
-	_typeOfApiAccess: str = "free"
-	_balance: int = -1
 	_autoRecognitionPrompt: str = ""
 	_autoRecognitionModel: str = ""
 	streamResult: bool = False
@@ -317,26 +313,6 @@ class BaseRecognizer(ContentRecognizer, AbstractEngine, ABC):
 		self._apiSecretKey = value
 
 	@property
-	def useOwnApiKey(self) -> bool:
-		return self._typeOfApiAccess == "own_key"
-
-	@property
-	def accesstype(self) -> str:
-		return self._typeOfApiAccess
-
-	@accesstype.setter
-	def accesstype(self, value: str) -> None:
-		self._typeOfApiAccess = value
-
-	@property
-	def balance(self) -> int:
-		return self._balance
-
-	@balance.setter
-	def balance(self, value: int) -> None:
-		self._balance = value
-
-	@property
 	def autoRecognitionPrompt(self) -> str:
 		return self._autoRecognitionPrompt
 
@@ -351,21 +327,6 @@ class BaseRecognizer(ContentRecognizer, AbstractEngine, ABC):
 	@autoRecognitionModel.setter
 	def autoRecognitionModel(self, value: str) -> None:
 		self._autoRecognitionModel = value.strip() if value else ""
-
-	@property
-	def availableAccesstype(self) -> dict:
-		"""
-		Provides the list of available API access types for the settings UI.
-
-		:returns: A dictionary of access type IDs to display names.
-		"""
-		accessTypes = OrderedDict(
-			{
-				"free": _("Use public API quota"),
-				"own_key": _("Use api key registered by yourself"),
-			},
-		)
-		return self.generateStringSettings(accessTypes)
 
 	def applyAutoRecognitionOverrides(self) -> None:
 		"""Applies automatic recognition setting overrides supported by this engine."""
@@ -817,20 +778,6 @@ class BaseRecognizer(ContentRecognizer, AbstractEngine, ABC):
 	def autoRecognitionModelSetting(cls) -> EngineSetting:
 		# Translators: The label for an engine setting to override the model used for automatic recognition.
 		return TextInputEngineSetting("autoRecognitionModel", _("Automatic recognition &model"))
-
-	@classmethod
-	def accessTypeSetting(cls) -> EngineSetting:
-		# Translators: The label for an engine setting to choose the API access type.
-		return cls.stringSetting(
-			"accesstype",
-			_("API Access Type"),
-			options_property_name="availableAccesstype",
-		)
-
-	@classmethod
-	def balanceSetting(cls) -> EngineSetting:
-		# Translators: The label for a read-only engine setting showing API quota balance.
-		return cls.readOnlySetting("balance", _("API quota Balance"))
 
 
 class CustomOCRHandler(AbstractEngineHandler):
