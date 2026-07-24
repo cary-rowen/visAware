@@ -5,7 +5,7 @@
 """An image description engine that uses the Google Gemma API."""
 
 from collections import OrderedDict
-from collections.abc import Callable, Iterator
+from collections.abc import Callable
 import json
 from typing import Any
 
@@ -14,12 +14,11 @@ import config
 from logHandler import log
 
 from .. import network
-from ..conversation import QuestionStreamFinished, QuestionStreamText
 from ..engineGUIHelper import (
 	ChoiceEngineSetting,
 	TextInputEngineSetting,
 )
-from ..exceptions import ApiError, AuthenticationError, StreamIncompleteError
+from ..exceptions import ApiError, AuthenticationError
 from ..recogHandler import BaseDescriber, RecognitionRequest
 from ._googleGenerativeLanguage import (
 	buildConversationContents,
@@ -29,7 +28,6 @@ from ._googleGenerativeLanguage import (
 	getApiErrorMessage,
 	getCandidateFinishError,
 	getPromptFeedbackError,
-	parseSseDataChunk,
 )
 
 addonHandler.initTranslation()
@@ -126,7 +124,6 @@ class CustomContentRecognizer(BaseDescriber):
 
 	# --- Engine Default Settings ---
 	_apiKey: str = ""
-	_useStreaming: bool = False
 	_model: str = "gemma-4-26b-a4b-it"
 	_thinkingLevel: str = "off"
 	# Translators: This is the default prompt sent to the Gemma model.
@@ -175,20 +172,6 @@ class CustomContentRecognizer(BaseDescriber):
 	@apiKey.setter
 	def apiKey(self, value: str) -> None:
 		self._apiKey = value
-
-	@property
-	def useStreaming(self) -> bool:
-		return self._useStreaming
-
-	@useStreaming.setter
-	def useStreaming(self, value: bool) -> None:
-		"""
-		Sets whether streaming is enabled for simple text output.
-
-		:param value: The new boolean value.
-		"""
-		self._useStreaming = value
-		self.isStreaming = value
 
 	@property
 	def model(self) -> str:
@@ -376,42 +359,6 @@ class CustomContentRecognizer(BaseDescriber):
 			},
 		}
 
-	def processStreamChunk(self, chunk: bytes, request: RecognitionRequest) -> str | None:
-		"""
-		Extracts text from one Gemma streaming response line.
-
-		:param chunk: One raw line from the streaming HTTP response.
-		:param request: The request-local recognition options.
-		:returns: New model text, or None when the line does not contain text.
-		:raises ApiError: If the stream reports a service error.
-		"""
-		apiResult = parseSseDataChunk(chunk, "Gemma")
-		if not apiResult:
-			return None
-		apiError = getApiErrorMessage(apiResult)
-		if apiError:
-			# Translators: An error message returned from the Gemma API.
-			raise ApiError(_("Gemma API Error: {}").format(apiError))
-		if not apiResult.get("candidates"):
-			promptFeedbackError = getPromptFeedbackError(apiResult)
-			if promptFeedbackError:
-				raise ApiError(promptFeedbackError)
-			return None
-		candidate = apiResult["candidates"][0]
-		if not isinstance(candidate, dict):
-			return None
-		text = extractTextFromCandidate(candidate, strip=False)
-		if text and _isVerboseDebugLoggingEnabled():
-			log.debug(
-				"Gemma stream chunk details: "
-				f"finishReason={candidate.get('finishReason')!r}, textChars={len(text)}, "
-				f"textPreview={_previewTextForLog(text)!r}",
-			)
-		finishError = getCandidateFinishError(candidate, allowMissing=True)
-		if finishError:
-			raise StreamIncompleteError(finishError, partialText=text)
-		return text
-
 	def askQuestion(
 		self,
 		context: Any,
@@ -479,18 +426,6 @@ class CustomContentRecognizer(BaseDescriber):
 			"headers": headers,
 			"json": payload,
 		}
-
-	def askQuestionStream(
-		self,
-		context: Any,
-		question: str,
-		cancellationChecker: Callable[[], None] | None = None,
-	) -> Iterator[QuestionStreamText | QuestionStreamFinished]:
-		self._checkQuestionCancelled(cancellationChecker)
-		request = RecognitionRequest(textResult=True, streamResult=True)
-		requestParams = self._buildQuestionRequestParams(context, question, stream=True)
-		self._checkQuestionCancelled(cancellationChecker)
-		yield from self._iterQuestionStreamingResponse(requestParams, request, cancellationChecker)
 
 	def _buildGenerationConfig(self) -> dict[str, Any]:
 		"""
