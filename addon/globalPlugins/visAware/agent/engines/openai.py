@@ -56,12 +56,12 @@ class AgentEngine(BaseAgentEngine):
 			TextInputEngineSetting(
 				name="apiKey",
 				# Translators: The label for the OpenAI API key used by the Agent.
-				displayNameWithAccelerator=_("API &Key:"),
+				displayNameWithAccelerator=_("API &Key"),
 			),
 			TextInputEngineSetting(
 				name="baseUrl",
 				# Translators: The label for the OpenAI-compatible base URL used by the Agent.
-				displayNameWithAccelerator=_("Base &URL:"),
+				displayNameWithAccelerator=_("Base &URL"),
 			),
 			ButtonEngineSetting(
 				name="fetchModels",
@@ -71,7 +71,7 @@ class AgentEngine(BaseAgentEngine):
 			EditableChoiceEngineSetting(
 				name="model",
 				# Translators: The label for the OpenAI model used by the Agent.
-				displayNameWithAccelerator=_("&Model:"),
+				displayNameWithAccelerator=_("&Model"),
 				optionsPropertyName="availableModels",
 			),
 			self._imageQualitySetting(),

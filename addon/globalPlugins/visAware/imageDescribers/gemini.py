@@ -72,7 +72,7 @@ class CustomContentRecognizer(BaseDescriber):
 			TextInputEngineSetting(
 				name="apiKey",
 				# Translators: The label for the text field to enter the Gemini API Key.
-				displayNameWithAccelerator=_("API &Key:"),
+				displayNameWithAccelerator=_("API &Key"),
 			),
 			BooleanEngineSetting(
 				"useStreaming",
@@ -82,21 +82,21 @@ class CustomContentRecognizer(BaseDescriber):
 			ChoiceEngineSetting(
 				name="model",
 				# Translators: The label for a setting to select the Gemini model.
-				displayNameWithAccelerator=_("&Model:"),
+				displayNameWithAccelerator=_("&Model"),
 				optionsPropertyName="availableModels",
 			),
 			self.autoRecognitionModelSetting(),
 			ChoiceEngineSetting(
 				name="mediaResolution",
 				# Translators: The label for a setting to control image detail sent to Gemini.
-				displayNameWithAccelerator=_("Media &resolution:"),
+				displayNameWithAccelerator=_("Media &resolution"),
 				optionsPropertyName="availableMediaResolutions",
 			),
 			self.imageQualitySetting(),
 			TextInputEngineSetting(
 				name="prompt",
 				# Translators: The label for a setting to customize the prompt for the vision model.
-				displayNameWithAccelerator=_("&Custom Prompt:"),
+				displayNameWithAccelerator=_("&Custom Prompt"),
 			),
 			self.autoRecognitionPromptSetting(),
 		]

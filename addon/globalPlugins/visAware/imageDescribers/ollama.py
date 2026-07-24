@@ -81,12 +81,12 @@ class CustomContentRecognizer(OllamaEngineMixin, BaseDescriber):
 			TextInputEngineSetting(
 				name="apiBaseUrl",
 				# Translators: The label for the Ollama API URL field.
-				displayNameWithAccelerator=_("API &URL:"),
+				displayNameWithAccelerator=_("API &URL"),
 			),
 			TextInputEngineSetting(
 				name="apiKey",
 				# Translators: The label for the Ollama API key field.
-				displayNameWithAccelerator=_("API &Key:"),
+				displayNameWithAccelerator=_("API &Key"),
 			),
 			ButtonEngineSetting(
 				name="fetchModels",
@@ -96,7 +96,7 @@ class CustomContentRecognizer(OllamaEngineMixin, BaseDescriber):
 			ChoiceEngineSetting(
 				name="model",
 				# Translators: The label for a setting to select the Ollama model.
-				displayNameWithAccelerator=_("&Model:"),
+				displayNameWithAccelerator=_("&Model"),
 				optionsPropertyName="availableModels",
 			),
 			self.autoRecognitionModelSetting(),
@@ -109,7 +109,7 @@ class CustomContentRecognizer(OllamaEngineMixin, BaseDescriber):
 			TextInputEngineSetting(
 				name="prompt",
 				# Translators: The label for a setting to customize the prompt for the model.
-				displayNameWithAccelerator=_("&Custom Prompt:"),
+				displayNameWithAccelerator=_("&Custom Prompt"),
 			),
 			self.autoRecognitionPromptSetting(),
 		]

@@ -811,12 +811,12 @@ class BaseRecognizer(ContentRecognizer, AbstractEngine, ABC):
 	@classmethod
 	def autoRecognitionPromptSetting(cls) -> EngineSetting:
 		# Translators: The label for an engine setting to override the prompt used for automatic recognition.
-		return TextInputEngineSetting("autoRecognitionPrompt", _("Automatic recognition &prompt:"))
+		return TextInputEngineSetting("autoRecognitionPrompt", _("Automatic recognition &prompt"))
 
 	@classmethod
 	def autoRecognitionModelSetting(cls) -> EngineSetting:
 		# Translators: The label for an engine setting to override the model used for automatic recognition.
-		return TextInputEngineSetting("autoRecognitionModel", _("Automatic recognition &model:"))
+		return TextInputEngineSetting("autoRecognitionModel", _("Automatic recognition &model"))
 
 	@classmethod
 	def accessTypeSetting(cls) -> EngineSetting:

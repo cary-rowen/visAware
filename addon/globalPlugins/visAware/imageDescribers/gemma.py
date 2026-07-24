@@ -144,26 +144,26 @@ class CustomContentRecognizer(BaseDescriber):
 			TextInputEngineSetting(
 				name="apiKey",
 				# Translators: The label for the text field to enter the Gemma API Key.
-				displayNameWithAccelerator=_("API &Key:"),
+				displayNameWithAccelerator=_("API &Key"),
 			),
 			ChoiceEngineSetting(
 				name="model",
 				# Translators: The label for a setting to select the Gemma model.
-				displayNameWithAccelerator=_("&Model:"),
+				displayNameWithAccelerator=_("&Model"),
 				optionsPropertyName="availableModels",
 			),
 			self.autoRecognitionModelSetting(),
 			ChoiceEngineSetting(
 				name="thinkingLevel",
 				# Translators: The label for a setting to control Gemma thinking mode.
-				displayNameWithAccelerator=_("Thinking &Level:"),
+				displayNameWithAccelerator=_("Thinking &Level"),
 				optionsPropertyName="availableThinkingLevels",
 			),
 			self.imageQualitySetting(),
 			TextInputEngineSetting(
 				name="prompt",
 				# Translators: The label for a setting to customize the prompt for the vision model.
-				displayNameWithAccelerator=_("&Custom Prompt:"),
+				displayNameWithAccelerator=_("&Custom Prompt"),
 			),
 			self.autoRecognitionPromptSetting(),
 		]

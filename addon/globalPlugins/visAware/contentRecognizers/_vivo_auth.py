@@ -97,7 +97,13 @@ def _fetchSignatureFromService(nvdacnUser: str, nvdacnPass: str, signingStringBy
 			return result["data"]
 		else:
 			errorMessage = result.get("data", "Unknown API error")
-			raise AuthenticationError(f"NVDACN API Error: {errorMessage} (Code: {result.get('code')})")
+			raise AuthenticationError(
+				# Translators: An NVDACN API error. {message} is the service message and {code} is the error code.
+				_("NVDACN API Error: {message} (Code: {code})").format(
+					message=errorMessage,
+					code=result.get("code"),
+				),
+			)
 
 	except AuthenticationError:
 		raise

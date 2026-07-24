@@ -428,25 +428,25 @@ class CustomContentRecognizer(BaseRecognizer):
 			ChoiceEngineSetting(
 				name="serviceType",
 				# Translators: The label for selecting the PaddleOCR service type.
-				displayNameWithAccelerator=_("Service &type:"),
+				displayNameWithAccelerator=_("Service &type"),
 				optionsPropertyName="availableServiceTypes",
 			),
 			ChoiceEngineSetting(
 				name="model",
 				# Translators: The label for selecting a PaddleOCR model.
-				displayNameWithAccelerator=_("&Model:"),
+				displayNameWithAccelerator=_("&Model"),
 				optionsPropertyName="availableModels",
 			),
 			self.autoRecognitionModelSetting(),
 			TextInputEngineSetting(
 				name="apiUrl",
 				# Translators: The label for the PaddleOCR API URL field.
-				displayNameWithAccelerator=_("API &URL:"),
+				displayNameWithAccelerator=_("API &URL"),
 			),
 			TextInputEngineSetting(
 				name="token",
 				# Translators: The label for the PaddleOCR API token field.
-				displayNameWithAccelerator=_("API &Token:"),
+				displayNameWithAccelerator=_("API &Token"),
 			),
 		]
 		settings.extend(

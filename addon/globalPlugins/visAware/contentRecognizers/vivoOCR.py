@@ -43,7 +43,7 @@ class CustomContentRecognizer(BaseRecognizer):
 			ChoiceEngineSetting(
 				"recognitionMode",
 				# Translators: The label for the recognition mode setting.
-				_("Recognition Mode:"),
+				_("Recognition Mode"),
 				optionsPropertyName="availableRecognitionModes",
 			),
 		]

@@ -109,12 +109,12 @@ class CustomContentRecognizer(BaseRecognizer):
 			TextInputEngineSetting(
 				name="apiKey",
 				# Translators: The label for the text field to enter the Gemini API Key.
-				displayNameWithAccelerator=_("API &Key:"),
+				displayNameWithAccelerator=_("API &Key"),
 			),
 			ChoiceEngineSetting(
 				name="model",
 				# Translators: The label for a setting to select the Gemini model.
-				displayNameWithAccelerator=_("&Model:"),
+				displayNameWithAccelerator=_("&Model"),
 				optionsPropertyName="availableModels",
 			),
 			self.autoRecognitionModelSetting(),

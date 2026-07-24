@@ -167,9 +167,16 @@ class CustomContentRecognizer(BaseRecognizer):
 				self._accessToken = result["access_token"]
 			elif "error" in result:
 				errorDesc = result.get("error_description", "Unknown OAuth error")
-				raise AuthenticationError(f"Baidu OAuth Error: {result['error']} - {errorDesc}")
+				raise AuthenticationError(
+					# Translators: A Baidu OAuth error. {error} is the error code and {description} is its description.
+					_("Baidu OAuth Error: {error} - {description}").format(
+						error=result["error"],
+						description=errorDesc,
+					),
+				)
 			else:
-				raise ApiError(f"Unexpected response from Baidu OAuth: {result}")
+				# Translators: An unexpected response from Baidu OAuth. {response} is the returned response.
+				raise ApiError(_("Unexpected response from Baidu OAuth: {response}").format(response=result))
 		except (NetworkError, ApiError) as e:
 			# Translators: An error message when the token cannot be refreshed.
 			raise AuthenticationError(
@@ -198,7 +205,10 @@ class CustomContentRecognizer(BaseRecognizer):
 				return _("Token was expired, please try again.")
 			except (ApiError, AuthenticationError) as e:
 				return str(e)
-		return self.CODE_TO_ERROR_MESSAGE.get(errorCode, _(f"Unknown error code: {errorCode}"))
+		# Translators: An unknown Baidu API error. {code} is the error code returned by the service.
+		return self.CODE_TO_ERROR_MESSAGE.get(
+			errorCode, _("Unknown error code: {code}").format(code=errorCode)
+		)
 
 	def _buildRequestParams(self, imageContent: bytes, request: RecognitionRequest) -> dict:
 		"""

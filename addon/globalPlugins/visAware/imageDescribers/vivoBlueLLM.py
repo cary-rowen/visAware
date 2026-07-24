@@ -89,13 +89,13 @@ class CustomContentRecognizer(BaseDescriber):
 			ChoiceEngineSetting(
 				name="thinkingLevel",
 				# Translators: The label for a setting to control model thinking mode.
-				displayNameWithAccelerator=_("Thinking &Level:"),
+				displayNameWithAccelerator=_("Thinking &Level"),
 				optionsPropertyName="availableThinkingLevels",
 			),
 			TextInputEngineSetting(
 				"prompt",
 				# Translators: The label for an engine setting to customize the prompt for the vision model.
-				_("&Custom Prompt:"),
+				_("&Custom Prompt"),
 			),
 			self.autoRecognitionPromptSetting(),
 			temperatureSetting,

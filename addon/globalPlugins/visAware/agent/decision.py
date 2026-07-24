@@ -227,8 +227,13 @@ def parseAgentDecision(data: dict[str, Any], providerName: str) -> AgentDecision
 	_normalizeScalarArguments(arguments, ("delta_x", "delta_y"))
 	if normalizedActionName == "type_text_at":
 		text = str(arguments.get("text") or "")
-		arguments["press_enter"] = bool(arguments.get("press_enter", False)) or text.endswith("\n")
-		arguments["text"] = text.replace("\n", "").strip()
+		hasTrailingNewline = text.endswith(("\r", "\n"))
+		arguments["press_enter"] = bool(arguments.get("press_enter", False)) or hasTrailingNewline
+		if text.endswith("\r\n"):
+			text = text[:-2]
+		elif hasTrailingNewline:
+			text = text[:-1]
+		arguments["text"] = text
 	return AgentDecision(
 		status="action",
 		message=message,

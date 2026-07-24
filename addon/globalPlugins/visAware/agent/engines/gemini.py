@@ -47,18 +47,18 @@ class AgentEngine(BaseAgentEngine):
 			TextInputEngineSetting(
 				name="apiKey",
 				# Translators: The label for the Gemini API key used by the Agent.
-				displayNameWithAccelerator=_("API &Key:"),
+				displayNameWithAccelerator=_("API &Key"),
 			),
 			ChoiceEngineSetting(
 				name="model",
 				# Translators: The label for the Gemini model used by the Agent.
-				displayNameWithAccelerator=_("&Model:"),
+				displayNameWithAccelerator=_("&Model"),
 				optionsPropertyName="availableModels",
 			),
 			ChoiceEngineSetting(
 				name="mediaResolution",
 				# Translators: The label for the Gemini media resolution used by the Agent.
-				displayNameWithAccelerator=_("Media &resolution:"),
+				displayNameWithAccelerator=_("Media &resolution"),
 				optionsPropertyName="availableMediaResolutions",
 			),
 			self._imageQualitySetting(),

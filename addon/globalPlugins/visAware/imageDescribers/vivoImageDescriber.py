@@ -57,12 +57,12 @@ class CustomContentRecognizer(BaseDescriber):
 			NumericEngineSetting(
 				"minScore",
 				# Translators: Label for a setting to set the minimum confidence score.
-				_("Minimum confidence score (0-100):"),
+				_("Minimum confidence score (0-100)"),
 			),
 			CheckListEngineSetting(
 				"filters",
 				# Translators: Label for a setting to configure automatic filters.
-				_("Automatic filters:"),
+				_("Automatic filters"),
 				optionsPropertyName="availableFilters",
 			),
 		]
