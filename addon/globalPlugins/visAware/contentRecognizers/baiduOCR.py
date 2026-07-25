@@ -207,7 +207,8 @@ class CustomContentRecognizer(BaseRecognizer):
 				return str(e)
 		# Translators: An unknown Baidu API error. {code} is the error code returned by the service.
 		return self.CODE_TO_ERROR_MESSAGE.get(
-			errorCode, _("Unknown error code: {code}").format(code=errorCode)
+			errorCode,
+			_("Unknown error code: {code}").format(code=errorCode),
 		)
 
 	def _buildRequestParams(self, imageContent: bytes, request: RecognitionRequest) -> dict:

@@ -49,7 +49,7 @@ class MarkdownRendererTestCase(unittest.TestCase):
 	def test_preserves_html_source_inside_code(self) -> None:
 		htmlText = self.renderer.sanitizeRenderedHtml(
 			self.renderer.renderMarkdownToHtml(
-				"```html\n<div>$x$</div>\n```\n\nUse `<button title='$x$'>OK</button>`."
+				"```html\n<div>$x$</div>\n```\n\nUse `<button title='$x$'>OK</button>`.",
 			),
 		)
 		self.assertIn("&lt;div&gt;$x$&lt;/div&gt;", htmlText)
