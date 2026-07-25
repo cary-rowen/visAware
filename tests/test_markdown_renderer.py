@@ -65,6 +65,23 @@ class MarkdownRendererTestCase(unittest.TestCase):
 		self.assertNotIn("$ \\lim", htmlText)
 		self.assertIn("<table", htmlText)
 
+	def test_unwraps_only_formula_only_single_cell_table(self) -> None:
+		formulaTable = self.renderer.sanitizeRenderedHtml(
+			self.renderer.renderMarkdownToHtml(
+				"<table border=1><tr><td>$x+1$</td></tr></table>",
+			),
+		)
+		self.assertTrue(formulaTable.startswith("<math"))
+		self.assertNotIn("<table", formulaTable)
+
+		realTable = self.renderer.sanitizeRenderedHtml(
+			self.renderer.renderMarkdownToHtml(
+				"<table><tr><td>$x$</td><td>$y$</td></tr></table>",
+			),
+		)
+		self.assertIn("<table", realTable)
+		self.assertEqual(2, realTable.count("<math"))
+
 	def test_preserves_real_table_and_html_attributes(self) -> None:
 		htmlText = self.renderer.renderMarkdownToHtml(
 			"<table summary='Result'><tr><td title='$unchanged$'>$x$</td></tr></table>",

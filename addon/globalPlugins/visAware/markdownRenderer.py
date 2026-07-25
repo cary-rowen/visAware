@@ -35,6 +35,7 @@ _MATH_DELIMITERS = (
 	(r"\(", r"\)", "inline"),
 	("$", "$", "inline"),
 )
+_MATHML_NAMESPACE = "http://www.w3.org/1998/Math/MathML"
 _LITERAL_NUMERIC_CHARACTER_REFERENCE_PATTERN = re.compile(
 	r"(?:(?:&(?:amp|AMP)|&#0*38|&#[xX]0*26);?)#(?:[xX][0-9A-Fa-f]+|\d+);?",
 )
@@ -667,7 +668,7 @@ def _attributeFilter(tag: str, attr: str, value: str) -> str | None:
 		if attr == "display":
 			return value if value in {"inline", "block"} else None
 		if attr == "xmlns":
-			return value if value == "http://www.w3.org/1998/Math/MathML" else None
+			return value if value == _MATHML_NAMESPACE else None
 	return value
 
 
@@ -675,14 +676,43 @@ ALLOWED_TAGS = (nh3.ALLOWED_TAGS - {"img", "picture", "source"}) | {"tfoot"} | M
 ALLOWED_ATTRIBUTES = _createAllowedAttributes()
 
 
+def _unwrapFormulaOnlySingleCellTable(htmlText: str) -> str:
+	"""Remove a table wrapper that contains only one MathML formula."""
+	strippedHtml = htmlText.strip()
+	if not strippedHtml.startswith("<table") or not strippedHtml.endswith("</table>"):
+		return htmlText
+	try:
+		table = ElementTree.fromstring(strippedHtml)
+		(tableBody,) = table
+		(row,) = tableBody
+		(cell,) = row
+		(mathElement,) = cell
+	except (ElementTree.ParseError, ValueError):
+		return htmlText
+	wrappers = (table, tableBody, row, cell)
+	if (
+		(table.tag, tableBody.tag, row.tag, cell.tag) != ("table", "tbody", "tr", "td")
+		or mathElement.tag != f"{{{_MATHML_NAMESPACE}}}math"
+		or any(element.attrib or (element.text or "").strip() for element in wrappers)
+		or any((child.tail or "").strip() for element in wrappers for child in element)
+	):
+		return htmlText
+	mathStart = strippedHtml.find("<math")
+	mathEnd = strippedHtml.rfind("</math>")
+	if mathStart < 0 or mathEnd < mathStart:
+		return htmlText
+	return strippedHtml[mathStart : mathEnd + len("</math>")]
+
+
 def sanitizeRenderedHtml(htmlText: str) -> str:
 	"""Sanitize rendered Markdown while preserving safe MathML structure."""
-	return nh3.clean(
+	sanitizedHtml = nh3.clean(
 		htmlText,
 		tags=ALLOWED_TAGS,
 		attributes=ALLOWED_ATTRIBUTES,
 		attribute_filter=_attributeFilter,
 	)
+	return _unwrapFormulaOnlySingleCellTable(sanitizedHtml)
 
 
 def showMarkdownBrowseableMessage(
