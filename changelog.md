@@ -1,3 +1,9 @@
+### 0.6.3
+
+* Improved formula rendering in HTML and PaddleOCR results.
+* Fixed AI Agent text input and automatic recognition on English interfaces.
+* Improved English and Simplified Chinese UI text and documentation.
+
 ### 0.6.2
 
 * Updated the available Gemini models, with Gemini 3.6 Flash as the new default and Gemini 3.5 Flash-Lite as a low-cost option.
