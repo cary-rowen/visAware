@@ -6,11 +6,19 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from copy import deepcopy
+from html import unescape
+from html.parser import HTMLParser
+import logging
 import re
+from typing import override
+from xml.etree import ElementTree
 
 import nh3
-from markdown import markdown
+from markdown import Markdown, markdown
+from markdown.extensions import Extension
+from markdown.postprocessors import Postprocessor
 
 
 _MARKDOWN_EXTENSIONS = [
@@ -20,6 +28,33 @@ _MARKDOWN_EXTENSIONS = [
 
 _MARKDOWN_FENCE_INFO_STRINGS = {"markdown", "md", "mdown", "mkdn", "gfm"}
 _TEXT_FENCE_INFO_STRINGS = {"", "text", "plain", "plaintext"}
+
+_MATH_DELIMITERS = (
+	("$$", "$$", "block"),
+	(r"\[", r"\]", "block"),
+	(r"\(", r"\)", "inline"),
+	("$", "$", "inline"),
+)
+_LITERAL_NUMERIC_CHARACTER_REFERENCE_PATTERN = re.compile(
+	r"(?:(?:&(?:amp|AMP)|&#0*38|&#[xX]0*26);?)#(?:[xX][0-9A-Fa-f]+|\d+);?",
+)
+_NUMERIC_CHARACTER_REFERENCE_PATTERN = re.compile(r"&#(?:[xX][0-9A-Fa-f]+|\d+);")
+_PRIVATE_USE_MARKER_START = 0xF0000
+_PRIVATE_USE_MARKER_END = 0xFFFFD
+_MATH_TEXT_ONLY_HTML_TAGS = {
+	"iframe",
+	"noembed",
+	"noframes",
+	"noscript",
+	"script",
+	"style",
+	"textarea",
+	"title",
+	"xmp",
+}
+_MATH_EXCLUDED_HTML_TAGS = _MATH_TEXT_ONLY_HTML_TAGS | {"code", "kbd", "math", "pre", "samp"}
+
+log = logging.getLogger(__name__)
 
 _OUTER_FENCED_MARKDOWN_PATTERN = re.compile(
 	r"\A[ \t]*(?P<fence>`{3,}|~{3,})(?P<info>[^\n]*)\n(?P<body>.*)\n(?P=fence)[ \t]*\Z",
@@ -331,14 +366,262 @@ def _unwrapOuterMarkdownFence(text: str) -> str:
 	return text
 
 
-def _getMarkdownExtensions() -> list[object]:
-	extensions = list(_MARKDOWN_EXTENSIONS)
+def _getMarkdownExtensions() -> list[str | Extension]:
+	extensions: list[str | Extension] = list(_MARKDOWN_EXTENSIONS)
 	try:
 		from l2m4m import LaTeX2MathMLExtension
+		from latex2mathml import converter
 	except ImportError:
 		return extensions
-	extensions.append(LaTeX2MathMLExtension())
+
+	def convertFormula(formula: str, display: str) -> str:
+		protectedFormula, protectedReferences = _protectLiteralNumericCharacterReferences(formula)
+		mathElement = converter.convert_to_element(unescape(protectedFormula), display=display)
+		_decodeMathMlNumericCharacterReferences(mathElement, protectedReferences)
+		return ElementTree.tostring(mathElement, encoding="unicode")
+
+	extensions.extend((LaTeX2MathMLExtension(), _RawHtmlMathExtension(convertFormula)))
 	return extensions
+
+
+def _protectLiteralNumericCharacterReferences(formula: str) -> tuple[str, dict[str, str]]:
+	protectedReferences: dict[str, str] = {}
+	markerCodePoint = _PRIVATE_USE_MARKER_START
+	unescapedFormula = unescape(formula)
+
+	def replaceReference(match: re.Match[str]) -> str:
+		nonlocal markerCodePoint
+		while markerCodePoint <= _PRIVATE_USE_MARKER_END:
+			marker = chr(markerCodePoint)
+			markerCodePoint += 1
+			if marker not in unescapedFormula and marker not in protectedReferences:
+				protectedReferences[marker] = match.group(0)
+				return marker
+		raise ValueError("Too many literal numeric character references in formula")
+
+	return _LITERAL_NUMERIC_CHARACTER_REFERENCE_PATTERN.sub(replaceReference, formula), protectedReferences
+
+
+def _decodeMathMlNumericCharacterReferences(
+	mathElement: ElementTree.Element,
+	protectedReferences: dict[str, str],
+) -> None:
+	referencePattern = re.compile(
+		"|".join((*map(re.escape, protectedReferences), _NUMERIC_CHARACTER_REFERENCE_PATTERN.pattern)),
+	)
+
+	def decode(value: str) -> str:
+		def replaceReference(match: re.Match[str]) -> str:
+			reference = match.group(0)
+			return unescape(protectedReferences.get(reference, reference))
+
+		return referencePattern.sub(replaceReference, value)
+
+	for element in mathElement.iter():
+		if element.text:
+			element.text = decode(element.text)
+		if element.tail:
+			element.tail = decode(element.tail)
+		for name, value in tuple(element.attrib.items()):
+			element.set(name, decode(value))
+
+
+def _isEscaped(text: str, position: int) -> bool:
+	backslashCount = 0
+	position -= 1
+	while position >= 0 and text[position] == "\\":
+		backslashCount += 1
+		position -= 1
+	return backslashCount % 2 == 1
+
+
+def _matchMathOpener(text: str, position: int) -> tuple[str, str, str] | None:
+	for opener, closer, display in _MATH_DELIMITERS:
+		if not text.startswith(opener, position) or _isEscaped(text, position):
+			continue
+		return opener, closer, display
+	return None
+
+
+def _findMathCloser(
+	text: str,
+	position: int,
+	closer: str,
+) -> tuple[int | None, int]:
+	while position < len(text):
+		if text.startswith(closer, position) and not _isEscaped(text, position):
+			return position, position + len(closer)
+		if _matchMathOpener(text, position) is not None:
+			return None, position
+		position += 1
+	return None, position
+
+
+def _convertMathText(text: str, convertFormula: Callable[[str, str], str]) -> str:
+	"""Convert supported LaTeX delimiters with a single forward scan."""
+	output: list[str] = []
+	unchangedStart = 0
+	position = 0
+	while position < len(text):
+		delimiter = _matchMathOpener(text, position)
+		if delimiter is None:
+			position += 1
+			continue
+		opener, closer, display = delimiter
+		formulaStart = position + len(opener)
+		formulaEnd, resumePosition = _findMathCloser(text, formulaStart, closer)
+		if formulaEnd is None:
+			if resumePosition >= len(text):
+				break
+			position = resumePosition
+			continue
+		matchEnd = formulaEnd + len(closer)
+		formula = text[formulaStart:formulaEnd]
+		if not formula:
+			position = matchEnd
+			continue
+		# ponytail: `$` is ambiguous; broader currency detection needs an explicit syntax signal.
+		if opener == "$" and formula[0].isdigit() and matchEnd < len(text) and text[matchEnd].isdigit():
+			position = matchEnd
+			continue
+		try:
+			mathMl = convertFormula(formula, display)
+		except Exception:
+			log.warning("Unable to convert LaTeX formula in raw HTML.", exc_info=True)
+			position = matchEnd
+			continue
+		output.extend((text[unchangedStart:position], mathMl))
+		unchangedStart = matchEnd
+		position = matchEnd
+	output.append(text[unchangedStart:])
+	return "".join(output)
+
+
+class _RawHtmlMathParser(HTMLParser):
+	"""Convert formulas in raw HTML text while preserving its original markup."""
+
+	def __init__(self, convertFormula: Callable[[str, str], str]) -> None:
+		super().__init__(convert_charrefs=False)
+		self._convertFormula = convertFormula
+		self._excludedTags: list[str] = []
+		self._htmlParts: list[str] = []
+		self._sourceLines: list[str] = []
+		self._textParts: list[str] = []
+
+	def convert(self, htmlText: str) -> str:
+		self._sourceLines = htmlText.split("\n")
+		self.feed(htmlText)
+		self.close()
+		self._flushText()
+		return "".join(self._htmlParts)
+
+	def _flushText(self) -> None:
+		if not self._textParts:
+			return
+		text = "".join(self._textParts)
+		self._textParts.clear()
+		self._htmlParts.append(text if self._excludedTags else _convertMathText(text, self._convertFormula))
+
+	@override
+	def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+		self._flushText()
+		self._htmlParts.append(self.get_starttag_text() or f"<{tag}>")
+		if tag in _MATH_EXCLUDED_HTML_TAGS:
+			self._excludedTags.append(tag)
+
+	@override
+	def handle_startendtag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+		self._flushText()
+		self._htmlParts.append(self.get_starttag_text() or f"<{tag} />")
+
+	@override
+	def handle_endtag(self, tag: str) -> None:
+		self._flushText()
+		self._htmlParts.append(f"</{tag}>")
+		if tag in self._excludedTags:
+			tagPosition = len(self._excludedTags) - 1 - self._excludedTags[::-1].index(tag)
+			del self._excludedTags[tagPosition:]
+
+	@override
+	def handle_data(self, data: str) -> None:
+		self._textParts.append(data)
+
+	def _appendCharacterReference(self, reference: str) -> None:
+		lineNumber, offset = self.getpos()
+		if self._sourceLines[lineNumber - 1].startswith(";", offset + len(reference)):
+			reference += ";"
+		self._textParts.append(reference)
+
+	@override
+	def handle_entityref(self, name: str) -> None:
+		self._appendCharacterReference(f"&{name}")
+
+	@override
+	def handle_charref(self, name: str) -> None:
+		self._appendCharacterReference(f"&#{name}")
+
+	@override
+	def handle_comment(self, data: str) -> None:
+		self._flushText()
+		self._htmlParts.append(f"<!--{data}-->")
+
+	@override
+	def handle_decl(self, decl: str) -> None:
+		self._flushText()
+		self._htmlParts.append(f"<!{decl}>")
+
+	@override
+	def handle_pi(self, data: str) -> None:
+		self._flushText()
+		self._htmlParts.append(f"<?{data}>")
+
+	@override
+	def unknown_decl(self, data: str) -> None:
+		self._flushText()
+		self._htmlParts.append(f"<![{data}]]>")
+
+
+def _convertMathInRawHtml(htmlText: str, convertFormula: Callable[[str, str], str]) -> str:
+	if not any(delimiter[0] in htmlText for delimiter in _MATH_DELIMITERS):
+		return htmlText
+	try:
+		return _RawHtmlMathParser(convertFormula).convert(htmlText)
+	except Exception:
+		log.warning("Unable to convert LaTeX formulas in raw HTML.", exc_info=True)
+		return htmlText
+
+
+class _RawHtmlMathPostprocessor(Postprocessor):
+	def __init__(self, md: Markdown, convertFormula: Callable[[str, str], str]) -> None:
+		super().__init__(md)
+		self._markdown = md
+		self._convertFormula = convertFormula
+
+	@override
+	def run(self, text: str) -> str:
+		for position, htmlBlock in enumerate(self._markdown.htmlStash.rawHtmlBlocks):
+			self._markdown.htmlStash.rawHtmlBlocks[position] = _convertMathInRawHtml(
+				htmlBlock,
+				self._convertFormula,
+			)
+		return text
+
+
+class _RawHtmlMathExtension(Extension):
+	def __init__(self, convertFormula: Callable[[str, str], str]) -> None:
+		super().__init__()
+		self._convertFormula = convertFormula
+
+	@override
+	def extendMarkdown(self, md: Markdown) -> None:
+		for tag in _MATH_TEXT_ONLY_HTML_TAGS:
+			if tag not in md.block_level_elements:
+				md.block_level_elements.append(tag)
+		md.postprocessors.register(
+			_RawHtmlMathPostprocessor(md, self._convertFormula),
+			"rawHtmlMath",
+			35,
+		)
 
 
 def renderMarkdownToHtml(text: str) -> str:

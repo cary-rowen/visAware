@@ -24,6 +24,9 @@ dependencies = [
 	# Build add-on
 	"scons==4.10.1",
 	"Markdown==3.10",
+	"l2m4m==1.0.4",
+	# Match the minimum supported NVDA runtime.
+	"latex2mathml==3.78.1",
 	# Translations management
 	"requests==2.33.0",
 	"nh3==0.3.2",
