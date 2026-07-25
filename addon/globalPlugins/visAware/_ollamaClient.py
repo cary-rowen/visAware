@@ -120,7 +120,7 @@ class OllamaClient:
 		error = getOllamaError(payload)
 		if error:
 			# Translators: An error message returned from the Ollama API.
-			raise ApiError(_("Ollama API Error: {}").format(error))
+			raise ApiError(_("Ollama API error: {}").format(error))
 		modelItems = payload.get("models")
 		if not isinstance(modelItems, list):
 			# Translators: An error message when Ollama returns invalid model list data.
@@ -218,7 +218,7 @@ def parseOllamaChatStreamChunk(chunk: bytes) -> str | None:
 	error = getOllamaError(payload)
 	if error:
 		# Translators: An error message returned from the Ollama API.
-		raise ApiError(_("Ollama API Error: {}").format(error))
+		raise ApiError(_("Ollama API error: {}").format(error))
 	if payload.get("done"):
 		return None
 	message = payload.get("message")
@@ -240,7 +240,7 @@ def parseOllamaGenerateStreamChunk(chunk: bytes) -> str | None:
 	error = getOllamaError(payload)
 	if error:
 		# Translators: An error message returned from the Ollama API.
-		raise ApiError(_("Ollama API Error: {}").format(error))
+		raise ApiError(_("Ollama API error: {}").format(error))
 	if payload.get("done"):
 		return None
 	response = payload.get("response")

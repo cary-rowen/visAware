@@ -45,7 +45,7 @@ class OpenAIAgentClient:
 		self.imageQuality = settings.imageQuality
 		if not self.apiKey:
 			raise AuthenticationError(
-				_("API Key is missing. Please configure it in the Agent settings."),
+				_("API key is missing. Please configure it in the AI Agent settings."),
 			)
 		log.info(
 			f"Vis Aware agent using OpenAI settings from {settings.source or 'Agent settings'}, "
@@ -543,7 +543,7 @@ def _formatComputerActionMessage(actions: list[AgentAction]) -> str:
 def _extractResponseText(apiResult: dict[str, Any]) -> str:
 	error = apiResult.get("error")
 	if error:
-		raise ApiError(_("OpenAI API Error: {}").format(error))
+		raise ApiError(_("OpenAI API error: {}").format(error))
 	outputText = apiResult.get("output_text")
 	if isinstance(outputText, str) and outputText:
 		return outputText

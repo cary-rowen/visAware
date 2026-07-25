@@ -57,7 +57,7 @@ class CustomContentRecognizer(BaseDescriber):
 			NumericEngineSetting(
 				"minScore",
 				# Translators: Label for a setting to set the minimum confidence score.
-				_("Minimum confidence score (0-100)"),
+				_("Minimum confidence (0 to 100)"),
 			),
 			CheckListEngineSetting(
 				"filters",
@@ -96,11 +96,11 @@ class CustomContentRecognizer(BaseDescriber):
 		filterOptions = OrderedDict(
 			{
 				# Translators: A filter option for Vivo Image Describer.
-				self.FILTER_BAD_ID: _("Filter bad descriptions"),
+				self.FILTER_BAD_ID: _("Filter descriptions flagged as bad"),
 				# Translators: A filter option for Vivo Image Describer.
-				self.FILTER_LOW_SCORE_ID: _("Filter low score descriptions"),
+				self.FILTER_LOW_SCORE_ID: _("Filter low-confidence descriptions"),
 				# Translators: A filter option for Vivo Image Describer.
-				self.FILTER_BLUR_ID: _("Filter descriptions of blurry images"),
+				self.FILTER_BLUR_ID: _("Filter descriptions generated from blurry images"),
 			},
 		)
 		return self.generateStringSettings(filterOptions)
@@ -268,7 +268,11 @@ class CustomContentRecognizer(BaseDescriber):
 		responseJson = self._convertToJson(result)
 		if responseJson.get("code") != 0:
 			errorMessage = responseJson.get("msg", "Unknown Vivo API error")
-			return f"Vivo API Error: {errorMessage} (Code: {responseJson.get('code')})"
+			# Translators: A Vivo API error. {message} is the service message and {code} is the error code.
+			return _("Vivo API error: {message} (Code: {code})").format(
+				message=errorMessage,
+				code=responseJson.get("code"),
+			)
 		return False
 
 	def extractText(self, apiResult: dict) -> str:

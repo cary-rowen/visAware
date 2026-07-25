@@ -109,7 +109,7 @@ class CustomContentRecognizer(BaseRecognizer):
 			TextInputEngineSetting(
 				name="apiKey",
 				# Translators: The label for the text field to enter the Gemini API Key.
-				displayNameWithAccelerator=_("API &Key"),
+				displayNameWithAccelerator=_("API &key"),
 			),
 			ChoiceEngineSetting(
 				name="model",
@@ -175,7 +175,7 @@ class CustomContentRecognizer(BaseRecognizer):
 		if not self.apiKey:
 			# Translators: An error message if the Gemini API key is missing.
 			raise AuthenticationError(
-				_("API Key is missing. Please configure it in the Gemini OCR engine settings."),
+				_("API key is missing. Please configure it in the Gemini OCR engine settings."),
 			)
 
 		imageBase64String = imageContent.decode("utf-8")
@@ -231,7 +231,7 @@ class CustomContentRecognizer(BaseRecognizer):
 					error.get("message", "Unknown API error") if isinstance(error, dict) else str(error)
 				)
 				# Translators: An error message returned from the Gemini API.
-				return _("Gemini API Error: {}").format(errorMessage)
+				return _("Gemini API error: {}").format(errorMessage)
 			self._extractStructuredResult(responseJson)
 		except (ApiError, json.JSONDecodeError) as e:
 			return str(e)

@@ -48,7 +48,7 @@ class GeminiAgentClient:
 		self.mediaResolution = settings.mediaResolution
 		if not self.apiKey:
 			raise AuthenticationError(
-				_("API Key is missing. Please configure it in the Agent settings."),
+				_("API key is missing. Please configure it in the AI Agent settings."),
 			)
 		log.info(
 			f"Vis Aware agent using Gemini settings from {settings.source or 'Agent settings'}, "
@@ -286,7 +286,7 @@ def _extractToolCall(apiResult: dict[str, Any]) -> tuple[str, dict[str, Any]]:
 	apiError = _getApiErrorMessage(apiResult)
 	if apiError:
 		# Translators: An error message returned from the Gemini API.
-		raise ApiError(_("Gemini API Error: {}").format(apiError))
+		raise ApiError(_("Gemini API error: {}").format(apiError))
 	steps = apiResult.get("steps")
 	if not isinstance(steps, list):
 		raise ApiError(_("Gemini returned malformed agent action data."))

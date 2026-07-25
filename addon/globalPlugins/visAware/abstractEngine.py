@@ -511,7 +511,7 @@ class SpecificEnginePanel(SettingsPanel):
 	"""A settings panel for a specific engine's settings."""
 
 	# Translators: The title of the engine-specific settings panel.
-	title = _("Engine Settings")
+	title = _("Engine settings")
 	handler: Type[AbstractEngineHandler]
 	_getEngine: Callable[[], Optional[AbstractEngine]]
 	_engine: Optional[AbstractEngine] = None
@@ -904,7 +904,7 @@ class AbstractEngineSettingsPanel(SettingsPanel, ABC):
 		self._selectedEngine = self._getInitialSelectedEngine()
 		settingsSizerHelper = guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
 		# Translators: The label for the group box to select an engine.
-		engineLabel = f"{self.title} {_('Engines')}"
+		engineLabel = _("Engines")
 		engineBox = wx.StaticBox(self, label=engineLabel)
 		engineGroupSizer = wx.StaticBoxSizer(engineBox, wx.HORIZONTAL)
 		engineGroupHelper = guiHelper.BoxSizerHelper(self, sizer=engineGroupSizer)
@@ -1069,7 +1069,7 @@ class AbstractEngineSettingsPanel(SettingsPanel, ABC):
 				# Translators: A warning shown when trying to disable every engine in a category.
 				_("At least one engine must remain enabled."),
 				# Translators: The title of a warning shown for invalid engine enablement settings.
-				_("Engine configuration"),
+				_("Engine Configuration"),
 				wx.OK | wx.ICON_WARNING,
 				self,
 			)
@@ -1089,7 +1089,7 @@ class AbstractEngineSettingsPanel(SettingsPanel, ABC):
 					engine=selectedEngine.description,
 				),
 				# Translators: The title of a warning shown for invalid engine enablement settings.
-				_("Engine configuration"),
+				_("Engine Configuration"),
 				wx.OK | wx.ICON_WARNING,
 				self,
 			)
@@ -1111,7 +1111,7 @@ class AbstractEngineSettingsPanel(SettingsPanel, ABC):
 					engine=currentEngine.description,
 				),
 				# Translators: The title of a warning shown for invalid engine enablement settings.
-				_("Engine configuration"),
+				_("Engine Configuration"),
 				wx.OK | wx.ICON_WARNING,
 				self,
 			)

@@ -72,7 +72,7 @@ class CustomContentRecognizer(BaseDescriber):
 			TextInputEngineSetting(
 				name="apiKey",
 				# Translators: The label for the text field to enter the Gemini API Key.
-				displayNameWithAccelerator=_("API &Key"),
+				displayNameWithAccelerator=_("API &key"),
 			),
 			BooleanEngineSetting(
 				"useStreaming",
@@ -96,7 +96,7 @@ class CustomContentRecognizer(BaseDescriber):
 			TextInputEngineSetting(
 				name="prompt",
 				# Translators: The label for a setting to customize the prompt for the vision model.
-				displayNameWithAccelerator=_("&Custom Prompt"),
+				displayNameWithAccelerator=_("Custom &prompt"),
 			),
 			self.autoRecognitionPromptSetting(),
 		]
@@ -187,7 +187,7 @@ class CustomContentRecognizer(BaseDescriber):
 		if not self.apiKey:
 			# Translators: An error message if the Gemini API key is missing.
 			raise AuthenticationError(
-				_("API Key is missing. Please configure it in the Gemini engine settings."),
+				_("API key is missing. Please configure it in the Gemini engine settings."),
 			)
 
 		url = buildGenerateContentUrl(self.model, request.streamResult)
@@ -234,7 +234,7 @@ class CustomContentRecognizer(BaseDescriber):
 		apiError = getApiErrorMessage(apiResult)
 		if apiError:
 			# Translators: An error message returned from the Gemini API.
-			raise ApiError(_("Gemini API Error: {}").format(apiError))
+			raise ApiError(_("Gemini API error: {}").format(apiError))
 		if not apiResult.get("candidates"):
 			promptFeedbackError = getPromptFeedbackError(apiResult)
 			if promptFeedbackError:
@@ -253,7 +253,7 @@ class CustomContentRecognizer(BaseDescriber):
 		if not self.apiKey:
 			# Translators: An error message if the Gemini API key is missing.
 			raise AuthenticationError(
-				_("API Key is missing. Please configure it in the Gemini engine settings."),
+				_("API key is missing. Please configure it in the Gemini engine settings."),
 			)
 		image = self._getConversationImage(context)
 		imageContent = self.prepareImageContentFromImage(image)
@@ -298,7 +298,7 @@ class CustomContentRecognizer(BaseDescriber):
 		if not self.apiKey:
 			# Translators: An error message if the Gemini API key is missing.
 			raise AuthenticationError(
-				_("API Key is missing. Please configure it in the Gemini engine settings."),
+				_("API key is missing. Please configure it in the Gemini engine settings."),
 			)
 		self._checkQuestionCancelled(cancellationChecker)
 		requestParams = self._buildQuestionRequestParams(context, question, stream=False)
@@ -337,7 +337,7 @@ class CustomContentRecognizer(BaseDescriber):
 		if "error" in responseJson:
 			errorMessage = getApiErrorMessage(responseJson) or "Unknown API error"
 			# Translators: An error message returned from the Gemini API.
-			return _("Gemini API Error: {}").format(errorMessage)
+			return _("Gemini API error: {}").format(errorMessage)
 		if not responseJson.get("candidates"):
 			promptFeedbackError = getPromptFeedbackError(responseJson)
 			if promptFeedbackError:

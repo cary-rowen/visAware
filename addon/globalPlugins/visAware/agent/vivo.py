@@ -165,7 +165,7 @@ def _extractToolArguments(apiResult: dict[str, Any]) -> dict[str, Any]:
 		errorMessage = apiResult.get("msg", _("Unknown Vivo API error"))
 		errorCode = apiResult.get("code")
 		raise ApiError(
-			_("Vivo API Error: {message} (Code: {code})").format(
+			_("Vivo API error: {message} (Code: {code})").format(
 				message=errorMessage,
 				code=errorCode,
 			),

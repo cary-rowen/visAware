@@ -141,7 +141,7 @@ class CustomContentRecognizer(BaseDescriber):
 			TextInputEngineSetting(
 				name="apiKey",
 				# Translators: The label for the text field to enter the Gemma API Key.
-				displayNameWithAccelerator=_("API &Key"),
+				displayNameWithAccelerator=_("API &key"),
 			),
 			ChoiceEngineSetting(
 				name="model",
@@ -153,14 +153,14 @@ class CustomContentRecognizer(BaseDescriber):
 			ChoiceEngineSetting(
 				name="thinkingLevel",
 				# Translators: The label for a setting to control Gemma thinking mode.
-				displayNameWithAccelerator=_("Thinking &Level"),
+				displayNameWithAccelerator=_("Thinking &level"),
 				optionsPropertyName="availableThinkingLevels",
 			),
 			self.imageQualitySetting(),
 			TextInputEngineSetting(
 				name="prompt",
 				# Translators: The label for a setting to customize the prompt for the vision model.
-				displayNameWithAccelerator=_("&Custom Prompt"),
+				displayNameWithAccelerator=_("Custom &prompt"),
 			),
 			self.autoRecognitionPromptSetting(),
 		]
@@ -208,8 +208,8 @@ class CustomContentRecognizer(BaseDescriber):
 		"""
 		models = OrderedDict(
 			{
-				"gemma-4-26b-a4b-it": _("Gemma 4 26B A4B IT (Recommended, faster)"),
-				"gemma-4-31b-it": _("Gemma 4 31B IT (Higher quality, slower)"),
+				"gemma-4-26b-a4b-it": _("Gemma 4 26B A4B IT (recommended, faster)"),
+				"gemma-4-31b-it": _("Gemma 4 31B IT (higher quality, slower)"),
 			},
 		)
 		return self.generateStringSettings(models)
@@ -304,7 +304,7 @@ class CustomContentRecognizer(BaseDescriber):
 		if not self.apiKey:
 			# Translators: An error message if the Gemma API key is missing.
 			raise AuthenticationError(
-				_("API Key is missing. Please configure it in the Gemma engine settings."),
+				_("API key is missing. Please configure it in the Gemma engine settings."),
 			)
 
 		url = buildGenerateContentUrl(self.model, request.streamResult)
@@ -376,7 +376,7 @@ class CustomContentRecognizer(BaseDescriber):
 		if not self.apiKey:
 			# Translators: An error message if the Gemma API key is missing.
 			raise AuthenticationError(
-				_("API Key is missing. Please configure it in the Gemma engine settings."),
+				_("API key is missing. Please configure it in the Gemma engine settings."),
 			)
 		self._checkQuestionCancelled(cancellationChecker)
 		requestParams = self._buildQuestionRequestParams(context, question, stream=False)
@@ -393,7 +393,7 @@ class CustomContentRecognizer(BaseDescriber):
 		if not self.apiKey:
 			# Translators: An error message if the Gemma API key is missing.
 			raise AuthenticationError(
-				_("API Key is missing. Please configure it in the Gemma engine settings."),
+				_("API key is missing. Please configure it in the Gemma engine settings."),
 			)
 		image = self._getConversationImage(context)
 		imageContent = self.prepareImageContentFromImage(image)
@@ -465,7 +465,7 @@ class CustomContentRecognizer(BaseDescriber):
 		if "error" in responseJson:
 			errorMessage = getApiErrorMessage(responseJson) or "Unknown API error"
 			# Translators: An error message returned from the Gemma API.
-			return _("Gemma API Error: {}").format(errorMessage)
+			return _("Gemma API error: {}").format(errorMessage)
 		if not responseJson.get("candidates"):
 			promptFeedbackError = getPromptFeedbackError(responseJson)
 			if promptFeedbackError:

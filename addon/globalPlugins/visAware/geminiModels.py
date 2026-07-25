@@ -23,7 +23,7 @@ def getGeminiModelChoices() -> OrderedDict[str, str]:
 	return OrderedDict(
 		{
 			# Translators: The display name for a Gemini model preset.
-			"gemini-3.6-flash": _("Gemini 3.6 Flash (Recommended)"),
+			"gemini-3.6-flash": _("Gemini 3.6 Flash (recommended)"),
 			# Translators: The display name for a Gemini model preset.
 			"gemini-3.5-flash-lite": _("Gemini 3.5 Flash-Lite (fast, lower cost)"),
 			# Translators: The display name for a Gemini model preset.

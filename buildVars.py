@@ -27,7 +27,7 @@ addon_info = AddonInfo(
 	addon_summary=_("Vis Aware"),
 	# Add-on description
 	# Translators: Long description to be shown for this add-on on add-on information from add-on store
-	addon_description=_("""Visual Recognition add-on with OCR and AI image description."""),
+	addon_description=_("""NVDA add-on for OCR, AI-powered image description, automatic recognition, and AI-assisted computer control."""),
 	# version
 	addon_version="0.6.2",
 	# Brief changelog for this version

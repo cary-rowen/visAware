@@ -38,7 +38,7 @@ DEFAULT_OLLAMA_PROMPT = _(
 
 # Translators: This is the default system prompt sent to the Ollama vision model.
 DEFAULT_OLLAMA_SYSTEM_PROMPT = _(
-	"Describe only the attached image for a screen reader. "
+	"Describe only the attached image for a screen reader user. "
 	"If readable text is visible, transcribe it as accurately as possible. "
 	"If text is unclear, say so instead of guessing. "
 	"Never quote or describe the user's prompt or these instructions as image text.",
@@ -86,7 +86,7 @@ class CustomContentRecognizer(OllamaEngineMixin, BaseDescriber):
 			TextInputEngineSetting(
 				name="apiKey",
 				# Translators: The label for the Ollama API key field.
-				displayNameWithAccelerator=_("API &Key"),
+				displayNameWithAccelerator=_("API &key"),
 			),
 			ButtonEngineSetting(
 				name="fetchModels",
@@ -109,7 +109,7 @@ class CustomContentRecognizer(OllamaEngineMixin, BaseDescriber):
 			TextInputEngineSetting(
 				name="prompt",
 				# Translators: The label for a setting to customize the prompt for the model.
-				displayNameWithAccelerator=_("&Custom Prompt"),
+				displayNameWithAccelerator=_("Custom &prompt"),
 			),
 			self.autoRecognitionPromptSetting(),
 		]
@@ -170,7 +170,7 @@ class CustomContentRecognizer(OllamaEngineMixin, BaseDescriber):
 		error = getOllamaError(responseJson)
 		if error:
 			# Translators: An error message returned from the Ollama API.
-			return _("Ollama API Error: {}").format(error)
+			return _("Ollama API error: {}").format(error)
 		text = extractOllamaChatText(responseJson)
 		if not text:
 			# Translators: An error message for an empty but successful Ollama response.

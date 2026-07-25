@@ -124,7 +124,7 @@ class CustomContentRecognizer(OllamaEngineMixin, BaseRecognizer):
 			TextInputEngineSetting(
 				name="apiKey",
 				# Translators: The label for the Ollama API key field.
-				displayNameWithAccelerator=_("API &Key"),
+				displayNameWithAccelerator=_("API &key"),
 			),
 			ButtonEngineSetting(
 				name="fetchModels",
@@ -147,7 +147,7 @@ class CustomContentRecognizer(OllamaEngineMixin, BaseRecognizer):
 			TextInputEngineSetting(
 				name="prompt",
 				# Translators: The label for a setting to customize the OCR prompt.
-				displayNameWithAccelerator=_("&Custom Prompt"),
+				displayNameWithAccelerator=_("Custom &prompt"),
 			),
 			self.autoRecognitionPromptSetting(),
 		]
@@ -209,7 +209,7 @@ class CustomContentRecognizer(OllamaEngineMixin, BaseRecognizer):
 		error = getOllamaError(responseJson)
 		if error:
 			# Translators: An error message returned from the Ollama API.
-			return _("Ollama API Error: {}").format(error)
+			return _("Ollama API error: {}").format(error)
 		text = extractOllamaGenerateText(responseJson)
 		if not text:
 			# Translators: An error message for an empty but successful Ollama response.

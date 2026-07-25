@@ -32,7 +32,7 @@ class AskQuestionFrame(wx.Frame):
 
 	def __init__(self, parent: wx.Window | None, context: ConversationContext) -> None:
 		# Translators: The title of the follow-up question dialog.
-		super().__init__(parent=parent, title=_("Ask a question"))
+		super().__init__(parent=parent, title=_("Ask a Follow-up Question"))
 		self.SetName("visAwareAskQuestionFrame")
 		self._context = context
 		self._cancellationEvent: Event | None = None
@@ -91,7 +91,7 @@ class AskQuestionFrame(wx.Frame):
 		self._sendButton = buttonHelper.addButton(panel, label=_("&Send"))
 		self._sendButton.Bind(wx.EVT_BUTTON, self._onSend)
 		# Translators: The label for a button that opens the latest answer rendered as Markdown.
-		self._renderedAnswerButton = buttonHelper.addButton(panel, label=_("Open rendered &answer"))
+		self._renderedAnswerButton = buttonHelper.addButton(panel, label=_("View formatted &answer"))
 		self._renderedAnswerButton.Bind(wx.EVT_BUTTON, self._onOpenRenderedAnswer)
 		# Translators: The label for a button that closes the follow-up question dialog.
 		self._closeButton = buttonHelper.addButton(panel, label=_("&Close"))
@@ -118,9 +118,9 @@ class AskQuestionFrame(wx.Frame):
 		self._context = context
 		engineDescription = context.engineDescription or context.engineName
 		if engineDescription:
-			self.SetTitle(f"{_('Ask a question')} - {engineDescription}")
+			self.SetTitle(f"{_('Ask a Follow-up Question')} - {engineDescription}")
 		else:
-			self.SetTitle(_("Ask a question"))
+			self.SetTitle(_("Ask a Follow-up Question"))
 		self._messagesText.SetValue("")
 		self._latestAnswerText = ""
 		# Translators: The sender label for the original image description in the follow-up dialog.
@@ -166,7 +166,7 @@ class AskQuestionFrame(wx.Frame):
 		question = self._questionText.GetValue().strip()
 		if not question:
 			# Translators: Reported when the user tries to send an empty follow-up question.
-			ui.message(_("Question is blank."))
+			ui.message(_("Enter a question."))
 			self._questionText.SetFocus()
 			return
 		self._questionText.SetValue("")
@@ -350,12 +350,12 @@ class AskQuestionFrame(wx.Frame):
 		evt.Skip()
 		if not self._latestAnswerText:
 			# Translators: Reported when there is no follow-up answer to show in rendered form.
-			ui.message(_("There is no answer to render."))
+			ui.message(_("There is no answer to show."))
 			return
 		# Translators: The title for the browseable message window showing a rendered follow-up answer.
 		showMarkdownBrowseableMessage(
 			self._latestAnswerText,
-			title=_("Rendered answer"),
+			title=_("Formatted Answer"),
 			closeButton=True,
 			copyButton=True,
 		)

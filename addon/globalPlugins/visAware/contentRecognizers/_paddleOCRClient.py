@@ -306,7 +306,7 @@ class PaddleOCRClient:
 		message = cls._extractErrorMessage(result)
 		if message:
 			# Translators: An error message returned from the PaddleOCR API.
-			raise ApiError(_("PaddleOCR API Error: {}").format(message))
+			raise ApiError(_("PaddleOCR API error: {}").format(message))
 
 	@classmethod
 	def _extractErrorMessage(cls, result: dict[str, Any]) -> str:

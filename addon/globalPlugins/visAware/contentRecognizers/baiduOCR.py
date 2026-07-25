@@ -44,7 +44,7 @@ class CustomContentRecognizer(BaseRecognizer):
 			ChoiceEngineSetting(
 				"language",
 				# Translators: The label for the recognition language setting.
-				_("Recognition Language"),
+				_("Recognition &language"),
 				optionsPropertyName="availableLanguages",
 			),
 			BooleanEngineSetting(
@@ -62,8 +62,8 @@ class CustomContentRecognizer(BaseRecognizer):
 				# Translators: The label for the setting to use a more accurate but slower API.
 				_("&Use Accurate API (Slower)"),
 			),
-			TextInputEngineSetting("apikey", _("API &Key")),
-			TextInputEngineSetting("apisecret", _("API &Secret Key")),
+			TextInputEngineSetting("apikey", _("API &key")),
+			TextInputEngineSetting("apisecret", _("Secret &key")),
 		]
 
 	@property

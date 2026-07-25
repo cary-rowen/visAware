@@ -190,9 +190,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self.ocrSettingMenuItem = gui.mainFrame.sysTrayIcon.preferencesMenu.Append(
 			wx.ID_NEW,
 			# Translators: The label for the menu item to open the Vis Aware settings dialog.
-			_("Open &Vis Aware settings"),
+			_("&Vis Aware settings..."),
 			# Translators: The help text for the menu item to open the Vis Aware settings dialog.
-			_("Open settings dialog for Vis Aware"),
+			_("Vis Aware settings"),
 		)
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.openSettingsDialog, self.ocrSettingMenuItem)
 
@@ -354,7 +354,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	@script(
 		# Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-		description=_("Describe the content of the current navigator object."),
+		description=_("Describes the content of the current navigator object"),
 		category=CATEGORY_NAME,
 		gestures=[],
 	)
@@ -368,7 +368,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	@script(
 		# Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-		description=_("Describe clipboard images."),
+		description=_("Describes images on the clipboard"),
 		category=CATEGORY_NAME,
 		gestures=[],
 	)
@@ -386,7 +386,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	@script(
 		# Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-		description=_("Recognizes the content of the current navigator object with OCR engine."),
+		description=_("Recognizes the content of the current navigator object using OCR"),
 		category=CATEGORY_NAME,
 		gestures=[],
 	)
@@ -400,7 +400,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	@script(
 		# Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-		description=_("Recognizes the text in clipboard images with OCR engine."),
+		description=_("Recognizes text in images on the clipboard using OCR"),
 		category=CATEGORY_NAME,
 		gestures=[],
 	)
@@ -450,7 +450,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	@script(
 		# Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-		description=_("Show previous recognition result, if any."),
+		description=_("Shows the previous recognition result"),
 		category=CATEGORY_NAME,
 		gestures=[],
 	)
@@ -458,7 +458,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		historyEntry = recogHistory.getPreviousResult()
 		if not historyEntry:
 			# Translators: Reported when there is no previous recognition result to show.
-			ui.message(_("No previous result"))
+			ui.message(_("No previous recognition result"))
 			return
 		resultObject = self._makePreviousResultObject(historyEntry)
 		if not resultObject:
@@ -469,7 +469,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	@script(
 		# Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-		description=_("Ask a follow-up question about the previous image description."),
+		description=_("Asks a follow-up question about the previous image description"),
 		category=CATEGORY_NAME,
 		gestures=["kb:NVDA+Alt+Q"],
 	)
@@ -516,7 +516,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			return
 		if self._isScreenCurtainRunning():
 			# Translators: A message shown when trying to use the AI agent with screen curtain enabled.
-			ui.message(_("Please disable screen curtain before starting the agent."))
+			ui.message(_("Please disable screen curtain before starting the AI Agent."))
 			return
 		try:
 			from .agent.client import createAgentClient
@@ -534,7 +534,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				dialog = wx.TextEntryDialog(
 					gui.mainFrame,
 					# Translators: Prompt shown when starting the AI agent.
-					_("What should the agent do?"),
+					_("What should the AI Agent do?"),
 					# Translators: Title for the AI agent command dialog.
 					_("Vis Aware Agent"),
 				)
@@ -710,14 +710,14 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	@script(
 		# Translators: Describes the command to cancel an ongoing recognition task.
-		description=_("Cancel current recognition if there is any."),
+		description=_("Cancels the current recognition"),
 		category=CATEGORY_NAME,
 		gestures=[],
 	)
 	def script_cancelCurrentRecognition(self, gesture: "inputCore.InputGesture") -> None:
 		if not self._cancelCurrentRecognition(isUserInitiated=True):
 			# Translators: Reported when the cancel command is used but no recognition is in progress.
-			ui.message(_("There is no recognition ongoing."))
+			ui.message(_("No recognition is in progress."))
 
 	def startRecognition(self, gesture: "inputCore.InputGesture", simpleText: bool) -> None:
 		"""
@@ -743,8 +743,10 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	@script(
 		# Translators: Describes the main Vis Aware command.
 		description=_(
-			"Run Vis Aware according to settings. For image recognition, single-press gives rich result "
-			"and double-press gives simple text.",
+			"Performs recognition using the current settings. In OCR and image description modes, press once "
+			"for a recognition result document. Press twice to show the result in a browsable message "
+			"or have NVDA announce it, depending on the General setting. In AI Agent mode, starts or "
+			"stops the Agent",
 		),
 		category=CATEGORY_NAME,
 		gestures=["kb:NVDA+Alt+space"],
@@ -768,7 +770,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	@script(
 		# Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-		description=_("Cycle through Vis Aware operating modes"),
+		description=_("Cycles through recognition modes"),
 		category=CATEGORY_NAME,
 		gestures=["kb:nvda+alt+1"],
 	)
@@ -778,7 +780,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	@script(
 		# Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-		description=_("Cycle through types of recognition source"),
+		description=_("Cycles through recognition sources"),
 		category=CATEGORY_NAME,
 		gestures=["kb:nvda+alt+3"],
 	)
@@ -786,12 +788,10 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		conf = config.conf["visAwareGeneral"]
 		if getConfigChoiceValue(conf, "engineType", ENGINE_TYPES) == "Agent":
 			# Translators: Reported when recognition source cycling is requested while AI Agent mode is active.
-			ui.message(_("Changing recognition source is not supported in Agent mode."))
+			ui.message(_("Changing recognition source is not supported in AI Agent mode."))
 			return
 		name = self._cycleThroughSettings(conf, "sourceType", getCycleSourceTypes(conf))
-		# Translators: Reported when the user cycles through recognition source types.
-		# The placeholder will be replaced with the source type (e.g. "Clipboard image").
-		ui.message(_("{name} as source").format(name=name))
+		ui.message(name)
 
 	@staticmethod
 	def _cycleThroughSettings(configSection: Any, configName: str, configList: list) -> str:
@@ -988,8 +988,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 						autoSayAll=conf["autoSayAllOnResult"],
 					)
 				elif conf["useBrowseableMessage"]:
-					# Translators: The title for the browseable message window showing the recognition result.
-					showMarkdownBrowseableMessage(result.text, title=_("Image recognition result"))
+					# Translators: The title for the browsable message showing the recognition result.
+					showMarkdownBrowseableMessage(result.text, title=_("Recognition result"))
 				else:
 					ui.message(result.text)
 			else:
@@ -1167,7 +1167,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	@script(
 		# Translators: Describes a command to cycle through available recognition engines.
-		description=_("Cycle through available engines for the active recognition type"),
+		description=_("Cycles through engines for the current mode"),
 		category=CATEGORY_NAME,
 		gestures=["kb:NVDA+Alt+2"],
 	)

@@ -37,8 +37,8 @@ from .exceptions import ApiError, CancellationError, StreamIncompleteError, Stre
 addonHandler.initTranslation()
 
 ENGINE_TYPES: List[Tuple[str, str]] = [
-	("OCR", _("OCR Engines")),
-	("ImageDescriber", _("Image Describer Engines")),
+	("OCR", _("OCR")),
+	("ImageDescriber", _("Image description")),
 	("Agent", _("AI Agent")),
 ]
 
@@ -46,11 +46,11 @@ SOURCE_TYPES: List[Tuple[str, str]] = [
 	# Translators: A recognition source type
 	("navigatorObject", _("Navigator object")),
 	# Translators: A recognition source type
-	("wholeDesktop", _("The whole screen")),
+	("wholeDesktop", _("Whole screen")),
 	# Translators: A recognition source type
-	("foreGroundWindow", _("Current foreground window")),
+	("foreGroundWindow", _("Foreground window")),
 	# Translators: A recognition source type
-	("clipboardImage", _("Image data or image file in clipboard")),
+	("clipboardImage", _("Image or image file on the clipboard")),
 ]
 
 AUTO_RECOGNITION_OFF = "off"
@@ -681,7 +681,7 @@ class BaseRecognizer(ContentRecognizer, AbstractEngine, ABC):
 
 		if currentSize >= self.maxSize:
 			# Translators: An error message when the image is too large to upload.
-			raise ApiError(_("Image content is too big to upload."))
+			raise ApiError(_("Image is too large to upload."))
 		return base64.b64encode(imageContent) if self.uploadBase64EncodeImage else imageContent
 
 	def prepareImageContentFromImage(self, image: Image.Image) -> bytes:
@@ -966,7 +966,7 @@ class ImageDescriberPanel(AbstractEngineSettingsPanel):
 	"""Settings panel for image describer engines."""
 
 	# Translators: The title of the Image Describer engine settings panel.
-	title = _("Image Describer")
+	title = _("Image description")
 	handler = ImageDescriberHandler
 
 
@@ -1018,7 +1018,7 @@ def getAutoRecognitionEngineChoices(autoRecognitionType: str) -> List[Tuple[str,
 	if autoRecognitionType == AUTO_RECOGNITION_IMAGE_DESCRIBER_MODE:
 		choices = [
 			# Translators: A choice for automatic recognition to use the current image description engine.
-			(AUTO_RECOGNITION_CURRENT_ENGINE_NAME, _("Current image describer engine")),
+			(AUTO_RECOGNITION_CURRENT_ENGINE_NAME, _("Current image description engine")),
 		]
 		choices.extend(
 			(engineName, engineDescription)
@@ -1072,7 +1072,7 @@ class AutomaticRecognitionPanel(SettingsPanel):
 	"""Automatic recognition settings panel for the Vis Aware add-on."""
 
 	# Translators: The title of the automatic recognition settings panel for the add-on.
-	title = _("Automatic Recognition")
+	title = _("Automatic recognition")
 
 	def makeSettings(self, sizer: wx.BoxSizer) -> None:
 		"""
@@ -1125,7 +1125,7 @@ class AutomaticRecognitionPanel(SettingsPanel):
 		self.autoRecognitionFetchModelsButton.Bind(wx.EVT_BUTTON, self._onFetchAutoRecognitionModels)
 		# Translators: The label for a checkbox to prefer screenshots before downloading web image URLs.
 		self.preferScreenshotForWebImagesCheckBox = settingsSizerHelper.addItem(
-			wx.CheckBox(self, label=_("Prefer screenshots for &web image objects")),
+			wx.CheckBox(self, label=_("Prefer screenshots for &web images")),
 		)
 		self.preferScreenshotForWebImagesCheckBox.SetValue(conf["preferScreenshotForWebImages"])
 		self._updateAutoRecognitionOverrideControls()
@@ -1203,7 +1203,7 @@ class AutomaticRecognitionPanel(SettingsPanel):
 
 	def _getAutoRecognitionModelChoices(self, engine: AbstractEngine | None) -> List[Tuple[str, str]]:
 		# Translators: A choice meaning automatic recognition should use the engine's regular model setting.
-		choices = [("", _("Use regular engine model"))]
+		choices = [("", _("Use the model selected in engine settings"))]
 		if not engine or not engine.isSupported("model"):
 			return choices
 		seenModelNames = {""}
@@ -1310,17 +1310,17 @@ class CustomOCRPanel(SettingsPanel):
 		conf = config.conf["visAwareGeneral"]
 		# Translators: The label for a checkbox to copy recognition results to the clipboard.
 		self.copyToClipboardCheckBox = settingsSizerHelper.addItem(
-			wx.CheckBox(self, label=_("&Copy recognition result to the clipboard")),
+			wx.CheckBox(self, label=_("Copy recognition result to the &clipboard")),
 		)
 		self.copyToClipboardCheckBox.SetValue(conf["copyToClipboard"])
 		# Translators: The label for a checkbox to use a browseable message for text results.
 		self.useBrowseableMessageCheckBox = settingsSizerHelper.addItem(
-			wx.CheckBox(self, label=_("&Use browseable message for text result")),
+			wx.CheckBox(self, label=_("Show text results in a &browsable message")),
 		)
 		self.useBrowseableMessageCheckBox.SetValue(conf["useBrowseableMessage"])
 		# Translators: The label for a checkbox to automatically read recognition results shown as documents.
 		self.autoSayAllOnResultCheckBox = settingsSizerHelper.addItem(
-			wx.CheckBox(self, label=_("Automatically &read recognition result")),
+			wx.CheckBox(self, label=_("Automatically &read recognition result documents")),
 		)
 		self.autoSayAllOnResultCheckBox.SetValue(conf["autoSayAllOnResult"])
 		# Translators: The label for a checkbox to enable verbose debug logging.
@@ -1332,7 +1332,7 @@ class CustomOCRPanel(SettingsPanel):
 		sourceTypeChoices = [description for _name, description in SOURCE_TYPES]
 		# Translators: The label for a checklist of recognition sources available in the cycle command.
 		self.sourceTypesList = settingsSizerHelper.addLabeledControl(
-			_("Recognition &sources available in the Cycle recognition source command:"),
+			_("Recognition &sources included when cycling:"),
 			CustomCheckListBox,
 			choices=sourceTypeChoices,
 		)
@@ -1359,7 +1359,7 @@ class CustomOCRPanel(SettingsPanel):
 		settingsSizerHelper.addItem(wx.StaticLine(self, style=wx.LI_HORIZONTAL))
 
 		# Translators: The label for a group box for NVDACN account settings.
-		nvdacnGroupLabel = _("NVDACN Account (for supported engines like Vivo OCR)")
+		nvdacnGroupLabel = _("NVDACN account (for supported engines like Vivo OCR)")
 		nvdacnGroupSizer = wx.StaticBoxSizer(wx.VERTICAL, self, nvdacnGroupLabel)
 		nvdacnGroupBox = nvdacnGroupSizer.GetStaticBox()
 		nvdacnGroup = BoxSizerHelper(nvdacnGroupBox, sizer=nvdacnGroupSizer)
@@ -1421,9 +1421,9 @@ class CustomOCRPanel(SettingsPanel):
 		if not self.sourceTypesList.GetCheckedItems():
 			self._validationErrorMessageBox(
 				# Translators: Shown when no recognition source is available for the cycle source command.
-				message=_("At least one recognition source must be checked."),
+				message=_("At least one recognition source must be selected."),
 				# Translators: The setting name used in the validation error for the recognition source checklist.
-				option=_("Recognition sources available in the Cycle recognition source command"),
+				option=_("Recognition sources included when cycling"),
 			)
 			return False
 		return super().isValid()

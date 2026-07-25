@@ -39,7 +39,9 @@ def getNvdacnCredentials() -> tuple[str, str]:
 		password = ""
 	if not user or not password:
 		# Translators: An error message if NVDACN credentials are not set.
-		raise AuthenticationError(_("Please configure your NVDACN account in the General OCR settings."))
+		raise AuthenticationError(
+			_("Please configure your NVDACN account in the General panel of Vis Aware settings."),
+		)
 	return user, password
 
 
@@ -99,7 +101,7 @@ def _fetchSignatureFromService(nvdacnUser: str, nvdacnPass: str, signingStringBy
 			errorMessage = result.get("data", "Unknown API error")
 			raise AuthenticationError(
 				# Translators: An NVDACN API error. {message} is the service message and {code} is the error code.
-				_("NVDACN API Error: {message} (Code: {code})").format(
+				_("NVDACN API error: {message} (Code: {code})").format(
 					message=errorMessage,
 					code=result.get("code"),
 				),

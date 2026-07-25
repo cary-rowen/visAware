@@ -45,7 +45,7 @@ class AgentEngine(BaseAgentEngine):
 			TextInputEngineSetting(
 				name="apiKey",
 				# Translators: The label for the Gemini API key used by the Agent.
-				displayNameWithAccelerator=_("API &Key"),
+				displayNameWithAccelerator=_("API &key"),
 			),
 			ChoiceEngineSetting(
 				name="model",

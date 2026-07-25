@@ -446,7 +446,7 @@ class CustomContentRecognizer(BaseRecognizer):
 			TextInputEngineSetting(
 				name="token",
 				# Translators: The label for the PaddleOCR API token field.
-				displayNameWithAccelerator=_("API &Token"),
+				displayNameWithAccelerator=_("API &token"),
 			),
 		]
 		settings.extend(
@@ -649,7 +649,7 @@ class CustomContentRecognizer(BaseRecognizer):
 		"""
 		serviceTypes = OrderedDict(
 			{
-				SERVICE_TYPE_AISTUDIO_ASYNC: _("AI Studio hosted task API (Recommended)"),
+				SERVICE_TYPE_AISTUDIO_ASYNC: _("AI Studio hosted task API (recommended)"),
 				SERVICE_TYPE_AISTUDIO_SYNC: _("AI Studio deployed service"),
 				SERVICE_TYPE_SELF_HOSTED: _("Self-hosted PaddleOCR service"),
 			},
@@ -670,7 +670,7 @@ class CustomContentRecognizer(BaseRecognizer):
 			)
 			if self.serviceType == SERVICE_TYPE_SELF_HOSTED
 			else (
-				(MODEL_PADDLEOCR_VL_1_5, _("PaddleOCR-VL 1.5 (Recommended)")),
+				(MODEL_PADDLEOCR_VL_1_5, _("PaddleOCR-VL 1.5 (recommended)")),
 				(MODEL_PADDLEOCR_VL, _("PaddleOCR-VL")),
 				(MODEL_PP_OCR_V5, _("PP-OCRv5")),
 				(MODEL_PP_STRUCTURE_V3, _("PP-StructureV3")),

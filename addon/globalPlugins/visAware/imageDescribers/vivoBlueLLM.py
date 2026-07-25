@@ -56,7 +56,7 @@ class CustomContentRecognizer(BaseDescriber):
 	# Translators: This is the default prompt sent to the VIVO BlueLLM model.
 	# It guides the model to provide an objective description.
 	_prompt: str = _(
-		"Describe this image in Chinese objectively. "
+		"Describe this image objectively in Chinese. "
 		"Include all visible text (if none, do not mention it). "
 		"Do not include any introductory phrases. "
 		"Avoid subjective descriptions like 'it seems...' or 'it gives a feeling of...'.",
@@ -73,8 +73,8 @@ class CustomContentRecognizer(BaseDescriber):
 		"""
 		temperatureSetting = NumericEngineSetting(
 			name="temperature",
-			# Translators: Label for a setting to control the creativity of the AI model.
-			displayNameWithAccelerator=_("Creativity (&Temperature)"),
+			# Translators: Label for the AI model temperature setting.
+			displayNameWithAccelerator=_("&Temperature"),
 		)
 		temperatureSetting.minVal = 0
 		temperatureSetting.maxVal = 200  # Corresponds to API's 0.0 to 2.0
@@ -89,13 +89,13 @@ class CustomContentRecognizer(BaseDescriber):
 			ChoiceEngineSetting(
 				name="thinkingLevel",
 				# Translators: The label for a setting to control model thinking mode.
-				displayNameWithAccelerator=_("Thinking &Level"),
+				displayNameWithAccelerator=_("Thinking &level"),
 				optionsPropertyName="availableThinkingLevels",
 			),
 			TextInputEngineSetting(
 				"prompt",
 				# Translators: The label for an engine setting to customize the prompt for the vision model.
-				_("&Custom Prompt"),
+				_("Custom &prompt"),
 			),
 			self.autoRecognitionPromptSetting(),
 			temperatureSetting,
@@ -277,7 +277,7 @@ class CustomContentRecognizer(BaseDescriber):
 			)
 			# Translators: A VIVO API error message. {message} is the service message and {code} is the error code.
 			raise ApiError(
-				_("Vivo API Error: {message} (Code: {code})").format(
+				_("Vivo API error: {message} (Code: {code})").format(
 					message=errorMessage,
 					code=errorCode,
 				),
@@ -388,7 +388,7 @@ class CustomContentRecognizer(BaseDescriber):
 			errorCode = responseJson.get("code")
 			log.error(f"VIVO API returned an error: {errorMessage} (Code: {errorCode})")
 			# Translators: A VIVO API error message. {message} is the service message and {code} is the error code.
-			return _("Vivo API Error: {message} (Code: {code})").format(
+			return _("Vivo API error: {message} (Code: {code})").format(
 				message=errorMessage,
 				code=errorCode,
 			)

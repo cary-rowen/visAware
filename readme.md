@@ -1,30 +1,166 @@
 # Vis Aware
 
-Vis Aware is an NVDA add-on for OCR, image description, automatic recognition,
-and AI-assisted computer operation.
+Vis Aware is an NVDA add-on for OCR, AI-powered image description, automatic
+recognition, and AI-assisted computer control.
 
 Vis Aware requires NVDA 2026.1 or later. Most hosted engines require an
-Internet connection and service credentials. Ollama can use a local or hosted
-service.
+Internet connection and service credentials. Ollama is used for local
+self-hosting (for example, Google Gemma).
+
+## Quick start
+
+1. Open `NVDA menu > Preferences > Vis Aware settings...`. In **General**,
+   you can sign in to your NVDA Chinese Community (www.nvdacn.com) account to
+   use the related free community services. Then select and configure other
+   engines as needed in the corresponding **OCR**, **Image description**, or
+   **AI Agent** panel.
+2. Press `NVDA+alt+1` to select a mode (capability type): **OCR**, **Image
+   description**, or **AI Agent**.
+3. Press `NVDA+alt+2` to select an engine supported by that mode. Choose an
+   engine that you configured in step 1.
+4. Move the navigator object to the content you want to recognize, or press
+   `NVDA+alt+3` to select another recognition source (for example, an image or
+   image file on the clipboard).
+5. Press `NVDA+alt+space` once to perform recognition using the selected
+   capability or start or stop the Agent. For regular recognition:
+
+   - Press once to present the result in an NVDA recognition result document.
+     For OCR results, you can use `Enter` or `Space` to click the coordinates
+     corresponding to the text; this is useful when recognizing a window.
+   - The behavior of pressing twice depends on whether **Show text results in a
+     browsable message** is selected in **General** settings. If selected, the
+     result is presented in an NVDA browse mode dialog, which is suitable for
+     mathematical formulas, tables, or structured content that requires
+     Markdown rendering. If not selected, NVDA only announces the recognition
+     result and does not display a dialog.
 
 ## Modes and recognition sources
 
 Vis Aware provides three modes:
 
-* **OCR Engines** extract text from an image.
-* **Image Describer Engines** describe visual content. Supported engines can
-  answer follow-up questions about the previous description.
+* **OCR** extracts text from an image.
+* **Image description** describes visual content. Supported engines can answer
+  follow-up questions about the previous description.
 * **AI Agent** analyzes the screen and performs computer actions for a task.
 
 OCR and image description can use these recognition sources:
 
 * Navigator object
-* The whole screen
-* Current foreground window
-* Image data or image file in clipboard
+* Whole screen
+* Foreground window
+* Image or image file on the clipboard
 
-The AI Agent mode uses the screen directly and does not use the selected
+AI Agent mode captures the full screen directly and does not use the selected
 recognition source.
+
+## Commands
+
+The following commands have default gestures:
+
+| Command | Default gesture |
+| --- | --- |
+| Perform recognition using the current settings | `NVDA+alt+space` |
+| Ask a follow-up question about the previous image description | `NVDA+alt+q` |
+| Cycle through recognition modes | `NVDA+alt+1` |
+| Cycle through engines for the current mode | `NVDA+alt+2` |
+| Cycle through recognition sources | `NVDA+alt+3` |
+
+The following commands have no default gesture:
+
+* Describes the content of the current navigator object
+* Describes images on the clipboard
+* Recognizes the content of the current navigator object using OCR
+* Recognizes text in images on the clipboard using OCR
+* Shows the previous recognition result
+* Cancels the current recognition
+
+After assigning a gesture to **Describes images on the clipboard**, press it
+once to present the result in an NVDA recognition result document. Press it
+twice in quick succession to show the result in a browsable message or have
+NVDA announce it, depending on the **Show text results in a browsable message**
+setting.
+
+## Recognition results
+
+When OCR results include coordinates, pressing `enter` or `space` on text in
+the recognition result document clicks the corresponding location in the
+recognized screen area.
+
+Recognition results can be displayed in an NVDA virtual document or, depending
+on the setting, in a browse mode dialog. Browse mode renders supported Markdown
+and mathematical formulas. Results can also be copied to the clipboard.
+
+Only the previous recognition result from the current NVDA session is retained.
+For image description engines that support follow-up questions, the follow-up
+question command opens a multi-turn dialog and streams spoken answers when
+supported. In that dialog, `control+enter` sends a question and `escape`
+cancels the request or closes the dialog. Use **View formatted answer** to view
+the formatted answer in browse mode.
+
+Follow-up questions are supported by Google Gemini, Google Gemma, VIVO BlueLLM
+Vision, and Ollama Vision. Outside the conversation dialog, streaming output is
+available only when browse mode is not in use.
+
+## Automatic recognition
+
+Automatic recognition is off by default. In the **Automatic recognition**
+panel, choose OCR or image description, then choose the current engine or a
+specific enabled engine. The prompt and model fields override that engine only
+for automatic recognition. Leave the prompt blank to use the engine's regular
+prompt, and choose **Use the model selected in engine settings** to follow its
+regular model. When supported, use **Fetch models** to load available model
+names.
+
+Automatic recognition runs in the background when the system focus, browse
+mode cursor, or navigator object moves to a supported graphic control. The
+result is announced automatically and saved as the previous result; follow-up
+questions are available when supported by the engine.
+
+For web graphics, Vis Aware normally uses the image's URL and uses an object
+screenshot instead when no URL is available. **Prefer screenshots for web
+images** recognizes the content shown on the screen first and falls back to the
+URL if a screenshot cannot be captured.
+
+## AI Agent mode
+
+The AI Agent asks for a task, starts from the foreground window, and can
+operate across windows. It can click, type, press keys, scroll, drag and drop,
+navigate, wait, and ask you for information when needed. Actions are not
+confirmed one by one, so monitor the session and stop it when necessary.
+
+Each AI Agent step sends the selected service a full-screen screenshot, which
+can include content from other windows. Avoid running the AI Agent while
+sensitive information is visible on the screen.
+
+The AI Agent cannot start while Screen Curtain is enabled.
+
+## Settings
+
+Open `NVDA menu > Preferences > Vis Aware settings...`.
+
+The settings dialog contains these panels:
+
+* **General**: result output, clipboard copying, automatic reading, debug
+  logging, the sources included when cycling, the Vis Aware mode, and NVDACN
+  account details.
+* **Automatic recognition**: automatic recognition type, engine, prompt,
+  model, fetching model names, and web-image screenshot preference.
+* **OCR**, **Image description**, and **AI Agent**: the current engine, engine
+  enablement, and settings provided by each engine.
+
+Disabled engines are skipped during normal use and engine cycling. At least one
+engine must remain enabled in each mode.
+
+For PaddleOCR / PaddleOCR-VL, the OCR settings support an AI Studio hosted task
+API, an AI Studio deployed service, or a self-hosted PaddleOCR service.
+
+For Ollama engines, enter a full API URL or a host and port such as
+`localhost:11434`. The default API root is `http://localhost:11434/api`. Use
+**Fetch models** to load model names and then choose a model. If no model is
+selected, the first model returned by Ollama is used. The optional API key is
+sent as an `Authorization: Bearer` token. Ollama engines require a
+vision-capable model, such as Gemma 4; Ollama OCR provides screen coordinates
+only when the model returns valid structured OCR data.
 
 ## Included engines
 
@@ -60,141 +196,18 @@ points to the local service, Vis Aware sends images to that local service. If
 you use a remote Ollama address hosted by someone else, data is sent to that
 remote service.
 
-Use **Ollama Vision** for image description, OCR, and recognition of charts or
-mathematical formulas. When text results are shown in a browsable message,
-supported formulas and tables are available for navigation with a screen reader.
-
-The Google Gemma engine currently provides **Gemma 4 26B A4B IT** (recommended,
-faster) and **Gemma 4 31B IT** (higher quality, slower). Ollama model names
-depend on the models installed in Ollama; use **Fetch models** to choose one.
-
-## Commands
-
-The following commands have default gestures:
-
-| Command | Default gesture |
-| --- | --- |
-| Run Vis Aware using the current settings | `NVDA+alt+space` |
-| Ask a follow-up question about the previous image description | `NVDA+alt+q` |
-| Cycle Vis Aware mode | `NVDA+alt+1` |
-| Cycle the engine for the current mode | `NVDA+alt+2` |
-| Cycle the recognition source | `NVDA+alt+3` |
-
-The following commands have no default gesture:
-
-* Describe the content of the current navigator object.
-* Describe clipboard images.
-* Recognize the content of the current navigator object with OCR.
-* Recognize text in a clipboard image with OCR.
-* Show the previous recognition result.
-* Cancel the current recognition.
-
-After assigning a gesture to **Describe clipboard images**, press it
-once to open a recognition result document or twice in quick succession for a
-plain-text result.
-
-Assign or change gestures in the `NVDA menu > Preferences > Input gestures...`
-dialog, under the `Vis Aware` category.
-
-In OCR and image description modes, the main command uses the selected engine
-and source. Press it once to open an NVDA recognition result document, or twice
-in quick succession for a plain-text result. In AI Agent mode, it opens a task
-prompt; pressing the command again while the agent is running stops it.
-
-The source cycling command is unavailable in AI Agent mode. It follows the
-fixed order listed above and includes only the sources checked in the General
-settings panel.
-
-## Recognition results
-
-OCR results with coordinates can be activated from the recognition result
-document: when coordinates are available, press `enter` or `space` to activate
-(normally click) the text at the cursor.
-
-Plain-text results are announced directly by default, or shown in a browsable
-message when that option is enabled. Browsable messages render supported
-Markdown and mathematical formulas. Results can also be copied to the
-clipboard, and recognition result documents can be read automatically.
-
-Only the previous recognition result from the current NVDA session is retained.
-The follow-up question command opens a multi-turn dialog for supported image
-description engines and streams spoken answers when supported. In that dialog,
-`control+enter` sends a question and `escape` cancels the request or closes the
-dialog. Use **Open rendered answer** to view the answer as a formatted
-browsable message.
-
-Follow-up questions are supported by Google Gemini, Google Gemma, VIVO BlueLLM
-Vision, and Ollama Vision. For main recognition results, streaming speech is
-supported by Google Gemini image description, VIVO BlueLLM Vision, Ollama
-Vision, and Ollama OCR when streaming is enabled and browsable messages are
-not in use.
-
-## Automatic recognition
-
-Automatic recognition is off by default. In the Automatic Recognition panel,
-choose OCR or image description, then choose the current engine or a specific
-enabled engine. When supported, you can set a separate prompt and model and
-fetch the available model names.
-
-Automatic recognition runs in the background when the system focus, browse
-mode cursor, or navigator object moves to a supported image, graphic, or
-image-like control. The result is announced automatically and saved as the
-previous result; follow-up questions are available when supported by the
-engine.
-
-For web graphics, Vis Aware normally uses the image URL exposed by the object
-and falls back to an object screenshot when no usable URL is available.
-**Prefer screenshots for web image objects** uses the visible rendering first
-and falls back to the URL if the screenshot cannot be captured.
-
-## AI Agent mode
-
-The AI Agent asks for a task, starts from the current foreground state, and can
-operate across windows. It can click, type, press keys, scroll, drag and drop,
-navigate, wait, and ask you for information when needed. Actions are not
-confirmed one by one, so monitor the session and stop it when necessary.
-
-The AI Agent cannot start while Screen Curtain is enabled.
-
-## Settings
-
-Open `NVDA menu > Preferences > Open Vis Aware settings`.
-
-The settings dialog contains these panels:
-
-* **General**: result output, clipboard copying, automatic reading, debug
-  logging, the sources included in source cycling, the Vis Aware mode, and
-  NVDACN account details.
-* **Automatic Recognition**: automatic recognition type, engine, prompt,
-  model, fetching model names, and web-image screenshot preference.
-* **OCR**, **Image Describer**, and **Agent**: the current engine, engine
-  enablement, and settings provided by each engine.
-
-Disabled engines are skipped during normal use and engine cycling. At least one
-engine must remain enabled in each mode.
-
-For PaddleOCR / PaddleOCR-VL, the OCR settings support an AI Studio hosted task
-API, an AI Studio deployed service, or a self-hosted PaddleOCR service.
-
-For Ollama engines, enter a full API URL or a host and port such as
-`localhost:11434`. The default API root is `http://localhost:11434/api`. Use
-**Fetch models** to load model names and then choose a model. If no model is
-selected, the first model returned by Ollama is used. The optional API key is
-sent as an `Authorization: Bearer` token. Ollama engines require a
-vision-capable model, such as Gemma 4; Ollama OCR provides screen coordinates
-only when the model returns valid structured OCR data.
-
 ## Data and credentials
 
 Recognition sends the selected image and, when applicable, a prompt to the
 service configured for the selected engine. Each AI Agent step sends a
-screenshot of the complete screen area across all displays to the selected
-service; the screenshot can include other windows. Review the service's data
-policy and avoid sending sensitive content.
+full-screen screenshot to the selected service; the screenshot can include
+other windows. Review the service's data policy and avoid sending sensitive
+content.
 
 Manual recognition from a source other than the clipboard requires Screen
 Curtain to be disabled. The NVDACN password is protected with Windows DPAPI.
-Other saved API keys and tokens are stored in the NVDA configuration.
+Other saved API keys are stored unencrypted in the NVDA configuration. Be
+mindful of data security before creating or sharing a portable copy of NVDA.
 
 ## License
 

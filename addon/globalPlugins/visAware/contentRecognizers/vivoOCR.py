@@ -43,7 +43,7 @@ class CustomContentRecognizer(BaseRecognizer):
 			ChoiceEngineSetting(
 				"recognitionMode",
 				# Translators: The label for the recognition mode setting.
-				_("Recognition Mode"),
+				_("Recognition &mode"),
 				optionsPropertyName="availableRecognitionModes",
 			),
 		]
@@ -120,7 +120,11 @@ class CustomContentRecognizer(BaseRecognizer):
 		responseJson = self._convertToJson(result)
 		if responseJson.get("error_code") != 0:
 			errorMsg = responseJson.get("error_msg", "Unknown Vivo API error")
-			return f"Vivo API Error: {errorMsg} (Code: {responseJson.get('error_code')})"
+			# Translators: A Vivo API error. {message} is the service message and {code} is the error code.
+			return _("Vivo API error: {message} (Code: {code})").format(
+				message=errorMsg,
+				code=responseJson.get("error_code"),
+			)
 		return False
 
 	def extractText(self, apiResult: dict) -> str:

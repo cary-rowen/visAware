@@ -64,5 +64,5 @@ class AgentPanel(AbstractEngineSettingsPanel):
 	"""Settings panel for computer-use agent engines."""
 
 	# Translators: The title of the Agent settings panel.
-	title = _("Agent")
+	title = _("AI Agent")
 	handler = AgentHandler
