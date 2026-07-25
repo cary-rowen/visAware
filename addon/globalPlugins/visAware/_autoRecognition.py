@@ -49,7 +49,7 @@ DOWNLOAD_CHUNK_SIZE = 16 * 1024
 DESCRIPTION_DEBOUNCE_MS = 200
 START_TONE_HZ = 230
 START_TONE_LENGTH_MS = 30
-SCREENSHOT_OBJECT_NAMES = frozenset(("", "图片", "图形", "图像"))
+SCREENSHOT_OBJECT_NAMES = frozenset(("", "图片", "图形", "图像", "Image"))
 SCREENSHOT_OBJECT_ROLES = frozenset((controlTypes.Role.BUTTON, controlTypes.Role.LISTITEM))
 WEB_OBJECT_MODULE_PREFIXES = (
 	"NVDAObjects.IAccessible.mozilla",
