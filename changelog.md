@@ -1,4 +1,4 @@
-### 0.6.3
+### 0.6.4
 
 * Improved formula rendering in HTML and PaddleOCR results.
 * Fixed AI Agent text input and automatic recognition on English interfaces.

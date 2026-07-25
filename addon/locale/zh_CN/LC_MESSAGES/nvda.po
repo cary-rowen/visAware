@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 'customOCR' '0.1.1-dev'\n"
 "Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
-"POT-Creation-Date: 2026-07-26 00:14+0800\n"
+"POT-Creation-Date: 2026-07-26 00:22+0800\n"
 "PO-Revision-Date: 2025-11-02 16:14+0800\n"
 "Last-Translator: Larry Wang <larry.wang.801@gmail.com>\n"
 "Language-Team: \n"
@@ -1253,65 +1253,65 @@ msgstr "无法刷新令牌。服务器返回的响应无效。"
 msgid "Token was expired, please try again."
 msgstr "令牌已过期，请重试。"
 
-#: addon\globalPlugins\visAware\contentRecognizers\baiduOCR.py:210
+#: addon\globalPlugins\visAware\contentRecognizers\baiduOCR.py:211
 #, python-brace-format
 msgid "Unknown error code: {code}"
 msgstr "未知错误代码：{code}"
 
 #. Translators: An error message for Baidu OCR.
-#: addon\globalPlugins\visAware\contentRecognizers\baiduOCR.py:301
+#: addon\globalPlugins\visAware\contentRecognizers\baiduOCR.py:302
 msgid "Unknown error"
 msgstr "未知错误"
 
-#: addon\globalPlugins\visAware\contentRecognizers\baiduOCR.py:302
+#: addon\globalPlugins\visAware\contentRecognizers\baiduOCR.py:303
 msgid "Service temporarily unavailable"
 msgstr "服务暂时不可用"
 
-#: addon\globalPlugins\visAware\contentRecognizers\baiduOCR.py:303
+#: addon\globalPlugins\visAware\contentRecognizers\baiduOCR.py:304
 msgid "Unsupported API endpoint"
 msgstr "不支持的 API 端点"
 
-#: addon\globalPlugins\visAware\contentRecognizers\baiduOCR.py:304
+#: addon\globalPlugins\visAware\contentRecognizers\baiduOCR.py:305
 msgid "API request limit reached"
 msgstr "已达到 API 请求上限"
 
-#: addon\globalPlugins\visAware\contentRecognizers\baiduOCR.py:305
+#: addon\globalPlugins\visAware\contentRecognizers\baiduOCR.py:306
 msgid "Daily request limit reached"
 msgstr "已达到每日请求上限"
 
-#: addon\globalPlugins\visAware\contentRecognizers\baiduOCR.py:306
+#: addon\globalPlugins\visAware\contentRecognizers\baiduOCR.py:307
 msgid "QPS request limit reached"
 msgstr "已达到 QPS 请求上限"
 
-#: addon\globalPlugins\visAware\contentRecognizers\baiduOCR.py:307
+#: addon\globalPlugins\visAware\contentRecognizers\baiduOCR.py:308
 msgid "Total request limit reached"
 msgstr "已达到请求总数上限"
 
-#: addon\globalPlugins\visAware\contentRecognizers\baiduOCR.py:308
+#: addon\globalPlugins\visAware\contentRecognizers\baiduOCR.py:309
 msgid "Invalid parameter"
 msgstr "无效参数"
 
-#: addon\globalPlugins\visAware\contentRecognizers\baiduOCR.py:309
+#: addon\globalPlugins\visAware\contentRecognizers\baiduOCR.py:310
 msgid "Access token invalid or expired"
 msgstr "访问令牌无效或已过期"
 
-#: addon\globalPlugins\visAware\contentRecognizers\baiduOCR.py:310
+#: addon\globalPlugins\visAware\contentRecognizers\baiduOCR.py:311
 msgid "Access token expired"
 msgstr "访问令牌已过期"
 
-#: addon\globalPlugins\visAware\contentRecognizers\baiduOCR.py:311
+#: addon\globalPlugins\visAware\contentRecognizers\baiduOCR.py:312
 msgid "Empty image"
 msgstr "图像为空"
 
-#: addon\globalPlugins\visAware\contentRecognizers\baiduOCR.py:312
+#: addon\globalPlugins\visAware\contentRecognizers\baiduOCR.py:313
 msgid "Image format error"
 msgstr "图像格式错误"
 
-#: addon\globalPlugins\visAware\contentRecognizers\baiduOCR.py:313
+#: addon\globalPlugins\visAware\contentRecognizers\baiduOCR.py:314
 msgid "Image size error"
 msgstr "图像尺寸错误"
 
-#: addon\globalPlugins\visAware\contentRecognizers\baiduOCR.py:314
+#: addon\globalPlugins\visAware\contentRecognizers\baiduOCR.py:315
 msgid "Image recognize error"
 msgstr "图像识别错误"
 
@@ -1825,14 +1825,14 @@ msgstr "为 NVDA 提供 OCR、AI 图像描述、自动识别和 AI 辅助计算�
 #. Translators: what's new content for the add-on version to be shown in the add-on store
 #: buildVars.py:35
 msgid ""
-"### 0.6.3\n"
+"### 0.6.4\n"
 "\n"
 "* Improved formula rendering in HTML and PaddleOCR results.\n"
 "* Fixed AI Agent text input and automatic recognition on English "
 "interfaces.\n"
 "* Improved English and Simplified Chinese UI text and documentation."
 msgstr ""
-"### 0.6.3\n"
+"### 0.6.4\n"
 "\n"
 "* 改进 HTML 和 PaddleOCR 结果中的公式渲染。\n"
 "* 修复 AI Agent 文本输入以及英文界面下的自动识别。\n"

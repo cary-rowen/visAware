@@ -29,10 +29,10 @@ addon_info = AddonInfo(
 	# Translators: Long description to be shown for this add-on on add-on information from add-on store
 	addon_description=_("""NVDA add-on for OCR, AI-powered image description, automatic recognition, and AI-assisted computer control."""),
 	# version
-	addon_version="0.6.3",
+	addon_version="0.6.4",
 	# Brief changelog for this version
 	# Translators: what's new content for the add-on version to be shown in the add-on store
-	addon_changelog=_("""### 0.6.3
+	addon_changelog=_("""### 0.6.4
 
 * Improved formula rendering in HTML and PaddleOCR results.
 * Fixed AI Agent text input and automatic recognition on English interfaces.
