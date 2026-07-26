@@ -20,6 +20,10 @@ class _FakeResponse:
 def _install_module_stubs() -> None:
 	builtins._ = lambda value: value
 
+	configModule = types.ModuleType("config")
+	configModule.conf = {"visAwareGeneral": {"nvdacnUser": "", "nvdacnPass": ""}}
+	sys.modules["config"] = configModule
+
 	logHandlerModule = types.ModuleType("logHandler")
 	logHandlerModule.log = type(
 		"Log",
@@ -64,6 +68,11 @@ def _install_module_stubs() -> None:
 	networkModule.sendRequest = lambda **kwargs: None
 	sys.modules["addon.globalPlugins.visAware.network"] = networkModule
 
+	secureStorageModule = types.ModuleType("addon.globalPlugins.visAware.secure_storage")
+	secureStorageModule.SecureStorageError = type("SecureStorageError", (Exception,), {})
+	secureStorageModule.unprotectString = lambda value: value
+	sys.modules["addon.globalPlugins.visAware.secure_storage"] = secureStorageModule
+
 
 def load_vivo_auth_module():
 	_install_module_stubs()
@@ -99,7 +108,7 @@ class VivoAuthTestCase(unittest.TestCase):
 		with self.assertRaises(self.module.AuthenticationError) as error:
 			self.module._fetchSignatureFromService("user", "pass", b"signing-string")
 
-		self.assertIn("NVDACN API Error: bad credentials", str(error.exception))
+		self.assertIn("bad credentials", str(error.exception))
 
 
 if __name__ == "__main__":

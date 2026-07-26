@@ -96,6 +96,11 @@ class _BooleanEngineSetting(_EngineSetting):
 
 class _BaseRecognizer:
 	configSectionName = "ocr"
+	_autoRecognitionModel = ""
+
+	@property
+	def autoRecognitionModel(self) -> str:
+		return self._autoRecognitionModel
 
 	@staticmethod
 	def generateStringSettings(settingsDict: dict) -> dict:
