@@ -1,3 +1,9 @@
+### 0.6.5
+
+* Improved settings and follow-up dialog layouts, including high-DPI scaling.
+* Improved editing of long custom and automatic-recognition prompts.
+* Improved follow-up questions so initial descriptions and latest answers can be viewed as formatted content.
+
 ### 0.6.4
 
 * Improved formula rendering in HTML and PaddleOCR results.

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 'customOCR' '0.1.1-dev'\n"
 "Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
-"POT-Creation-Date: 2026-07-26 23:06+0800\n"
+"POT-Creation-Date: 2026-07-26 23:56+0800\n"
 "PO-Revision-Date: 2025-11-02 16:14+0800\n"
 "Last-Translator: Larry Wang <larry.wang.801@gmail.com>\n"
 "Language-Team: \n"
@@ -19,59 +19,59 @@ msgid "Engine settings"
 msgstr "引擎设置"
 
 #. Translators: The default title for an engine settings panel.
-#: addon\globalPlugins\visAware\abstractEngine.py:893
+#: addon\globalPlugins\visAware\abstractEngine.py:909
 msgid "Engine"
 msgstr "引擎"
 
 #. Translators: The label for the group box to select an engine.
-#: addon\globalPlugins\visAware\abstractEngine.py:912
+#: addon\globalPlugins\visAware\abstractEngine.py:928
 msgid "Engines"
 msgstr "引擎"
 
 #. Translators: The label for a button to change the current engine.
-#: addon\globalPlugins\visAware\abstractEngine.py:928
+#: addon\globalPlugins\visAware\abstractEngine.py:944
 msgid "C&hange..."
 msgstr "修改(&H)..."
 
 #. Translators: The label for a checkbox that enables or disables the selected engine.
-#: addon\globalPlugins\visAware\abstractEngine.py:935
+#: addon\globalPlugins\visAware\abstractEngine.py:951
 msgid "&Enable this engine"
 msgstr "启用此引擎(&E)"
 
-#: addon\globalPlugins\visAware\abstractEngine.py:1010
-#: addon\globalPlugins\visAware\abstractEngine.py:1150
-#: addon\globalPlugins\visAware\abstractEngine.py:1268
+#: addon\globalPlugins\visAware\abstractEngine.py:1026
+#: addon\globalPlugins\visAware\abstractEngine.py:1166
+#: addon\globalPlugins\visAware\abstractEngine.py:1284
 #, python-format
 msgid "Could not load the %s engine."
 msgstr "无法加载 %s 引擎。"
 
 #. Translators: The title of an error dialog.
-#: addon\globalPlugins\visAware\abstractEngine.py:1012
-#: addon\globalPlugins\visAware\abstractEngine.py:1152
-#: addon\globalPlugins\visAware\abstractEngine.py:1270
+#: addon\globalPlugins\visAware\abstractEngine.py:1028
+#: addon\globalPlugins\visAware\abstractEngine.py:1168
+#: addon\globalPlugins\visAware\abstractEngine.py:1286
 msgid "Engine Error"
 msgstr "引擎加载出错"
 
 #. Translators: A warning shown when trying to disable every engine in a category.
-#: addon\globalPlugins\visAware\abstractEngine.py:1075
+#: addon\globalPlugins\visAware\abstractEngine.py:1091
 msgid "At least one engine must remain enabled."
 msgstr "必须至少保留一个启用的引擎。"
 
 #. Translators: The title of a warning shown for invalid engine enablement settings.
-#: addon\globalPlugins\visAware\abstractEngine.py:1077
-#: addon\globalPlugins\visAware\abstractEngine.py:1097
-#: addon\globalPlugins\visAware\abstractEngine.py:1119
+#: addon\globalPlugins\visAware\abstractEngine.py:1093
+#: addon\globalPlugins\visAware\abstractEngine.py:1113
+#: addon\globalPlugins\visAware\abstractEngine.py:1135
 msgid "Engine Configuration"
 msgstr "引擎配置"
 
-#: addon\globalPlugins\visAware\abstractEngine.py:1091
+#: addon\globalPlugins\visAware\abstractEngine.py:1107
 #, python-brace-format
 msgid ""
 "The selected engine {engine} is disabled. Please choose another enabled "
 "engine, or re-enable it."
 msgstr "所选引擎 {engine} 已禁用。请选择另一个已启用的引擎，或重新启用它。"
 
-#: addon\globalPlugins\visAware\abstractEngine.py:1113
+#: addon\globalPlugins\visAware\abstractEngine.py:1129
 #, python-brace-format
 msgid ""
 "The current engine {engine} is disabled. Please choose another enabled "
@@ -79,23 +79,23 @@ msgid ""
 msgstr "当前引擎 {engine} 已禁用。请选择另一个已启用的引擎，或重新启用它。"
 
 #. Translators: The title of the engine selection dialog.
-#: addon\globalPlugins\visAware\abstractEngine.py:1176
+#: addon\globalPlugins\visAware\abstractEngine.py:1192
 msgid "Select Engine"
 msgstr "选择引擎"
 
 #. Translators: The label for the choice control to select an engine.
-#: addon\globalPlugins\visAware\abstractEngine.py:1213
+#: addon\globalPlugins\visAware\abstractEngine.py:1229
 msgid "&Engines:"
 msgstr "引擎(&E)："
 
 #. Translators: A disabled engine option in the engine selection dialog.
-#: addon\globalPlugins\visAware\abstractEngine.py:1254
+#: addon\globalPlugins\visAware\abstractEngine.py:1270
 #, python-brace-format
 msgid "{engine} (disabled)"
 msgstr "{engine}（已禁用）"
 
 #. Translators: An enabled engine option in the engine selection dialog.
-#: addon\globalPlugins\visAware\abstractEngine.py:1256
+#: addon\globalPlugins\visAware\abstractEngine.py:1272
 #, python-brace-format
 msgid "{engine} (enabled)"
 msgstr "{engine}（已启用）"
@@ -137,8 +137,8 @@ msgstr "关闭(&C)"
 #. Translators: A choice meaning automatic recognition should use image description engines.
 #: addon\globalPlugins\visAware\askDialog.py:128
 #: addon\globalPlugins\visAware\recogHandler.py:42
-#: addon\globalPlugins\visAware\recogHandler.py:970
-#: addon\globalPlugins\visAware\recogHandler.py:999
+#: addon\globalPlugins\visAware\recogHandler.py:974
+#: addon\globalPlugins\visAware\recogHandler.py:1003
 msgid "Image description"
 msgstr "图像描述"
 
@@ -304,8 +304,8 @@ msgstr "网络连接失败。请检查您的网络连接并重试。"
 #. Translators: The title of the OCR engine settings panel.
 #. Translators: A choice meaning automatic recognition should use OCR engines.
 #: addon\globalPlugins\visAware\recogHandler.py:41
-#: addon\globalPlugins\visAware\recogHandler.py:799
-#: addon\globalPlugins\visAware\recogHandler.py:1001
+#: addon\globalPlugins\visAware\recogHandler.py:803
+#: addon\globalPlugins\visAware\recogHandler.py:1005
 msgid "OCR"
 msgstr "OCR"
 
@@ -371,132 +371,131 @@ msgstr "调整尺寸后的图像像素数仍然过多。"
 msgid "Upload image quality"
 msgstr "上传图像的质量"
 
-#. Translators: The label for an engine setting to override the prompt used for automatic recognition.
-#: addon\globalPlugins\visAware\recogHandler.py:776
+#: addon\globalPlugins\visAware\recogHandler.py:778
 msgid "Automatic recognition &prompt"
 msgstr "自动识别提示词(&P)"
 
 #. Translators: The label for an engine setting to override the model used for automatic recognition.
-#: addon\globalPlugins\visAware\recogHandler.py:781
+#: addon\globalPlugins\visAware\recogHandler.py:785
 msgid "Automatic recognition &model"
 msgstr "自动识别模型(&M)"
 
 #. Translators: Reported when the previous image is unavailable for a follow-up question.
-#: addon\globalPlugins\visAware\recogHandler.py:944
+#: addon\globalPlugins\visAware\recogHandler.py:948
 msgid "The previous image is no longer available for follow-up questions."
 msgstr "上一次识别的图像已不可用于追问。"
 
 #. Translators: An error message for a blank follow-up answer.
-#: addon\globalPlugins\visAware\recogHandler.py:951
+#: addon\globalPlugins\visAware\recogHandler.py:955
 msgid "Answer is blank."
 msgstr "回答为空。"
 
 #. Translators: A choice meaning automatic recognition is disabled.
-#: addon\globalPlugins\visAware\recogHandler.py:997
+#: addon\globalPlugins\visAware\recogHandler.py:1001
 msgid "Off"
 msgstr "关闭"
 
 #. Translators: A choice for automatic recognition to use the current image description engine.
-#: addon\globalPlugins\visAware\recogHandler.py:1022
+#: addon\globalPlugins\visAware\recogHandler.py:1026
 msgid "Current image description engine"
 msgstr "当前图像描述引擎"
 
 #. Translators: A choice for automatic recognition to use the current OCR engine.
-#: addon\globalPlugins\visAware\recogHandler.py:1033
+#: addon\globalPlugins\visAware\recogHandler.py:1037
 msgid "Current OCR engine"
 msgstr "当前 OCR 引擎"
 
 #. Translators: The title of the automatic recognition settings panel for the add-on.
-#: addon\globalPlugins\visAware\recogHandler.py:1076
+#: addon\globalPlugins\visAware\recogHandler.py:1080
 msgid "Automatic recognition"
 msgstr "自动识别"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1094
+#: addon\globalPlugins\visAware\recogHandler.py:1098
 msgid "Automatic recognition &type:"
 msgstr "自动识别类型(&T)："
 
-#: addon\globalPlugins\visAware\recogHandler.py:1102
+#: addon\globalPlugins\visAware\recogHandler.py:1106
 msgid "Automatic recognition &engine:"
 msgstr "自动识别引擎(&E)："
 
-#: addon\globalPlugins\visAware\recogHandler.py:1110
+#: addon\globalPlugins\visAware\recogHandler.py:1115
 msgid "Automatic recognition &prompt:"
 msgstr "自动识别提示词(&P)："
 
-#: addon\globalPlugins\visAware\recogHandler.py:1117
+#: addon\globalPlugins\visAware\recogHandler.py:1130
 msgid "Automatic recognition &model:"
 msgstr "自动识别模型(&M)："
 
 #. Translators: The label for a button that fetches model names.
 #. Translators: The label for the button that fetches OpenAI model names.
 #. Translators: The label for the button that fetches Ollama model names.
-#: addon\globalPlugins\visAware\recogHandler.py:1125
+#: addon\globalPlugins\visAware\recogHandler.py:1138
 #: addon\globalPlugins\visAware\agent\engines\openai.py:66
 #: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:132
 #: addon\globalPlugins\visAware\imageDescribers\ollama.py:94
 msgid "&Fetch models"
 msgstr "获取模型(&F)"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1135
+#: addon\globalPlugins\visAware\recogHandler.py:1148
 msgid "Prefer screenshots for &web images"
 msgstr "优先截取网页图像(&W)"
 
 #. Translators: A choice meaning automatic recognition should use the engine's regular model setting.
-#: addon\globalPlugins\visAware\recogHandler.py:1213
+#: addon\globalPlugins\visAware\recogHandler.py:1226
 msgid "Use the model selected in engine settings"
 msgstr "使用引擎设置中选择的模型"
 
 #. Translators: The title of the general settings panel for the add-on.
-#: addon\globalPlugins\visAware\recogHandler.py:1308
+#: addon\globalPlugins\visAware\recogHandler.py:1321
 msgid "General"
 msgstr "常规"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1320
+#: addon\globalPlugins\visAware\recogHandler.py:1333
 msgid "Copy recognition result to the &clipboard"
 msgstr "将识别结果复制到剪贴板(&C)"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1325
+#: addon\globalPlugins\visAware\recogHandler.py:1338
 msgid "Show text results in a &browsable message"
 msgstr "在浏览模式下显示文本结果(&B)"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1330
+#: addon\globalPlugins\visAware\recogHandler.py:1343
 msgid "Automatically &read recognition result documents"
 msgstr "自动朗读识别结果文档(&R)"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1335
+#: addon\globalPlugins\visAware\recogHandler.py:1348
 msgid "&Enable more verbose logging for debug purposes"
 msgstr "启用更详细的日志记录方便调试(&E)"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1342
+#: addon\globalPlugins\visAware\recogHandler.py:1355
 msgid "Recognition &sources included when cycling:"
 msgstr "循环切换时包含的识别来源(&S)："
 
-#: addon\globalPlugins\visAware\recogHandler.py:1359
+#: addon\globalPlugins\visAware\recogHandler.py:1372
 msgid "Vis Aware &mode:"
 msgstr "Vis Aware 模式(&M)："
 
 #. Translators: The label for a group box for NVDACN account settings.
-#: addon\globalPlugins\visAware\recogHandler.py:1369
+#: addon\globalPlugins\visAware\recogHandler.py:1382
 msgid "NVDACN account (for supported engines like Vivo OCR)"
 msgstr "NVDACN 账户（适用于 Vivo OCR 等支持的引擎）"
 
 #. Translators: The label for the username text control in the NVDACN settings.
-#: addon\globalPlugins\visAware\recogHandler.py:1376
+#: addon\globalPlugins\visAware\recogHandler.py:1389
 msgid "Username:"
 msgstr "用户名："
 
 #. Translators: The label for the password text control in the NVDACN settings.
-#: addon\globalPlugins\visAware\recogHandler.py:1385
+#: addon\globalPlugins\visAware\recogHandler.py:1398
 msgid "Password:"
 msgstr "密码："
 
 #. Translators: Shown when no recognition source is available for the cycle source command.
-#: addon\globalPlugins\visAware\recogHandler.py:1436
+#: addon\globalPlugins\visAware\recogHandler.py:1449
 msgid "At least one recognition source must be selected."
 msgstr "至少需要选择一个识别来源。"
 
 #. Translators: The setting name used in the validation error for the recognition source checklist.
-#: addon\globalPlugins\visAware\recogHandler.py:1438
+#: addon\globalPlugins\visAware\recogHandler.py:1451
 msgid "Recognition sources included when cycling"
 msgstr "循环切换时包含的识别来源"
 
@@ -504,8 +503,8 @@ msgstr "循环切换时包含的识别来源"
 #: addon\globalPlugins\visAware\_ollamaClient.py:123
 #: addon\globalPlugins\visAware\_ollamaClient.py:221
 #: addon\globalPlugins\visAware\_ollamaClient.py:243
-#: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:212
-#: addon\globalPlugins\visAware\imageDescribers\ollama.py:173
+#: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:213
+#: addon\globalPlugins\visAware\imageDescribers\ollama.py:174
 #, python-brace-format
 msgid "Ollama API error: {}"
 msgstr "Ollama API 错误：{}"
@@ -519,10 +518,10 @@ msgstr "Ollama 返回了无效的模型列表。"
 #. Translators: An error message for malformed Ollama response data.
 #: addon\globalPlugins\visAware\_ollamaClient.py:158
 #: addon\globalPlugins\visAware\_ollamaClient.py:161
-#: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:205
-#: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:208
-#: addon\globalPlugins\visAware\imageDescribers\ollama.py:166
-#: addon\globalPlugins\visAware\imageDescribers\ollama.py:169
+#: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:206
+#: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:209
+#: addon\globalPlugins\visAware\imageDescribers\ollama.py:167
+#: addon\globalPlugins\visAware\imageDescribers\ollama.py:170
 msgid "Ollama returned malformed response data."
 msgstr "Ollama 返回了格式错误的响应数据。"
 
@@ -572,114 +571,114 @@ msgid "Vis Aware Settings"
 msgstr "Vis Aware 设置"
 
 #. Translators: The label for the menu item to open the Vis Aware settings dialog.
-#: addon\globalPlugins\visAware\__init__.py:193
+#: addon\globalPlugins\visAware\__init__.py:204
 msgid "&Vis Aware settings..."
 msgstr "Vis Aware 设置(&V)..."
 
 #. Translators: The help text for the menu item to open the Vis Aware settings dialog.
-#: addon\globalPlugins\visAware\__init__.py:195
+#: addon\globalPlugins\visAware\__init__.py:206
 msgid "Vis Aware settings"
 msgstr "Vis Aware 设置"
 
 #. Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:357
+#: addon\globalPlugins\visAware\__init__.py:368
 msgid "Describes the content of the current navigator object"
 msgstr "描述当前导航对象的内容"
 
 #. Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:371
+#: addon\globalPlugins\visAware\__init__.py:382
 msgid "Describes images on the clipboard"
 msgstr "描述剪贴板中的图像"
 
 #. Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:389
+#: addon\globalPlugins\visAware\__init__.py:400
 msgid "Recognizes the content of the current navigator object using OCR"
 msgstr "使用 OCR 识别当前导航对象的内容"
 
 #. Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:403
+#: addon\globalPlugins\visAware\__init__.py:414
 msgid "Recognizes text in images on the clipboard using OCR"
 msgstr "使用 OCR 识别剪贴板图像中的文字"
 
 #. Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:453
+#: addon\globalPlugins\visAware\__init__.py:464
 msgid "Shows the previous recognition result"
 msgstr "显示上一次识别结果"
 
 #. Translators: Reported when there is no previous recognition result to show.
-#: addon\globalPlugins\visAware\__init__.py:461
+#: addon\globalPlugins\visAware\__init__.py:472
 msgid "No previous recognition result"
 msgstr "没有上一次识别结果"
 
 #. Translators: Reported when the previous recognition result is blank.
-#: addon\globalPlugins\visAware\__init__.py:466
+#: addon\globalPlugins\visAware\__init__.py:477
 msgid "Previous recognition result is blank."
 msgstr "上一次识别结果为空。"
 
 #. Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:472
+#: addon\globalPlugins\visAware\__init__.py:483
 msgid "Asks a follow-up question about the previous image description"
 msgstr "对上一次图像描述进行追问"
 
 #. Translators: Reported when there is no previous recognition result to ask about.
-#: addon\globalPlugins\visAware\__init__.py:480
+#: addon\globalPlugins\visAware\__init__.py:491
 msgid "There is no previous recognition result to ask about."
 msgstr "没有可追问的上一次识别结果。"
 
 #. Translators: Reported when the follow-up question dialog cannot be opened.
-#: addon\globalPlugins\visAware\__init__.py:496
+#: addon\globalPlugins\visAware\__init__.py:507
 msgid "Could not open the follow-up question dialog."
 msgstr "无法打开追问对话框。"
 
 #. Translators: A message shown when trying to use the AI agent with screen curtain enabled.
-#: addon\globalPlugins\visAware\__init__.py:519
+#: addon\globalPlugins\visAware\__init__.py:530
 msgid "Please disable screen curtain before starting the AI Agent."
 msgstr "请在启动 AI Agent 之前关闭黑屏。"
 
 #. Translators: Prompt shown when starting the AI agent.
-#: addon\globalPlugins\visAware\__init__.py:537
+#: addon\globalPlugins\visAware\__init__.py:548
 msgid "What should the AI Agent do?"
 msgstr "希望 AI Agent 做什么？"
 
 #. Translators: Title for the AI agent command dialog.
-#: addon\globalPlugins\visAware\__init__.py:539
-#: addon\globalPlugins\visAware\__init__.py:595
+#: addon\globalPlugins\visAware\__init__.py:550
+#: addon\globalPlugins\visAware\__init__.py:606
 msgid "Vis Aware Agent"
 msgstr "Vis Aware Agent"
 
 #. Translators: Reported when the AI agent is being stopped by the user.
-#: addon\globalPlugins\visAware\__init__.py:571
+#: addon\globalPlugins\visAware\__init__.py:582
 msgid "Agent is stopping."
 msgstr "Agent 正在停止。"
 
 #. Translators: Reported when content recognition (e.g. OCR) is attempted, but the content is not visible.
-#: addon\globalPlugins\visAware\__init__.py:641
+#: addon\globalPlugins\visAware\__init__.py:652
 msgid "Content is not visible"
 msgstr "内容不可见"
 
 #. Translators: A message shown when screen capture fails.
-#: addon\globalPlugins\visAware\__init__.py:669
+#: addon\globalPlugins\visAware\__init__.py:680
 msgid "Failed to capture screen image."
 msgstr "无法捕获屏幕图像。"
 
 #. Translators: Reported when a recognition task is cancelled by the user.
-#: addon\globalPlugins\visAware\__init__.py:685
-#: addon\globalPlugins\visAware\__init__.py:702
-#: addon\globalPlugins\visAware\__init__.py:956
+#: addon\globalPlugins\visAware\__init__.py:696
+#: addon\globalPlugins\visAware\__init__.py:713
+#: addon\globalPlugins\visAware\__init__.py:967
 msgid "Recognition cancelled"
 msgstr "识别已取消"
 
 #. Translators: Describes the command to cancel an ongoing recognition task.
-#: addon\globalPlugins\visAware\__init__.py:713
+#: addon\globalPlugins\visAware\__init__.py:724
 msgid "Cancels the current recognition"
 msgstr "取消当前识别"
 
 #. Translators: Reported when the cancel command is used but no recognition is in progress.
-#: addon\globalPlugins\visAware\__init__.py:720
+#: addon\globalPlugins\visAware\__init__.py:731
 msgid "No recognition is in progress."
 msgstr "当前没有正在进行的识别。"
 
-#: addon\globalPlugins\visAware\__init__.py:746
+#: addon\globalPlugins\visAware\__init__.py:757
 msgid ""
 "Performs recognition using the current settings. In OCR and image "
 "description modes, press once for a recognition result document. Press twice "
@@ -691,98 +690,98 @@ msgstr ""
 "识别结果。在 AI Agent 模式下启动或终止 Agent"
 
 #. Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:773
+#: addon\globalPlugins\visAware\__init__.py:784
 msgid "Cycles through recognition modes"
 msgstr "循环切换识别模式"
 
 #. Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:783
+#: addon\globalPlugins\visAware\__init__.py:794
 msgid "Cycles through recognition sources"
 msgstr "循环切换识别来源"
 
 #. Translators: Reported when recognition source cycling is requested while AI Agent mode is active.
-#: addon\globalPlugins\visAware\__init__.py:791
+#: addon\globalPlugins\visAware\__init__.py:802
 msgid "Changing recognition source is not supported in AI Agent mode."
 msgstr "AI Agent 模式下不支持切换识别来源。"
 
 #. Translators: Reported when attempting to recognize a clipboard image, but no image is found.
-#: addon\globalPlugins\visAware\__init__.py:875
+#: addon\globalPlugins\visAware\__init__.py:886
 msgid "No image in clipboard"
 msgstr "剪贴板中没有图像"
 
 #. Translators: An error message for authentication failures. The placeholder is the specific error.
-#: addon\globalPlugins\visAware\__init__.py:960
+#: addon\globalPlugins\visAware\__init__.py:971
 #, python-brace-format
 msgid "Authentication failed: {}"
 msgstr "身份验证失败：{}"
 
 #. Translators: An error message for network issues. The placeholder is the specific error.
-#: addon\globalPlugins\visAware\__init__.py:963
+#: addon\globalPlugins\visAware\__init__.py:974
 #, python-brace-format
 msgid "Network error: {}"
 msgstr "网络错误：{}"
 
 #. Translators: A generic error message for recognition failures from the API.
-#: addon\globalPlugins\visAware\__init__.py:966
+#: addon\globalPlugins\visAware\__init__.py:977
 #, python-brace-format
 msgid "Recognition failed: {}"
 msgstr "识别失败：{}"
 
 #. Translators: A message for an unexpected error during recognition.
-#: addon\globalPlugins\visAware\__init__.py:970
+#: addon\globalPlugins\visAware\__init__.py:981
 msgid "Recognition failed with an unexpected error."
 msgstr "识别失败，发生意外错误。"
 
 #. Translators: An error message for an unknown result type.
-#: addon\globalPlugins\visAware\__init__.py:976
-#: addon\globalPlugins\visAware\__init__.py:1039
+#: addon\globalPlugins\visAware\__init__.py:987
+#: addon\globalPlugins\visAware\__init__.py:1050
 msgid "Recognition returned an unknown result type."
 msgstr "识别返回了未知的结果类型。"
 
 #. Translators: The title for the browsable message showing the recognition result.
-#: addon\globalPlugins\visAware\__init__.py:992
+#: addon\globalPlugins\visAware\__init__.py:1003
 msgid "Recognition result"
 msgstr "识别结果"
 
 #. Translators: Reported after partial streaming output when the service stopped before completing.
-#: addon\globalPlugins\visAware\__init__.py:1024
+#: addon\globalPlugins\visAware\__init__.py:1035
 msgid "Recognition was interrupted. The result may be incomplete."
 msgstr "识别过程中断，结果可能不完整。"
 
 #. Translators: A message indicating that no recognition engine is configured.
-#: addon\globalPlugins\visAware\__init__.py:1093
+#: addon\globalPlugins\visAware\__init__.py:1104
 msgid "No recognition engine is configured."
 msgstr "未配置识别引擎。"
 
 #. Translators: A message shown when trying to recognize with screen curtain enabled.
-#: addon\globalPlugins\visAware\__init__.py:1098
+#: addon\globalPlugins\visAware\__init__.py:1109
 msgid "Please disable screen curtain before recognition."
 msgstr "请在识别之前关闭黑屏。"
 
 #. Translators: Reporting when content recognition (e.g. OCR) begins.
-#: addon\globalPlugins\visAware\__init__.py:1119
+#: addon\globalPlugins\visAware\__init__.py:1130
 msgid "Recognizing"
 msgstr "正在识别"
 
-#: addon\globalPlugins\visAware\__init__.py:1132
+#: addon\globalPlugins\visAware\__init__.py:1143
 msgid ""
 "An error occurred before starting recognition. Please check your settings "
 "and try again."
 msgstr "识别开始前发生错误。请检查设置后重试。"
 
 #. Translators: Reported when there are no alternative engines to switch to.
-#: addon\globalPlugins\visAware\__init__.py:1147
+#: addon\globalPlugins\visAware\__init__.py:1158
 msgid "No other engines to switch to."
 msgstr "没有其他可切换的引擎。"
 
 #. Translators: Reports the name of the only available engine.
-#: addon\globalPlugins\visAware\__init__.py:1152
+#: addon\globalPlugins\visAware\__init__.py:1163
 #, python-brace-format
 msgid "Current engine: {engine_name}"
 msgstr "当前引擎：{engine_name}"
 
 #. Translators: Describes a command to cycle through available recognition engines.
-#: addon\globalPlugins\visAware\__init__.py:1170
+#: addon\globalPlugins\visAware\__init__.py:1181
 msgid "Cycles through engines for the current mode"
 msgstr "循环切换当前模式的引擎"
 
@@ -849,8 +848,8 @@ msgstr "缺少 API 密钥。请在 AI Agent 设置中配置。"
 #. Translators: An error message returned from the Gemini API.
 #: addon\globalPlugins\visAware\agent\gemini.py:289
 #: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:234
-#: addon\globalPlugins\visAware\imageDescribers\gemini.py:237
-#: addon\globalPlugins\visAware\imageDescribers\gemini.py:340
+#: addon\globalPlugins\visAware\imageDescribers\gemini.py:238
+#: addon\globalPlugins\visAware\imageDescribers\gemini.py:341
 #, python-brace-format
 msgid "Gemini API error: {}"
 msgstr "Gemini API 错误：{}"
@@ -1021,14 +1020,14 @@ msgstr "截图质量"
 
 #. Translators: An error message for an invalid server response.
 #: addon\globalPlugins\visAware\agent\vivo.py:106
-#: addon\globalPlugins\visAware\imageDescribers\vivoBlueLLM.py:383
+#: addon\globalPlugins\visAware\imageDescribers\vivoBlueLLM.py:384
 msgid "Invalid response from server."
 msgstr "服务器响应无效。"
 
 #. Translators: A fallback error message when VIVO does not provide an error description.
 #: addon\globalPlugins\visAware\agent\vivo.py:165
-#: addon\globalPlugins\visAware\imageDescribers\vivoBlueLLM.py:273
-#: addon\globalPlugins\visAware\imageDescribers\vivoBlueLLM.py:387
+#: addon\globalPlugins\visAware\imageDescribers\vivoBlueLLM.py:274
+#: addon\globalPlugins\visAware\imageDescribers\vivoBlueLLM.py:388
 msgid "Unknown Vivo API error"
 msgstr "未知的 Vivo API 错误"
 
@@ -1037,8 +1036,8 @@ msgstr "未知的 Vivo API 错误"
 #. Translators: A Vivo API error. {message} is the service message and {code} is the error code.
 #: addon\globalPlugins\visAware\agent\vivo.py:168
 #: addon\globalPlugins\visAware\contentRecognizers\vivoOCR.py:124
-#: addon\globalPlugins\visAware\imageDescribers\vivoBlueLLM.py:280
-#: addon\globalPlugins\visAware\imageDescribers\vivoBlueLLM.py:391
+#: addon\globalPlugins\visAware\imageDescribers\vivoBlueLLM.py:281
+#: addon\globalPlugins\visAware\imageDescribers\vivoBlueLLM.py:392
 #: addon\globalPlugins\visAware\imageDescribers\vivoImageDescriber.py:272
 #, python-brace-format
 msgid "Vivo API error: {message} (Code: {code})"
@@ -1350,11 +1349,11 @@ msgstr "由于安全设置，内容已被屏蔽。"
 #. Translators: An error message for an empty but successful Ollama response.
 #. Translators: An error message for an empty but successful server response.
 #: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:293
-#: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:216
-#: addon\globalPlugins\visAware\imageDescribers\gemini.py:346
-#: addon\globalPlugins\visAware\imageDescribers\gemma.py:474
-#: addon\globalPlugins\visAware\imageDescribers\ollama.py:177
-#: addon\globalPlugins\visAware\imageDescribers\vivoBlueLLM.py:403
+#: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:217
+#: addon\globalPlugins\visAware\imageDescribers\gemini.py:347
+#: addon\globalPlugins\visAware\imageDescribers\gemma.py:475
+#: addon\globalPlugins\visAware\imageDescribers\ollama.py:178
+#: addon\globalPlugins\visAware\imageDescribers\vivoBlueLLM.py:404
 msgid "Server returned a successful but empty response."
 msgstr "服务器返回了成功但为空的响应。"
 
@@ -1422,27 +1421,27 @@ msgid "Custom &prompt"
 msgstr "自定义提示词(&P)"
 
 #. Translators: An error message for an empty Ollama OCR response.
-#: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:282
+#: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:283
 msgid "Ollama OCR returned an empty response."
 msgstr "Ollama OCR 返回了空响应。"
 
 #. Translators: An error message for malformed Ollama OCR structured JSON.
-#: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:287
+#: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:288
 msgid "Ollama OCR returned invalid JSON."
 msgstr "Ollama OCR 返回了无效 JSON。"
 
 #. Translators: An error message for malformed Ollama OCR structured data.
-#: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:318
-#: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:322
-#: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:326
-#: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:330
-#: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:335
+#: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:319
+#: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:323
+#: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:327
+#: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:331
+#: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:336
 msgid "Ollama OCR returned malformed structured data."
 msgstr "Ollama OCR 返回了格式错误的结构化数据。"
 
 #. Translators: An error message when coordinate conversion cannot be completed.
-#: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:349
-#: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:353
+#: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:350
+#: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:354
 msgid "Ollama OCR cannot convert coordinates without the uploaded image size."
 msgstr "Ollama OCR 缺少上传图像尺寸，无法转换坐标。"
 
@@ -1648,17 +1647,17 @@ msgstr ""
 msgid "&Enable streaming output (if available)"
 msgstr "启用流式输出（如果可用）(&S)"
 
-#: addon\globalPlugins\visAware\imageDescribers\gemini.py:190
-#: addon\globalPlugins\visAware\imageDescribers\gemini.py:256
-#: addon\globalPlugins\visAware\imageDescribers\gemini.py:301
+#: addon\globalPlugins\visAware\imageDescribers\gemini.py:191
+#: addon\globalPlugins\visAware\imageDescribers\gemini.py:257
+#: addon\globalPlugins\visAware\imageDescribers\gemini.py:302
 msgid "API key is missing. Please configure it in the Gemini engine settings."
 msgstr "缺少 API 密钥。请在 Gemini 引擎设置中配置。"
 
 #. Translators: An error message for malformed Gemini response data.
 #. Translators: An error message for malformed Gemma response data.
-#: addon\globalPlugins\visAware\imageDescribers\gemini.py:336
-#: addon\globalPlugins\visAware\imageDescribers\gemma.py:460
-#: addon\globalPlugins\visAware\imageDescribers\gemma.py:463
+#: addon\globalPlugins\visAware\imageDescribers\gemini.py:337
+#: addon\globalPlugins\visAware\imageDescribers\gemma.py:461
+#: addon\globalPlugins\visAware\imageDescribers\gemma.py:464
 msgid "Server returned an invalid response."
 msgstr "服务器返回的响应无效。"
 
@@ -1686,32 +1685,32 @@ msgstr "Google Gemma"
 msgid "Thinking &level"
 msgstr "思考级别(&L)"
 
-#: addon\globalPlugins\visAware\imageDescribers\gemma.py:211
+#: addon\globalPlugins\visAware\imageDescribers\gemma.py:212
 msgid "Gemma 4 26B A4B IT (recommended, faster)"
 msgstr "Gemma 4 26B A4B IT（推荐，较快）"
 
-#: addon\globalPlugins\visAware\imageDescribers\gemma.py:212
+#: addon\globalPlugins\visAware\imageDescribers\gemma.py:213
 msgid "Gemma 4 31B IT (higher quality, slower)"
 msgstr "Gemma 4 31B IT（质量更高，较慢）"
 
-#: addon\globalPlugins\visAware\imageDescribers\gemma.py:226
-#: addon\globalPlugins\visAware\imageDescribers\vivoBlueLLM.py:152
+#: addon\globalPlugins\visAware\imageDescribers\gemma.py:227
+#: addon\globalPlugins\visAware\imageDescribers\vivoBlueLLM.py:153
 msgid "Off (faster)"
 msgstr "关闭（较快）"
 
-#: addon\globalPlugins\visAware\imageDescribers\gemma.py:227
-#: addon\globalPlugins\visAware\imageDescribers\vivoBlueLLM.py:153
+#: addon\globalPlugins\visAware\imageDescribers\gemma.py:228
+#: addon\globalPlugins\visAware\imageDescribers\vivoBlueLLM.py:154
 msgid "High (better reasoning, slower)"
 msgstr "高（推理更强，较慢）"
 
-#: addon\globalPlugins\visAware\imageDescribers\gemma.py:307
-#: addon\globalPlugins\visAware\imageDescribers\gemma.py:379
-#: addon\globalPlugins\visAware\imageDescribers\gemma.py:396
+#: addon\globalPlugins\visAware\imageDescribers\gemma.py:308
+#: addon\globalPlugins\visAware\imageDescribers\gemma.py:380
+#: addon\globalPlugins\visAware\imageDescribers\gemma.py:397
 msgid "API key is missing. Please configure it in the Gemma engine settings."
 msgstr "缺少 API 密钥。请在 Gemma 引擎设置中配置。"
 
 #. Translators: An error message returned from the Gemma API.
-#: addon\globalPlugins\visAware\imageDescribers\gemma.py:468
+#: addon\globalPlugins\visAware\imageDescribers\gemma.py:469
 #, python-brace-format
 msgid "Gemma API error: {}"
 msgstr "Gemma API 错误：{}"
@@ -1825,18 +1824,33 @@ msgstr "为 NVDA 提供 OCR、AI 图像描述、自动识别和 AI 辅助计算�
 #. Translators: what's new content for the add-on version to be shown in the add-on store
 #: buildVars.py:35
 msgid ""
-"### 0.6.4\n"
+"### 0.6.5\n"
 "\n"
-"* Improved formula rendering in HTML and PaddleOCR results.\n"
-"* Fixed AI Agent text input and automatic recognition on English "
-"interfaces.\n"
-"* Improved English and Simplified Chinese UI text and documentation."
+"* Improved settings and follow-up dialog layouts, including high-DPI "
+"scaling.\n"
+"* Improved editing of long custom and automatic-recognition prompts.\n"
+"* Improved follow-up questions so initial descriptions and latest answers "
+"can be viewed as formatted content."
 msgstr ""
-"### 0.6.4\n"
+"### 0.6.5\n"
 "\n"
-"* 改进 HTML 和 PaddleOCR 结果中的公式渲染。\n"
-"* 修复 AI Agent 文本输入以及英文界面下的自动识别。\n"
-"* 改进英文和简体中文界面文案及文档。"
+"* 改进设置和追问对话框的布局，包括高 DPI 缩放。\n"
+"* 改进较长的自定义提示词和自动识别提示词的编辑体验。\n"
+"* 改进追问功能，现在可以以格式化内容查看初始描述和最新回答。"
+
+#~ msgid ""
+#~ "### 0.6.4\n"
+#~ "\n"
+#~ "* Improved formula rendering in HTML and PaddleOCR results.\n"
+#~ "* Fixed AI Agent text input and automatic recognition on English "
+#~ "interfaces.\n"
+#~ "* Improved English and Simplified Chinese UI text and documentation."
+#~ msgstr ""
+#~ "### 0.6.4\n"
+#~ "\n"
+#~ "* 改进 HTML 和 PaddleOCR 结果中的公式渲染。\n"
+#~ "* 修复 AI Agent 文本输入以及英文界面下的自动识别。\n"
+#~ "* 改进英文和简体中文界面文案及文档。"
 
 #~ msgid ""
 #~ "### 0.6.2\n"
