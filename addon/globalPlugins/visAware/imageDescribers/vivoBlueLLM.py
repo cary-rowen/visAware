@@ -96,6 +96,7 @@ class CustomContentRecognizer(BaseDescriber):
 				"prompt",
 				# Translators: The label for an engine setting to customize the prompt for the vision model.
 				_("Custom &prompt"),
+				multiline=True,
 			),
 			self.autoRecognitionPromptSetting(),
 			temperatureSetting,

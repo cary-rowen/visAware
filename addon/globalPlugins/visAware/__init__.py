@@ -152,6 +152,17 @@ class OCRMultiCategorySettingsDialog(NVDASettingsDialog):
 		self.categoryClasses = categoryList
 		super().__init__(parent)
 
+	def _enterActivatesOk_ctrlSActivatesApply(self, evt: wx.KeyEvent) -> None:
+		focusedControl = wx.Window.FindFocus()
+		if (
+			evt.KeyCode in (wx.WXK_RETURN, wx.WXK_NUMPAD_ENTER)
+			and isinstance(focusedControl, wx.TextCtrl)
+			and focusedControl.GetWindowStyleFlag() & wx.TE_MULTILINE
+		):
+			evt.Skip()
+			return
+		super()._enterActivatesOk_ctrlSActivatesApply(evt)
+
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def __init__(self):

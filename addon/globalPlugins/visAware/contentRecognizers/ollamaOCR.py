@@ -148,6 +148,7 @@ class CustomContentRecognizer(OllamaEngineMixin, BaseRecognizer):
 				name="prompt",
 				# Translators: The label for a setting to customize the OCR prompt.
 				displayNameWithAccelerator=_("Custom &prompt"),
+				multiline=True,
 			),
 			self.autoRecognitionPromptSetting(),
 		]

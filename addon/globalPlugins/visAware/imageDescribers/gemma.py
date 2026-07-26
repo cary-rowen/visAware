@@ -161,6 +161,7 @@ class CustomContentRecognizer(BaseDescriber):
 				name="prompt",
 				# Translators: The label for a setting to customize the prompt for the vision model.
 				displayNameWithAccelerator=_("Custom &prompt"),
+				multiline=True,
 			),
 			self.autoRecognitionPromptSetting(),
 		]

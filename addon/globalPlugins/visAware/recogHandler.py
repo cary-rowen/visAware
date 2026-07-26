@@ -773,7 +773,11 @@ class BaseRecognizer(ContentRecognizer, AbstractEngine, ABC):
 	@classmethod
 	def autoRecognitionPromptSetting(cls) -> EngineSetting:
 		# Translators: The label for an engine setting to override the prompt used for automatic recognition.
-		return TextInputEngineSetting("autoRecognitionPrompt", _("Automatic recognition &prompt"))
+		return TextInputEngineSetting(
+			"autoRecognitionPrompt",
+			_("Automatic recognition &prompt"),
+			multiline=True,
+		)
 
 	@classmethod
 	def autoRecognitionModelSetting(cls) -> EngineSetting:
@@ -1106,11 +1110,20 @@ class AutomaticRecognitionPanel(SettingsPanel):
 		self.autoRecognitionEngineList.Bind(wx.EVT_CHOICE, self._onAutoRecognitionEngineChanged)
 		self._setAutoRecognitionEngineChoices(self.autoRecognitionEngineChoices, engineSelection)
 		# Translators: The label for a text control to override the prompt used for automatic recognition.
-		self.autoRecognitionPromptCtrl = settingsSizerHelper.addLabeledControl(
-			_("Automatic recognition &prompt:"),
-			wx.TextCtrl,
-			size=(self.scaleSize(250), -1),
+		self.autoRecognitionPromptLabel = wx.StaticText(
+			self,
+			label=_("Automatic recognition &prompt:"),
 		)
+		self.autoRecognitionPromptCtrl = wx.TextCtrl(
+			self,
+			size=(-1, self.scaleSize(75)),
+			style=wx.TE_MULTILINE,
+		)
+		autoRecognitionPromptSizer = wx.BoxSizer(wx.VERTICAL)
+		autoRecognitionPromptSizer.Add(self.autoRecognitionPromptLabel)
+		autoRecognitionPromptSizer.AddSpacer(guiHelper.SPACE_BETWEEN_ASSOCIATED_CONTROL_VERTICAL)
+		autoRecognitionPromptSizer.Add(self.autoRecognitionPromptCtrl, proportion=1, flag=wx.EXPAND)
+		settingsSizerHelper.addItem(autoRecognitionPromptSizer, flag=wx.EXPAND)
 		# Translators: The label for a choice control to override the model used for automatic recognition.
 		modelControlHelper = guiHelper.LabeledControlHelper(
 			self,
@@ -1163,9 +1176,9 @@ class AutomaticRecognitionPanel(SettingsPanel):
 		self.autoRecognitionEngineList.Enable(isEnabled and bool(self.autoRecognitionEngineChoices))
 		engine = getattr(self, "_autoRecognitionEngine", None)
 		if hasattr(self, "autoRecognitionPromptCtrl"):
-			self.autoRecognitionPromptCtrl.Enable(
-				isEnabled and bool(engine and engine.isSupported("autoRecognitionPrompt")),
-			)
+			promptEnabled = isEnabled and bool(engine and engine.isSupported("autoRecognitionPrompt"))
+			self.autoRecognitionPromptLabel.Enable(promptEnabled)
+			self.autoRecognitionPromptCtrl.Enable(promptEnabled)
 		if hasattr(self, "autoRecognitionModelList"):
 			self.autoRecognitionModelList.Enable(
 				isEnabled and bool(engine and engine.isSupported("autoRecognitionModel")),

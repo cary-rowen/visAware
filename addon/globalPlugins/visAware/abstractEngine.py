@@ -630,7 +630,10 @@ class SpecificEnginePanel(SettingsPanel):
 
 		controlSizer = builder(setting, engine)
 		self._sizerDict[setting.name] = controlSizer
-		sHelper.addItem(controlSizer)
+		sHelper.addItem(
+			controlSizer,
+			flag=wx.EXPAND if isinstance(setting, TextInputEngineSetting) and setting.multiline else 0,
+		)
 
 	def _updateControlValue(self, setting: EngineSetting, engine: AbstractEngine) -> None:
 		"""
@@ -795,20 +798,33 @@ class SpecificEnginePanel(SettingsPanel):
 		engine: AbstractEngine,
 	) -> wx.BoxSizer:
 		labelText = f"{setting.displayNameWithAccelerator}:"
-		labeledControl = guiHelper.LabeledControlHelper(
-			self,
-			labelText,
-			wx.TextCtrl,
-			size=(self.scaleSize(250), -1),
-		)
-		textCtrl = labeledControl.control
+		if setting.multiline:
+			sizer = wx.BoxSizer(wx.VERTICAL)
+			label = wx.StaticText(self, label=labelText)
+			textCtrl = wx.TextCtrl(
+				self,
+				size=(-1, self.scaleSize(75)),
+				style=wx.TE_MULTILINE,
+			)
+			sizer.Add(label)
+			sizer.AddSpacer(guiHelper.SPACE_BETWEEN_ASSOCIATED_CONTROL_VERTICAL)
+			sizer.Add(textCtrl, proportion=1, flag=wx.EXPAND)
+		else:
+			labeledControl = guiHelper.LabeledControlHelper(
+				self,
+				labelText,
+				wx.TextCtrl,
+				size=(self.scaleSize(250), -1),
+			)
+			textCtrl = labeledControl.control
+			sizer = labeledControl.sizer
 		setattr(self, f"{setting.name}TextCtrl", textCtrl)
 		textCtrl.SetValue(str(getattr(engine, setting.name)))
 		textCtrl.Bind(wx.EVT_TEXT, TextInputEngineSettingChanger(setting, engine))
 		if self._lastControl:
 			textCtrl.MoveAfterInTabOrder(self._lastControl)
 		self._lastControl = textCtrl
-		return labeledControl.sizer
+		return sizer
 
 	def _makeReadOnlySettingControl(
 		self,
@@ -938,7 +954,7 @@ class AbstractEngineSettingsPanel(SettingsPanel, ABC):
 		self._updateEnableEngineCheckBox()
 
 		self._engineSettingPanel = SpecificEnginePanel(self, self.handler, self._getSelectedEngine)
-		settingsSizerHelper.addItem(self._engineSettingPanel)
+		settingsSizerHelper.addItem(self._engineSettingPanel, flag=wx.EXPAND)
 		self.makeGeneralSettings(settingsSizerHelper)
 
 	def _getInitialSelectedEngine(self) -> Optional[AbstractEngine]:
