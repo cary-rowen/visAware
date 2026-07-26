@@ -795,7 +795,12 @@ class SpecificEnginePanel(SettingsPanel):
 		engine: AbstractEngine,
 	) -> wx.BoxSizer:
 		labelText = f"{setting.displayNameWithAccelerator}:"
-		labeledControl = guiHelper.LabeledControlHelper(self, labelText, wx.TextCtrl)
+		labeledControl = guiHelper.LabeledControlHelper(
+			self,
+			labelText,
+			wx.TextCtrl,
+			size=(self.scaleSize(250), -1),
+		)
 		textCtrl = labeledControl.control
 		setattr(self, f"{setting.name}TextCtrl", textCtrl)
 		textCtrl.SetValue(str(getattr(engine, setting.name)))

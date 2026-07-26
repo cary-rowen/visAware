@@ -12,6 +12,7 @@ import addonHandler
 import ui
 import wx
 from gui import guiHelper
+from gui.dpiScalingHelper import DpiScalingHelperMixinWithoutInit
 from logHandler import log
 
 from .conversation import ROLE_ASSISTANT, ConversationContext, QuestionStreamFinished, QuestionStreamText
@@ -22,7 +23,7 @@ from .streamingSpeech import StreamingSpeechPresenter
 addonHandler.initTranslation()
 
 
-class AskQuestionFrame(wx.Frame):
+class AskQuestionFrame(DpiScalingHelperMixinWithoutInit, wx.Frame):
 	"""A reusable frame that asks follow-up questions in the background."""
 
 	FRAME_SIZE = (720, 560)
@@ -42,11 +43,11 @@ class AskQuestionFrame(wx.Frame):
 		self._streamingAnswerRequestSequence: int | None = None
 		self._streamingAnswerTextStartPosition: int | None = None
 		self._streamingAnswerText = ""
-		self._latestAnswerText = ""
+		self._formattedContent = ""
 		self._makeControls()
 		self.setContext(context)
-		self.SetMinSize(self.MIN_FRAME_SIZE)
-		self.SetSize(self.FRAME_SIZE)
+		self.SetMinSize(self.scaleSize(self.MIN_FRAME_SIZE))
+		self.SetSize(self.scaleSize(self.FRAME_SIZE))
 		self.CenterOnScreen()
 		self.Bind(wx.EVT_CLOSE, self._onClose)
 
@@ -63,7 +64,7 @@ class AskQuestionFrame(wx.Frame):
 			panel,
 			style=wx.TE_MULTILINE | wx.TE_READONLY | wx.TE_RICH2,
 		)
-		self._messagesText.SetMinSize(self.MESSAGE_MIN_SIZE)
+		self._messagesText.SetMinSize(self.scaleSize(self.MESSAGE_MIN_SIZE))
 		conversationSizer.Add(self._messagesText, proportion=1, flag=wx.EXPAND)
 		mainSizer.Add(
 			conversationSizer,
@@ -78,7 +79,7 @@ class AskQuestionFrame(wx.Frame):
 		questionSizer.Add(questionLabel)
 		questionSizer.AddSpacer(guiHelper.SPACE_BETWEEN_ASSOCIATED_CONTROL_VERTICAL)
 		self._questionText = wx.TextCtrl(panel, style=wx.TE_MULTILINE | wx.TE_PROCESS_ENTER)
-		self._questionText.SetMinSize(self.QUESTION_MIN_SIZE)
+		self._questionText.SetMinSize(self.scaleSize(self.QUESTION_MIN_SIZE))
 		questionSizer.Add(self._questionText, flag=wx.EXPAND)
 		mainSizer.Add(
 			questionSizer,
@@ -90,9 +91,9 @@ class AskQuestionFrame(wx.Frame):
 		# Translators: The label for a button that sends a follow-up question.
 		self._sendButton = buttonHelper.addButton(panel, label=_("&Send"))
 		self._sendButton.Bind(wx.EVT_BUTTON, self._onSend)
-		# Translators: The label for a button that opens the latest answer rendered as Markdown.
-		self._renderedAnswerButton = buttonHelper.addButton(panel, label=_("View formatted &answer"))
-		self._renderedAnswerButton.Bind(wx.EVT_BUTTON, self._onOpenRenderedAnswer)
+		# Translators: The label for a button that opens the latest content rendered as Markdown.
+		self._renderedContentButton = buttonHelper.addButton(panel, label=_("View &formatted content"))
+		self._renderedContentButton.Bind(wx.EVT_BUTTON, self._onOpenRenderedContent)
 		# Translators: The label for a button that closes the follow-up question dialog.
 		self._closeButton = buttonHelper.addButton(panel, label=_("&Close"))
 		self._closeButton.Bind(wx.EVT_BUTTON, self._onClose)
@@ -122,7 +123,7 @@ class AskQuestionFrame(wx.Frame):
 		else:
 			self.SetTitle(_("Ask a Follow-up Question"))
 		self._messagesText.SetValue("")
-		self._latestAnswerText = ""
+		self._formattedContent = context.initialText
 		# Translators: The sender label for the original image description in the follow-up dialog.
 		self._appendMessage(_("Image description"), context.initialText, report=False)
 		for turn in context.turns:
@@ -132,7 +133,7 @@ class AskQuestionFrame(wx.Frame):
 			else:
 				sender = context.engineDescription
 				if turn.role == ROLE_ASSISTANT:
-					self._latestAnswerText = turn.text
+					self._formattedContent = turn.text
 			self._appendMessage(sender, turn.text, report=False)
 		self._questionText.SetValue("")
 		self._setSendButtonEnabled(True)
@@ -304,7 +305,7 @@ class AskQuestionFrame(wx.Frame):
 		if incompleteReason:
 			answerForContext = f"{answer}\n\n{incompleteReason}"
 		self._context.addExchange(question, answerForContext)
-		self._latestAnswerText = answerForContext
+		self._formattedContent = answerForContext
 		if wasStreaming:
 			self._finishStreamingAnswer(requestSequence, answer)
 		else:
@@ -338,24 +339,24 @@ class AskQuestionFrame(wx.Frame):
 
 	def _setSendButtonEnabled(self, enabled: bool) -> None:
 		self._sendButton.Enable(enabled)
-		self._updateRenderedAnswerButton()
+		self._updateRenderedContentButton()
 
-	def _updateRenderedAnswerButton(self) -> None:
-		if hasattr(self, "_renderedAnswerButton"):
-			self._renderedAnswerButton.Enable(
-				bool(self._latestAnswerText) and self._activeRequestSequence is None,
+	def _updateRenderedContentButton(self) -> None:
+		if hasattr(self, "_renderedContentButton"):
+			self._renderedContentButton.Enable(
+				bool(self._formattedContent) and self._activeRequestSequence is None,
 			)
 
-	def _onOpenRenderedAnswer(self, evt: wx.CommandEvent) -> None:
+	def _onOpenRenderedContent(self, evt: wx.CommandEvent) -> None:
 		evt.Skip()
-		if not self._latestAnswerText:
-			# Translators: Reported when there is no follow-up answer to show in rendered form.
-			ui.message(_("There is no answer to show."))
+		if not self._formattedContent:
+			# Translators: Reported when there is no follow-up content to show in rendered form.
+			ui.message(_("There is no content to show."))
 			return
-		# Translators: The title for the browseable message window showing a rendered follow-up answer.
+		# Translators: The title for the browseable message window showing rendered follow-up content.
 		showMarkdownBrowseableMessage(
-			self._latestAnswerText,
-			title=_("Formatted Answer"),
+			self._formattedContent,
+			title=_("Formatted Content"),
 			closeButton=True,
 			copyButton=True,
 		)

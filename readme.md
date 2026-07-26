@@ -94,8 +94,8 @@ Only the previous recognition result from the current NVDA session is retained.
 For image description engines that support follow-up questions, the follow-up
 question command opens a multi-turn dialog and streams spoken answers when
 supported. In that dialog, `control+enter` sends a question and `escape`
-cancels the request or closes the dialog. Use **View formatted answer** to view
-the formatted answer in browse mode.
+cancels the request or closes the dialog. Use **View formatted content** to view
+the initial description or latest answer in browse mode.
 
 Follow-up questions are supported by Google Gemini, Google Gemma, VIVO BlueLLM
 Vision, and Ollama Vision. Outside the conversation dialog, streaming output is

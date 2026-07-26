@@ -12,6 +12,7 @@ from collections.abc import Iterator
 from collections.abc import Mapping, Sequence
 from contentRecog import ContentRecognizer, LinesWordsResult, RecogImageInfo
 from dataclasses import dataclass
+from gui import guiHelper
 from gui.nvdaControls import CustomCheckListBox
 from gui.guiHelper import BoxSizerHelper
 from gui.settingsDialogs import SettingsPanel
@@ -1108,20 +1109,26 @@ class AutomaticRecognitionPanel(SettingsPanel):
 		self.autoRecognitionPromptCtrl = settingsSizerHelper.addLabeledControl(
 			_("Automatic recognition &prompt:"),
 			wx.TextCtrl,
+			size=(self.scaleSize(250), -1),
 		)
 		# Translators: The label for a choice control to override the model used for automatic recognition.
-		self.autoRecognitionModelList = settingsSizerHelper.addLabeledControl(
+		modelControlHelper = guiHelper.LabeledControlHelper(
+			self,
 			_("Automatic recognition &model:"),
 			wx.Choice,
 			choices=[],
 		)
-		self.autoRecognitionFetchModelsButton = settingsSizerHelper.addItem(
-			wx.Button(
-				self,
-				# Translators: The label for a button that fetches model names.
-				label=_("&Fetch models"),
-			),
+		self.autoRecognitionModelList = modelControlHelper.control
+		modelSizer = wx.BoxSizer(wx.HORIZONTAL)
+		modelSizer.Add(modelControlHelper.sizer, flag=wx.ALIGN_CENTER_VERTICAL)
+		# Translators: The label for a button that fetches model names.
+		self.autoRecognitionFetchModelsButton = wx.Button(self, label=_("&Fetch models"))
+		modelSizer.Add(
+			self.autoRecognitionFetchModelsButton,
+			flag=wx.ALIGN_CENTER_VERTICAL | wx.LEFT,
+			border=guiHelper.SPACE_BETWEEN_BUTTONS_HORIZONTAL,
 		)
+		settingsSizerHelper.addItem(modelSizer)
 		self.autoRecognitionFetchModelsButton.Bind(wx.EVT_BUTTON, self._onFetchAutoRecognitionModels)
 		# Translators: The label for a checkbox to prefer screenshots before downloading web image URLs.
 		self.preferScreenshotForWebImagesCheckBox = settingsSizerHelper.addItem(
@@ -1367,7 +1374,11 @@ class CustomOCRPanel(SettingsPanel):
 
 		# Translators: The label for the username text control in the NVDACN settings.
 		nvdacnUserLabel = _("Username:")
-		self.nvdacnUserCtrl = nvdacnGroup.addLabeledControl(nvdacnUserLabel, wx.TextCtrl)
+		self.nvdacnUserCtrl = nvdacnGroup.addLabeledControl(
+			nvdacnUserLabel,
+			wx.TextCtrl,
+			size=(self.scaleSize(250), -1),
+		)
 		self.nvdacnUserCtrl.SetValue(conf["nvdacnUser"])
 
 		# Translators: The label for the password text control in the NVDACN settings.
@@ -1376,6 +1387,7 @@ class CustomOCRPanel(SettingsPanel):
 			nvdacnPassLabel,
 			wx.TextCtrl,
 			style=wx.TE_PASSWORD,
+			size=(self.scaleSize(250), -1),
 		)
 
 		from .secure_storage import SecureStorageError, unprotectString
