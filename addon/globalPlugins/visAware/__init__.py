@@ -11,6 +11,7 @@ import globalPluginHandler
 import globalVars
 import gui
 import os
+import speech
 import wx
 import inputCore
 from logHandler import log
@@ -1372,7 +1373,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			imageInfo, recognizeImage = imageData
 			pixels = recognizeImage.tobytes("raw", "BGRX")
 			# Translators: Reporting when content recognition (e.g. OCR) begins.
-			ui.message(_("Recognizing"))
+			ui.message(_("Recognizing"), speech.Spri.NOW)
 			if shouldStream:
 				self._streamingSpeechPresenter.start()
 			onResult = self._makeRecognitionCallback(recognitionSequence, shouldStream)
