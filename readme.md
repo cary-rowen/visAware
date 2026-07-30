@@ -166,6 +166,7 @@ only when the model returns valid structured OCR data.
 
 OCR engines:
 
+* Apple Vision (OCR Server)
 * Baidu OCR
 * Google Gemini OCR
 * Vivo OCR (NVDACN)
@@ -187,6 +188,35 @@ AI Agent engines:
 * Vivo BlueLM Vision (NVDACN)
 
 Engine availability depends on its service and configuration.
+
+## Apple Vision (OCR Server)
+
+Apple Vision (OCR Server) is a local-network OCR engine. Vis Aware sends the
+selected image to [OCR Server](https://github.com/riddleling/iOS-OCR-Server),
+an open-source iOS app that recognizes text with Apple Vision and returns text
+coordinates. No cloud OCR account is required, but the computer and iPhone must
+be able to reach each other on the same local network.
+
+The current app requires iOS 18.4 or later. The oldest supported iPhones are
+iPhone XS, iPhone XS Max, iPhone XR, and iPhone SE (2nd generation).
+
+To configure the engine:
+
+1. Install [OCR Server from the App Store](https://apps.apple.com/us/app/ocr-server/id6749533041)
+   on the iPhone.
+2. Connect the iPhone and computer to the same local network, then open OCR
+   Server. Its server starts automatically and displays the address to use.
+3. Open `NVDA menu > Preferences > Vis Aware settings... > OCR`, enable and
+   select **Apple Vision (OCR Server)**, then enter the displayed address, such
+   as `192.168.1.10:8000`.
+
+OCR Server connections use unauthenticated, unencrypted HTTP. Use this engine
+only on a trusted local network; on public or untrusted networks, transmitted
+images and returned OCR results can be intercepted or modified.
+
+Keep OCR Server open and the iPhone screen on while using the engine. For
+continuous operation, follow the upstream project's instructions for iOS
+Guided Access. The upstream project also documents app usage and the server API.
 
 ## Recommended offline setup: Gemma 4 through Ollama
 

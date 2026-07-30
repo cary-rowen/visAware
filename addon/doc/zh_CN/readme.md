@@ -100,6 +100,7 @@ PaddleOCR / PaddleOCR-VL 支持 AI Studio 托管任务 API、AI Studio 部署服
 
 OCR 引擎：
 
+* Apple Vision (OCR Server)
 * 百度 OCR
 * Google Gemini OCR
 * Vivo OCR（NVDACN）
@@ -121,6 +122,22 @@ AI Agent 引擎：
 * Vivo BlueLM Vision（NVDACN）
 
 引擎是否可用取决于相应服务和配置。
+
+## Apple Vision (OCR Server)
+
+Apple Vision (OCR Server) 是一个局域网 OCR 引擎。Vis Aware 会将所选图像发送到开源 iOS 应用 [OCR Server](https://github.com/riddleling/iOS-OCR-Server)，由该应用使用 Apple Vision 识别文字并返回文字坐标。该引擎不需要云端 OCR 账号，但电脑和 iPhone 必须能够通过同一局域网相互访问。
+
+当前版本的应用要求 iOS 18.4 或更高版本，支持的最早机型为 iPhone XS、iPhone XS Max、iPhone XR 和第二代 iPhone SE。
+
+配置步骤：
+
+1. 在 iPhone 上从 [App Store](https://apps.apple.com/us/app/ocr-server/id6749533041) 安装 OCR Server。
+2. 将 iPhone 和电脑连接到同一局域网，然后打开 OCR Server。服务器会自动启动并显示连接地址。
+3. 打开 `NVDA 菜单 > 选项 > Vis Aware 设置... > OCR`，启用并选择 **Apple Vision (OCR Server)**，然后填写应用显示的地址，例如 `192.168.1.10:8000`。
+
+与 OCR Server 的连接使用未经身份验证且未加密的 HTTP。请仅在可信局域网中使用此引擎；在公共或不可信网络上，上传的图像和返回的 OCR 结果可能被截获或篡改。
+
+使用该引擎时，请保持 OCR Server 在前台运行并让 iPhone 屏幕常亮。如需长时间连续运行，可按照原项目说明开启 iOS 引导式访问。应用使用方法和服务器 API 详见原项目说明。
 
 ## 推荐的离线方案：通过 Ollama 使用 Gemma 4
 

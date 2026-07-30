@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 'customOCR' '0.1.1-dev'\n"
 "Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
-"POT-Creation-Date: 2026-07-26 23:56+0800\n"
+"POT-Creation-Date: 2026-07-30 20:30+0800\n"
 "PO-Revision-Date: 2025-11-02 16:14+0800\n"
 "Last-Translator: Larry Wang <larry.wang.801@gmail.com>\n"
 "Language-Team: \n"
@@ -297,7 +297,7 @@ msgstr "服务未提供更多详细信息。"
 msgid "Service returned an error: {code} {reason}. Details: {details}"
 msgstr "服务返回错误：{code} {reason}。详情：{details}"
 
-#: addon\globalPlugins\visAware\network.py:268
+#: addon\globalPlugins\visAware\network.py:271
 msgid "Network connection failed. Please check your connection and try again."
 msgstr "网络连接失败。请检查您的网络连接并重试。"
 
@@ -1153,6 +1153,40 @@ msgstr "Vivo BlueLM Vision（NVDACN）"
 #: addon\globalPlugins\visAware\agent\engines\vivo.py:41
 msgid "Enable model &thinking"
 msgstr "启用模型思考(&T)"
+
+#. Translators: The description of the Apple Vision (OCR Server) engine.
+#: addon\globalPlugins\visAware\contentRecognizers\appleOCRServer.py:25
+msgid "Apple Vision (OCR Server)"
+msgstr "Apple Vision（OCR Server）"
+
+#. Translators: The label for the OCR Server address field in the engine settings.
+#: addon\globalPlugins\visAware\contentRecognizers\appleOCRServer.py:43
+msgid "Server &address (e.g., 192.168.1.10:8000)"
+msgstr "服务器地址(&A)（例如：192.168.1.10:8000）"
+
+#. Translators: An error message shown when the OCR Server address is not
+#. configured correctly.
+#: addon\globalPlugins\visAware\contentRecognizers\appleOCRServer.py:81
+msgid "Please configure a valid OCR Server address in the engine settings."
+msgstr "请在引擎设置中配置有效的 OCR Server 地址。"
+
+#. Translators: A fallback error message when the OCR Server app provides
+#. no error details.
+#: addon\globalPlugins\visAware\contentRecognizers\appleOCRServer.py:107
+msgid "Unknown server error"
+msgstr "未知服务器错误"
+
+#. Translators: The OCR Server app reported an error.
+#. The placeholder will be replaced with the error message.
+#: addon\globalPlugins\visAware\contentRecognizers\appleOCRServer.py:111
+#, python-brace-format
+msgid "OCR Server error: {}"
+msgstr "OCR Server 错误：{}"
+
+#. Translators: The OCR Server app returned data that was not in the expected format.
+#: addon\globalPlugins\visAware\contentRecognizers\appleOCRServer.py:116
+msgid "OCR Server returned an invalid response."
+msgstr "OCR Server 返回了无效响应。"
 
 #. Translators: The description of the Baidu OCR engine.
 #: addon\globalPlugins\visAware\contentRecognizers\baiduOCR.py:25

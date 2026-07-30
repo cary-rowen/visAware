@@ -135,6 +135,16 @@ class NetworkRequestRetryTestCase(unittest.TestCase):
 		self.assertIn("Service is temporarily unavailable or rate limited", str(error.exception))
 		self.assertEqual(len(calls), 3)
 
+	def test_send_request_uses_top_level_error_message(self) -> None:
+		response = _FakeResponse(400, reason="Bad Request")
+		response.json = lambda: {"success": False, "message": "Missing or empty 'file' part"}
+		self.module.requests.request = lambda **kwargs: response
+
+		with self.assertRaises(self.module.ApiError) as error:
+			self.module.sendRequest("POST", "https://example.test/upload")
+
+		self.assertIn("Missing or empty 'file' part", str(error.exception))
+
 
 if __name__ == "__main__":
 	unittest.main()

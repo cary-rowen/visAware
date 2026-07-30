@@ -161,6 +161,9 @@ def _getHttpErrorDetails(response: requests.Response) -> str:
 				return str(message)
 		elif error:
 			return str(error)
+		message = responseJson.get("message")
+		if message:
+			return str(message)
 	responseText = response.text.strip()
 	if responseText:
 		return responseText[:200]
