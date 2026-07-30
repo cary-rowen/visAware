@@ -28,7 +28,7 @@ addon_info = AddonInfo(
 	# Add-on description
 	# Translators: Long description to be shown for this add-on on add-on information from add-on store
 	addon_description=_(
-		"""NVDA add-on for OCR, AI-powered image description, automatic recognition, and AI-assisted computer control."""
+		"""NVDA add-on for OCR, AI-powered image description, automatic recognition, and AI-assisted computer control.""",
 	),
 	# version
 	addon_version="0.7.0",
