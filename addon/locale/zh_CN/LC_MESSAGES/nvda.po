@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 'customOCR' '0.1.1-dev'\n"
 "Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
-"POT-Creation-Date: 2026-07-30 20:30+0800\n"
+"POT-Creation-Date: 2026-07-30 23:19+0800\n"
 "PO-Revision-Date: 2025-11-02 16:14+0800\n"
 "Last-Translator: Larry Wang <larry.wang.801@gmail.com>\n"
 "Language-Team: \n"
@@ -270,17 +270,17 @@ msgstr "中（均衡）"
 msgid "Low (faster, less detail)"
 msgstr "低（速度较快，细节较少）"
 
-#: addon\globalPlugins\visAware\network.py:77
+#: addon\globalPlugins\visAware\network.py:80
 msgid ""
 "Network connection failed after multiple attempts. Please check your "
 "connection and try again."
 msgstr "多次尝试后连接失败。请检查您的网络连接并重试。"
 
-#: addon\globalPlugins\visAware\network.py:117
+#: addon\globalPlugins\visAware\network.py:120
 msgid "Authentication failed. Please check your API key or credentials."
 msgstr "身份验证失败。请检查您的 API 密钥或凭据。"
 
-#: addon\globalPlugins\visAware\network.py:126
+#: addon\globalPlugins\visAware\network.py:129
 #, python-brace-format
 msgid ""
 "Service is temporarily unavailable or rate limited: {code} {reason}. Please "
@@ -288,16 +288,16 @@ msgid ""
 msgstr "服务暂时不可用或受到限流：{code} {reason}。请稍后重试。"
 
 #. Translators: Used when an HTTP error response does not include a response body.
-#: addon\globalPlugins\visAware\network.py:134
+#: addon\globalPlugins\visAware\network.py:137
 msgid "No additional details were provided."
 msgstr "服务未提供更多详细信息。"
 
-#: addon\globalPlugins\visAware\network.py:137
+#: addon\globalPlugins\visAware\network.py:140
 #, python-brace-format
 msgid "Service returned an error: {code} {reason}. Details: {details}"
 msgstr "服务返回错误：{code} {reason}。详情：{details}"
 
-#: addon\globalPlugins\visAware\network.py:271
+#: addon\globalPlugins\visAware\network.py:274
 msgid "Network connection failed. Please check your connection and try again."
 msgstr "网络连接失败。请检查您的网络连接并重试。"
 
@@ -1155,38 +1155,41 @@ msgid "Enable model &thinking"
 msgstr "启用模型思考(&T)"
 
 #. Translators: The description of the Apple Vision (OCR Server) engine.
-#: addon\globalPlugins\visAware\contentRecognizers\appleOCRServer.py:25
+#: addon\globalPlugins\visAware\contentRecognizers\appleOCRServer.py:26
 msgid "Apple Vision (OCR Server)"
 msgstr "Apple Vision（OCR Server）"
 
 #. Translators: The label for the OCR Server address field in the engine settings.
-#: addon\globalPlugins\visAware\contentRecognizers\appleOCRServer.py:43
+#: addon\globalPlugins\visAware\contentRecognizers\appleOCRServer.py:44
 msgid "Server &address (e.g., 192.168.1.10:8000)"
 msgstr "服务器地址(&A)（例如：192.168.1.10:8000）"
 
 #. Translators: An error message shown when the OCR Server address is not
 #. configured correctly.
-#: addon\globalPlugins\visAware\contentRecognizers\appleOCRServer.py:81
+#: addon\globalPlugins\visAware\contentRecognizers\appleOCRServer.py:100
 msgid "Please configure a valid OCR Server address in the engine settings."
 msgstr "请在引擎设置中配置有效的 OCR Server 地址。"
 
+#. Translators: The OCR Server app returned data that was not in the expected format.
+#: addon\globalPlugins\visAware\contentRecognizers\appleOCRServer.py:125
+#: addon\globalPlugins\visAware\contentRecognizers\appleOCRServer.py:128
+#: addon\globalPlugins\visAware\contentRecognizers\appleOCRServer.py:143
+#: addon\globalPlugins\visAware\contentRecognizers\appleOCRServer.py:169
+msgid "OCR Server returned an invalid response."
+msgstr "OCR Server 返回了无效响应。"
+
 #. Translators: A fallback error message when the OCR Server app provides
 #. no error details.
-#: addon\globalPlugins\visAware\contentRecognizers\appleOCRServer.py:107
+#: addon\globalPlugins\visAware\contentRecognizers\appleOCRServer.py:134
 msgid "Unknown server error"
 msgstr "未知服务器错误"
 
 #. Translators: The OCR Server app reported an error.
 #. The placeholder will be replaced with the error message.
-#: addon\globalPlugins\visAware\contentRecognizers\appleOCRServer.py:111
+#: addon\globalPlugins\visAware\contentRecognizers\appleOCRServer.py:137
 #, python-brace-format
 msgid "OCR Server error: {}"
 msgstr "OCR Server 错误：{}"
-
-#. Translators: The OCR Server app returned data that was not in the expected format.
-#: addon\globalPlugins\visAware\contentRecognizers\appleOCRServer.py:116
-msgid "OCR Server returned an invalid response."
-msgstr "OCR Server 返回了无效响应。"
 
 #. Translators: The description of the Baidu OCR engine.
 #: addon\globalPlugins\visAware\contentRecognizers\baiduOCR.py:25
@@ -1858,19 +1861,29 @@ msgstr "为 NVDA 提供 OCR、AI 图像描述、自动识别和 AI 辅助计算�
 #. Translators: what's new content for the add-on version to be shown in the add-on store
 #: buildVars.py:35
 msgid ""
-"### 0.6.5\n"
+"### 0.7.0\n"
 "\n"
-"* Improved settings and follow-up dialog layouts, including high-DPI "
-"scaling.\n"
-"* Improved editing of long custom and automatic-recognition prompts.\n"
-"* Improved follow-up questions so initial descriptions and latest answers "
-"can be viewed as formatted content."
+"* Added the Apple Vision (OCR Server) engine for local-network OCR through "
+"the open-source OCR Server iOS app."
 msgstr ""
-"### 0.6.5\n"
+"### 0.7.0\n"
 "\n"
-"* 改进设置和追问对话框的布局，包括高 DPI 缩放。\n"
-"* 改进较长的自定义提示词和自动识别提示词的编辑体验。\n"
-"* 改进追问功能，现在可以以格式化内容查看初始描述和最新回答。"
+"* 新增 Apple Vision（OCR Server）引擎，可通过开源 iOS 应用 OCR Server 在局域网中进行 OCR。"
+
+#~ msgid ""
+#~ "### 0.6.5\n"
+#~ "\n"
+#~ "* Improved settings and follow-up dialog layouts, including high-DPI "
+#~ "scaling.\n"
+#~ "* Improved editing of long custom and automatic-recognition prompts.\n"
+#~ "* Improved follow-up questions so initial descriptions and latest answers "
+#~ "can be viewed as formatted content."
+#~ msgstr ""
+#~ "### 0.6.5\n"
+#~ "\n"
+#~ "* 改进设置和追问对话框的布局，包括高 DPI 缩放。\n"
+#~ "* 改进较长的自定义提示词和自动识别提示词的编辑体验。\n"
+#~ "* 改进追问功能，现在可以以格式化内容查看初始描述和最新回答。"
 
 #~ msgid ""
 #~ "### 0.6.4\n"

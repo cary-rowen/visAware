@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
-"POT-Creation-Date: 2026-07-29 11:06+0300\n"
+"POT-Creation-Date: 2026-07-30 23:19+0800\n"
 "PO-Revision-Date: 2026-07-29 12:04+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -276,7 +276,7 @@ msgstr "Середня (збалансовано)"
 msgid "Low (faster, less detail)"
 msgstr "Низька (швидше, менша деталізація)"
 
-#: addon\globalPlugins\visAware\network.py:77
+#: addon\globalPlugins\visAware\network.py:80
 msgid ""
 "Network connection failed after multiple attempts. Please check your "
 "connection and try again."
@@ -284,13 +284,13 @@ msgstr ""
 "Не вдалося підключитися до мережі після кількох спроб. Перевірте підключення "
 "та повторіть спробу."
 
-#: addon\globalPlugins\visAware\network.py:117
+#: addon\globalPlugins\visAware\network.py:120
 msgid "Authentication failed. Please check your API key or credentials."
 msgstr ""
 "Помилка автентифікації. Будь ласка, перевірте свій ключ API або облікові "
 "дані."
 
-#: addon\globalPlugins\visAware\network.py:126
+#: addon\globalPlugins\visAware\network.py:129
 #, python-brace-format
 msgid ""
 "Service is temporarily unavailable or rate limited: {code} {reason}. Please "
@@ -300,16 +300,16 @@ msgstr ""
 "ласка, спробуйте пізніше."
 
 #. Translators: Used when an HTTP error response does not include a response body.
-#: addon\globalPlugins\visAware\network.py:134
+#: addon\globalPlugins\visAware\network.py:137
 msgid "No additional details were provided."
 msgstr "Жодних додаткових подробиць надано не було."
 
-#: addon\globalPlugins\visAware\network.py:137
+#: addon\globalPlugins\visAware\network.py:140
 #, python-brace-format
 msgid "Service returned an error: {code} {reason}. Details: {details}"
 msgstr "Сервіс повернув помилку: {code} {reason}. Деталі: {details}"
 
-#: addon\globalPlugins\visAware\network.py:268
+#: addon\globalPlugins\visAware\network.py:274
 msgid "Network connection failed. Please check your connection and try again."
 msgstr "Помилка мережевого з’єднання. Перевірте з’єднання та повторіть спробу."
 
@@ -1173,6 +1173,43 @@ msgstr "Vivo BlueLM Vision (NVDACN)"
 msgid "Enable model &thinking"
 msgstr "Увімкнути &міркування моделі"
 
+#. Translators: The description of the Apple Vision (OCR Server) engine.
+#: addon\globalPlugins\visAware\contentRecognizers\appleOCRServer.py:26
+msgid "Apple Vision (OCR Server)"
+msgstr "Apple Vision (OCR Server)"
+
+#. Translators: The label for the OCR Server address field in the engine settings.
+#: addon\globalPlugins\visAware\contentRecognizers\appleOCRServer.py:44
+msgid "Server &address (e.g., 192.168.1.10:8000)"
+msgstr "&Адреса сервера (наприклад, 192.168.1.10:8000)"
+
+#. Translators: An error message shown when the OCR Server address is not
+#. configured correctly.
+#: addon\globalPlugins\visAware\contentRecognizers\appleOCRServer.py:100
+msgid "Please configure a valid OCR Server address in the engine settings."
+msgstr "Будь ласка, налаштуйте дійсну адресу OCR Server у налаштуваннях рушія."
+
+#. Translators: The OCR Server app returned data that was not in the expected format.
+#: addon\globalPlugins\visAware\contentRecognizers\appleOCRServer.py:125
+#: addon\globalPlugins\visAware\contentRecognizers\appleOCRServer.py:128
+#: addon\globalPlugins\visAware\contentRecognizers\appleOCRServer.py:143
+#: addon\globalPlugins\visAware\contentRecognizers\appleOCRServer.py:169
+msgid "OCR Server returned an invalid response."
+msgstr "OCR Server повернув недійсну відповідь."
+
+#. Translators: A fallback error message when the OCR Server app provides
+#. no error details.
+#: addon\globalPlugins\visAware\contentRecognizers\appleOCRServer.py:134
+msgid "Unknown server error"
+msgstr "Невідома помилка сервера"
+
+#. Translators: The OCR Server app reported an error.
+#. The placeholder will be replaced with the error message.
+#: addon\globalPlugins\visAware\contentRecognizers\appleOCRServer.py:137
+#, python-brace-format
+msgid "OCR Server error: {}"
+msgstr "Помилка OCR Server: {}"
+
 #. Translators: The description of the Baidu OCR engine.
 #: addon\globalPlugins\visAware\contentRecognizers\baiduOCR.py:25
 msgid "Baidu OCR"
@@ -1872,22 +1909,35 @@ msgstr ""
 #. Translators: what's new content for the add-on version to be shown in the add-on store
 #: buildVars.py:35
 msgid ""
-"### 0.6.5\n"
+"### 0.7.0\n"
 "\n"
-"* Improved settings and follow-up dialog layouts, including high-DPI "
-"scaling.\n"
-"* Improved editing of long custom and automatic-recognition prompts.\n"
-"* Improved follow-up questions so initial descriptions and latest answers "
-"can be viewed as formatted content."
+"* Added the Apple Vision (OCR Server) engine for local-network OCR through "
+"the open-source OCR Server iOS app."
 msgstr ""
-"### 0.6.5\n"
+"### 0.7.0\n"
 "\n"
-"* Покращено макети діалогових вікон налаштувань та подальших питань, зокрема "
-"з урахуванням масштабування з високою роздільною здатністю (DPI).\n"
-"* Покращено редагування довгих підказок, як користувацьких, так і тих, що "
-"генеруються автоматично.\n"
-"* Покращено додаткові питання, завдяки чому початкові описи та останні "
-"відповіді можна переглядати у форматованому вигляді."
+"* Додано рушій Apple Vision (OCR Server) для локального мережевого "
+"розпізнавання тексту за допомогою застосунку OCR Server з відкритим кодом "
+"для iOS."
+
+#~ msgid ""
+#~ "### 0.6.5\n"
+#~ "\n"
+#~ "* Improved settings and follow-up dialog layouts, including high-DPI "
+#~ "scaling.\n"
+#~ "* Improved editing of long custom and automatic-recognition prompts.\n"
+#~ "* Improved follow-up questions so initial descriptions and latest answers "
+#~ "can be viewed as formatted content."
+#~ msgstr ""
+#~ "### 0.6.5\n"
+#~ "\n"
+#~ "* Покращено макети діалогових вікон налаштувань та подальших питань, "
+#~ "зокрема з урахуванням масштабування з високою роздільною здатністю "
+#~ "(DPI).\n"
+#~ "* Покращено редагування довгих підказок, як користувацьких, так і тих, що "
+#~ "генеруються автоматично.\n"
+#~ "* Покращено додаткові питання, завдяки чому початкові описи та останні "
+#~ "відповіді можна переглядати у форматованому вигляді."
 
 #~ msgid "Open rendered &answer"
 #~ msgstr "Відкрити відформатовану &відповідь"
