@@ -5,6 +5,7 @@
 """An OCR engine that uses the 'OCR Server' iOS app on the local network."""
 
 import json
+import urllib.parse
 from typing import Any, override
 
 import addonHandler
@@ -46,12 +47,13 @@ class CustomContentRecognizer(BaseRecognizer):
 
 	@property
 	def serverAddress(self) -> str:
+		"""The configured OCR Server base address."""
 		return self._serverAddress
 
 	@serverAddress.setter
 	def serverAddress(self, value: str) -> None:
 		value = value.strip()
-		if value and not value.startswith(("http://", "https://")):
+		if value and "://" not in value:
 			value = "http://" + value
 		self._serverAddress = value
 
@@ -75,11 +77,30 @@ class CustomContentRecognizer(BaseRecognizer):
 		:returns: A dictionary of parameters for `requests`.
 		:raises ApiError: If the server address is not configured.
 		"""
-		if not self.serverAddress.startswith(("http://", "https://")):
+		try:
+			parsedAddress = urllib.parse.urlsplit(self.serverAddress)
+			hasValidPort = parsedAddress.port is None or parsedAddress.port > 0
+		except ValueError:
+			parsedAddress = None
+			hasValidPort = False
+		if (
+			parsedAddress is None
+			or parsedAddress.scheme.lower() not in ("http", "https")
+			or not parsedAddress.hostname
+			or not hasValidPort
+			or parsedAddress.username is not None
+			or parsedAddress.password is not None
+			or any(character.isspace() for character in parsedAddress.netloc)
+			or parsedAddress.path.rstrip("/") not in ("", "/upload")
+			or parsedAddress.query
+			or parsedAddress.fragment
+		):
 			# Translators: An error message shown when the OCR Server address is not
 			# configured correctly.
 			raise ApiError(_("Please configure a valid OCR Server address in the engine settings."))
-		url = f"{self.serverAddress.rstrip('/')}/upload"
+		url = urllib.parse.urlunsplit(
+			(parsedAddress.scheme.lower(), parsedAddress.netloc, "/upload", "", ""),
+		)
 		files = {"file": ("image.png", imageContent, "image/png")}
 		return {
 			"method": "POST",
@@ -99,21 +120,28 @@ class CustomContentRecognizer(BaseRecognizer):
 		"""
 		try:
 			responseJson = self._convertToJson(result)
-			if responseJson.get("success") is not True:
-				serverMessage = responseJson.get("message")
-				if not isinstance(serverMessage, str) or not serverMessage:
-					# Translators: A fallback error message when the OCR Server app provides
-					# no error details.
-					serverMessage = _("Unknown server error")
-				log.error(f"OCR Server returned a failure message: {serverMessage}")
-				# Translators: The OCR Server app reported an error.
-				# The placeholder will be replaced with the error message.
-				return _("OCR Server error: {}").format(serverMessage)
-			return False
 		except json.JSONDecodeError:
-			log.error("OCR Server: Failed to parse JSON from response.")
 			# Translators: The OCR Server app returned data that was not in the expected format.
 			return _("OCR Server returned an invalid response.")
+		if not isinstance(responseJson, dict):
+			# Translators: The OCR Server app returned data that was not in the expected format.
+			return _("OCR Server returned an invalid response.")
+		if responseJson.get("success") is not True:
+			serverMessage = responseJson.get("message")
+			if not isinstance(serverMessage, str) or not serverMessage:
+				# Translators: A fallback error message when the OCR Server app provides
+				# no error details.
+				serverMessage = _("Unknown server error")
+			# Translators: The OCR Server app reported an error.
+			# The placeholder will be replaced with the error message.
+			return _("OCR Server error: {}").format(serverMessage)
+		if not isinstance(responseJson.get("ocr_result"), str) or not isinstance(
+			responseJson.get("ocr_boxes"),
+			list,
+		):
+			# Translators: The OCR Server app returned data that was not in the expected format.
+			return _("OCR Server returned an invalid response.")
+		return False
 
 	@override
 	def extractText(self, apiResult: dict[str, Any]) -> str:
@@ -123,7 +151,8 @@ class CustomContentRecognizer(BaseRecognizer):
 		:param apiResult: The parsed JSON dictionary from the API.
 		:returns: The recognized text as a single string.
 		"""
-		return apiResult.get("ocr_result", "")
+		text = apiResult.get("ocr_result")
+		return text if isinstance(text, str) else ""
 
 	@override
 	def _convertToLineResultFormat(self, apiResult: dict[str, Any]) -> list[list[dict[str, Any]]]:
@@ -134,24 +163,35 @@ class CustomContentRecognizer(BaseRecognizer):
 		:returns: A list of lines, where each line is a list of word dictionaries.
 		"""
 		lines: list[list[dict[str, Any]]] = []
-		ocrBoxes = apiResult.get("ocr_boxes", [])
-		if not ocrBoxes:
-			fullText = self.extractText(apiResult)
-			if fullText:
-				# Fallback for when there are no coordinate boxes.
-				lines.append([{"text": fullText, "x": 0, "y": 0, "width": 1, "height": 1}])
-			return lines
+		ocrBoxes = apiResult.get("ocr_boxes")
+		if not isinstance(ocrBoxes, list):
+			# Translators: The OCR Server app returned data that was not in the expected format.
+			raise ApiError(_("OCR Server returned an invalid response."))
+		skippedBoxCount = 0
 		for box in ocrBoxes:
+			if not isinstance(box, dict):
+				skippedBoxCount += 1
+				continue
+			text = box.get("text")
+			if not isinstance(text, str) or not text.strip():
+				skippedBoxCount += 1
+				continue
 			try:
 				word = {
-					"text": box.get("text", ""),
-					"x": int(float(box.get("x", 0))),
-					"y": int(float(box.get("y", 0))),
-					"width": int(float(box.get("w", 0))),
-					"height": int(float(box.get("h", 0))),
+					"text": text,
+					"x": int(float(box["x"])),
+					"y": int(float(box["y"])),
+					"width": int(float(box["w"])),
+					"height": int(float(box["h"])),
 				}
-				# Treat each recognized box as a separate line.
-				lines.append([word])
-			except (ValueError, TypeError):
-				log.warning(f"OCR Server: Skipping malformed box data: {box}")
+			except (KeyError, OverflowError, TypeError, ValueError):
+				skippedBoxCount += 1
+				continue
+			if word["x"] < 0 or word["y"] < 0 or word["width"] <= 0 or word["height"] <= 0:
+				skippedBoxCount += 1
+				continue
+			# Treat each recognized box as a separate line.
+			lines.append([word])
+		if skippedBoxCount:
+			log.debugWarning(f"OCR Server ignored {skippedBoxCount} malformed or empty OCR boxes.")
 		return lines

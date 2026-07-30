@@ -40,7 +40,7 @@ def _install_module_stubs() -> None:
 		"Log",
 		(),
 		{
-			"error": staticmethod(lambda *args, **kwargs: None),
+			"debugWarning": staticmethod(lambda *args, **kwargs: None),
 			"warning": staticmethod(lambda *args, **kwargs: None),
 		},
 	)()

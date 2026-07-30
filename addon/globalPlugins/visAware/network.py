@@ -61,7 +61,10 @@ def retryOnNetworkError(
 						raise e
 
 				if attempt + 1 >= attempts:
-					log.error(f"{func.__name__} failed after {attempts} attempts.", exc_info=lastException)
+					log.debugWarning(
+						f"{func.__name__} failed after {attempts} attempts.",
+						exc_info=lastException,
+					)
 					break
 
 				log.warning(f"{logMessagePrefix}: {lastException}. Retrying in {currentDelay:.1f}s...")

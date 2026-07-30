@@ -1,3 +1,7 @@
+### 0.7.0
+
+* Added the Apple Vision (OCR Server) engine for local-network OCR through the open-source OCR Server iOS app.
+
 ### 0.6.5
 
 * Improved settings and follow-up dialog layouts, including high-DPI scaling.

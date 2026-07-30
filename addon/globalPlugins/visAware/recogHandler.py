@@ -761,7 +761,7 @@ class BaseRecognizer(ContentRecognizer, AbstractEngine, ABC):
 		self._recognitionThread = None
 
 	@staticmethod
-	def _convertToJson(data: bytes) -> dict[str, Any]:
+	def _convertToJson(data: bytes) -> Any:
 		"""Decodes and parses JSON data from bytes."""
 		return json.loads(data.decode("utf-8", errors="ignore"))
 
