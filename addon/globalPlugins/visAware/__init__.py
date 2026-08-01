@@ -11,12 +11,13 @@ import globalPluginHandler
 import globalVars
 import gui
 import os
+import speech
 import wx
 import inputCore
 from logHandler import log
 from gui.settingsDialogs import NVDASettingsDialog, SettingsPanel
 import functools
-from typing import Any, TYPE_CHECKING
+from typing import Any, TYPE_CHECKING, override
 from collections.abc import Callable
 from threading import Event
 from scriptHandler import script
@@ -73,7 +74,7 @@ GENERAL_CONFIG_SPEC = {
 	"preferScreenshotForWebImages": "boolean(default=False)",
 	"verboseDebugLogging": "boolean(default=False)",
 	"engineType": 'option("OCR", "ImageDescriber", "Agent", default="OCR")',
-	"sourceType": 'option("navigatorObject", "clipboardImage", "wholeDesktop", "foreGroundWindow", default="navigatorObject")',
+	"sourceType": 'option("navigatorObject", "clipboardImage", "wholeDesktop", "foreGroundWindow", "mouseCaptureArea", default="navigatorObject")',
 	"excludedSourceTypes": "list(default=list())",
 	"nvdacnUser": "string(default='')",
 	"nvdacnPass": "string(default='')",
@@ -133,6 +134,229 @@ def multiPressAction(timeout: int = 350):
 
 	return decorator
 
+
+class ScreenCaptureDialog(wx.Dialog):
+	"""A full-screen, borderless dialog for selecting a screen region to capture.
+
+	Displays a dimmed screenshot of the entire desktop. The user can drag to
+	select a rectangular region, which is then returned as a cropped image.
+	Press Escape to cancel, or right-click to reset the selection.
+	"""
+
+	# Minimum dimensions (in pixels) for a selection to be considered valid.
+	_MIN_SELECTION_WIDTH = 5
+	_MIN_SELECTION_HEIGHT = 5
+
+	def __init__(self, parent: wx.Window | None) -> None:
+		# Create a full-screen, borderless, always-on-top window.
+		super().__init__(parent, style=wx.NO_BORDER | wx.STAY_ON_TOP)
+
+		# Let wxPython know we handle all background painting ourselves.
+		self.SetBackgroundStyle(wx.BG_STYLE_PAINT)
+
+		# Suppress the default background erase to eliminate flicker.
+		self.Bind(wx.EVT_ERASE_BACKGROUND, self.onEraseBackground)
+
+		# Obtain screen dimensions and resize to cover the entire display.
+		self._screenLeft, self._screenTop, self._screenWidth, self._screenHeight = (
+			wx.Display().GetGeometry()
+		)
+		self.SetSize((self._screenLeft, self._screenTop, self._screenWidth, self._screenHeight))
+
+		# Capture a full-screen screenshot to use as the background.
+		self._fullScreenshot = ImageGrab.grab(all_screens=True)
+
+		# Convert the PIL screenshot to a wx.Bitmap for fast painting.
+		self._backgroundBitmap = self._pilToBitmap(self._fullScreenshot)
+
+		# Initialize selection state, starting from the current NVDA mouse object.
+		mouseLocation = api.getMouseObject().location
+		self._startPos = mouseLocation.topLeft
+		self._currentPos = mouseLocation.bottomRight
+		self._dragStartPos = None  # Saved on left-down; used when dragging begins.
+		self._isSelecting = False
+		self._resultRect: tuple[int, int, int, int] | None = None  # (x, y, w, h)
+
+		# Bind input events.
+		self.Bind(wx.EVT_PAINT, self.onPaint)
+		self.Bind(wx.EVT_LEFT_DOWN, self.onMouseLeftDown)
+		self.Bind(wx.EVT_MOTION, self.onMouseMove)
+		self.Bind(wx.EVT_LEFT_UP, self.onMouseLeftUp)
+		self.Bind(wx.EVT_RIGHT_UP, self.onMouseRightUp)
+		self.Bind(wx.EVT_KEY_UP, self.onKeyUp)
+		self.Bind(wx.EVT_MOUSE_CAPTURE_LOST, self.onMouseCaptureLost)
+
+		# Use a crosshair cursor to indicate selection mode.
+		self.SetCursor(wx.Cursor(wx.CURSOR_CROSS))
+
+	def _pilToBitmap(self, pilImage: Image.Image) -> wx.Bitmap:
+		"""Convert a PIL Image to a wx.Bitmap for rendering.
+
+		:param pilImage: The source PIL image (typically an RGB screenshot).
+		:returns: A wx.Bitmap suitable for use with wx.DC drawing operations.
+		"""
+		wxImage = wx.Image(pilImage.size[0], pilImage.size[1])
+		wxImage.SetData(pilImage.convert("RGB").tobytes())
+		return wxImage.ConvertToBitmap()
+
+	def onEraseBackground(self, event: wx.EraseEvent) -> None:
+		"""Intentionally skip background erasure to prevent white-flash flicker."""
+		pass
+
+	def onPaint(self, event: wx.PaintEvent) -> None:
+		"""Paint the dimmed screenshot overlay and the current selection rectangle.
+
+		Uses double-buffering (AutoBufferedPaintDC) for flicker-free rendering.
+		A semi-transparent dark overlay is drawn on top of the screenshot.
+		The area inside the current selection is drawn at full brightness and
+		outlined with a red border.
+		"""
+		dc = wx.AutoBufferedPaintDC(self)
+
+		# Draw the full screenshot as the base layer.
+		dc.DrawBitmap(self._backgroundBitmap, 0, 0)
+
+		# Draw a semi-transparent dark overlay on top of the screenshot.
+		gc = wx.GraphicsContext.Create(dc)
+		gc.SetBrush(wx.Brush(wx.Colour(0, 0, 0, 100)))  # Black at ~39 % opacity
+		gc.DrawRectangle(0, 0, self._screenWidth, self._screenHeight)
+
+		# If a selection is active, restore the original brightness inside it
+		# and draw a red outline.
+		if self._startPos and self._currentPos:
+			rect = self._getSelectionRect()
+
+			# Restore the un-dimmed screenshot within the selection bounds.
+			dc.SetClippingRegion(rect)
+			dc.DrawBitmap(self._backgroundBitmap, 0, 0)
+			dc.DestroyClippingRegion()
+
+			# Draw the red selection border.
+			gc.SetPen(wx.Pen(wx.Colour(255, 0, 0), 2))
+			gc.SetBrush(wx.NullBrush)
+			gc.DrawRectangle(rect.x, rect.y, rect.width, rect.height)
+
+	def onMouseLeftDown(self, event: wx.MouseEvent) -> None:
+		"""Begin a drag selection at the current mouse position.
+		The selection rectangle only appears once the mouse has been dragged
+		past the minimum threshold (see :meth:`onMouseMove`).
+		"""
+		self._dragStartPos = event.GetPosition()
+		self._isSelecting = True
+		try:
+			self.CaptureMouse()
+		except Exception:
+			log.debug("ScreenCaptureDialog: Could not capture mouse.", exc_info=True)
+
+	def onMouseCaptureLost(self, event: wx.MouseCaptureLostEvent) -> None:
+		"""Mouse capture was taken away (e.g. by the system or another window).
+		Clean up the in-progress selection state so the C++ assertion in
+		DoNotifyWindowAboutCaptureLost is satisfied.
+		"""
+		self._isSelecting = False
+		self._dragStartPos = None
+
+	def onMouseMove(self, event: wx.MouseEvent) -> None:
+		"""Track the mouse during an active drag selection.
+		A minimum drag distance is required before the selection rectangle
+		updates, filtering out accidental micro-movements when clicking.
+		"""
+		if not (self._isSelecting and event.Dragging()):
+			return
+		curPos = event.GetPosition()
+		dx = abs(curPos.x - self._dragStartPos.x)
+		dy = abs(curPos.y - self._dragStartPos.y)
+		if dx <= self._MIN_SELECTION_WIDTH and dy <= self._MIN_SELECTION_HEIGHT:
+			return  # Ignore tiny drags — likely an accidental click.
+		self._currentPos = curPos
+		self._startPos = self._dragStartPos
+		self.Refresh(eraseBackground=False)
+
+	def onMouseLeftUp(self, event: wx.MouseEvent) -> None:
+		"""Finalize the selection on mouse release."""
+		if not self._isSelecting:
+			return
+		if self.HasCapture():
+			self.ReleaseMouse()
+		self._isSelecting = False
+
+		rect = self._getSelectionRect()
+
+		if rect.width > self._MIN_SELECTION_WIDTH and rect.height > self._MIN_SELECTION_HEIGHT:
+			self._resultRect = (rect.x, rect.y, rect.width, rect.height)
+			self.EndModal(wx.ID_OK)
+		else:
+			# Tiny selection — treat as a stray click and reset.
+			self._startPos = None
+			self._currentPos = None
+			self.Refresh(eraseBackground=False)
+
+	def onMouseRightUp(self, event: wx.MouseEvent) -> None:
+		"""Cancel the current selection on right-click."""
+		if not self._isSelecting:
+			return
+		if self.HasCapture():
+			self.ReleaseMouse()
+		self._isSelecting = False
+		self._startPos = None
+		self._currentPos = None
+		self.Refresh(eraseBackground=False)
+
+	def onKeyUp(self, event: wx.KeyEvent) -> None:
+		"""Handle Escape: cancel the current selection, or dismiss the dialog."""
+		if event.GetKeyCode() != wx.WXK_ESCAPE:
+			event.Skip()
+			return
+		if self._isSelecting:
+			# Cancel the in-progress selection without closing the dialog.
+			if self.HasCapture():
+				self.ReleaseMouse()
+			self._isSelecting = False
+			self._dragStartPos = None
+			self._startPos = None
+			self._currentPos = None
+			self.Refresh(eraseBackground=False)
+		else:
+			self.EndModal(wx.ID_CANCEL)
+
+	def _getSelectionRect(self) -> wx.Rect:
+		"""Compute the normalized selection rectangle from start and current
+		positions. Handles dragging in any direction (including reverse).
+		"""
+		if not self._startPos or not self._currentPos:
+			return wx.Rect(0, 0, 0, 0)
+		x1, y1 = self._startPos
+		x2, y2 = self._currentPos
+		return wx.Rect(min(x1, x2), min(y1, y2), abs(x1 - x2), abs(y1 - y2))
+
+	def getCapturedImage(self) -> tuple[RecogImageInfo, Image.Image] | None:
+		"""Return the cropped image and its metadata for the selected region.
+
+		:returns: A (RecogImageInfo, PIL.Image) tuple, or None if no valid
+			selection was made.
+		"""
+		if not self._resultRect:
+			return None
+
+		x, y, w, h = self._resultRect
+		imageWidth, imageHeight = self._fullScreenshot.size
+
+		# Clamp crop coordinates to stay within the screenshot bounds.
+		# This guards against DPI scaling mismatches on Windows.
+		x = max(0, x)
+		y = max(0, y)
+		w = min(w, imageWidth - x)
+		h = min(h, imageHeight - y)
+
+		cropImage = self._fullScreenshot.crop((x, y, x + w, y + h))
+		info = RecogImageInfo(x, y, w, h, 1)
+		return info, cropImage
+
+	@override
+	def Destroy(self):
+		self._backgroundBitmap = None
+		self._fullScreenshot = None
+		return super().Destroy()
 
 class OCRMultiCategorySettingsDialog(NVDASettingsDialog):
 	# Translators: The title of the settings dialog for the Vis Aware add-on.
@@ -422,6 +646,15 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			currentEngineType="OCR",
 			simpleText=False,
 		)
+
+	@script(
+		# Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
+		description=_("Recognizes the text in the current mouse capture area with OCR engine."),
+		category=CATEGORY_NAME,
+		gestures=[],
+	)
+	def script_recognizeMouseCaptureAreaWithOCREngine(self, gesture: "inputCore.InputGesture") -> None:
+		self.executeRecognition(gesture, "mouseCaptureArea", "OCR", simpleText=True)
 
 	def _makePreviousResultObject(self, historyEntry: dict[str, Any]) -> RecognitionResult | None:
 		"""Creates a display result from cached history data."""
@@ -888,6 +1121,18 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		imageInfo = RecogImageInfo(0, 0, recognizeImage.width, recognizeImage.height, 1)
 		return imageInfo, recognizeImage
 
+	def _getImageFromMouseCaptureArea(self) -> tuple[RecogImageInfo, Image.Image] | None:
+		"""Gets an image from the mouse capture area and prepares it for recognition."""
+		gui.mainFrame.prePopup()
+		dlg = ScreenCaptureDialog(None)
+		try:
+			if dlg.ShowModal() == wx.ID_OK:
+				return dlg.getCapturedImage()
+		finally:
+			dlg.Destroy()
+			gui.mainFrame.postPopup()
+		return None
+
 	def _getImageFromSource(
 		self,
 		currentSource: str,
@@ -902,6 +1147,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		"""
 		sourceHandlers = {
 			"clipboardImage": self._getImageFromClipboardSource,
+			"mouseCaptureArea": self._getImageFromMouseCaptureArea,
 			"navigatorObject": functools.partial(
 				self._prepareImageFromObject,
 				api.getNavigatorObject,
@@ -1127,7 +1373,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			imageInfo, recognizeImage = imageData
 			pixels = recognizeImage.tobytes("raw", "BGRX")
 			# Translators: Reporting when content recognition (e.g. OCR) begins.
-			ui.message(_("Recognizing"))
+			ui.message(_("Recognizing"), speech.Spri.NOW)
 			if shouldStream:
 				self._streamingSpeechPresenter.start()
 			onResult = self._makeRecognitionCallback(recognitionSequence, shouldStream)

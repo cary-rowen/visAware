@@ -52,6 +52,8 @@ SOURCE_TYPES: List[Tuple[str, str]] = [
 	("foreGroundWindow", _("Foreground window")),
 	# Translators: A recognition source type
 	("clipboardImage", _("Image or image file on the clipboard")),
+	# Translators: A recognition source type
+	("mouseCaptureArea", _("Mouse capture area")),
 ]
 
 AUTO_RECOGNITION_OFF = "off"
