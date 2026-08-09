@@ -29,9 +29,8 @@ DEFAULT_AUTO_RECOGNITION_PROMPT = _(
 
 # Translators: The instruction appended when image description results are shown in a browsable message.
 _MARKDOWN_OUTPUT_INSTRUCTION = _(
-	"Format the response using simple Markdown when it improves readability. "
-	"Use paragraphs, lists, or headings where appropriate. "
-	"Keep LaTeX formulas enclosed in single dollar signs, and do not put them in code spans or code fences."
+	"Use simple Markdown where helpful. When the image contains a table, represent it as a standard Markdown table, "
+	"not a list. Never wrap the response in code fences. Keep LaTeX formulas enclosed in single dollar signs."
 )
 
 # Translators: The instruction appended when image description results are announced as plain text.

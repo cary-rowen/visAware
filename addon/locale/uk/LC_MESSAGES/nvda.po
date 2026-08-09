@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
-"POT-Creation-Date: 2026-08-09 23:19+0800\n"
+"POT-Creation-Date: 2026-08-10 00:30+0800\n"
 "PO-Revision-Date: 2026-07-29 12:04+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -144,8 +144,8 @@ msgstr "&Закрити"
 #. Translators: A choice meaning automatic recognition should use image description engines.
 #: addon\globalPlugins\visAware\askDialog.py:127
 #: addon\globalPlugins\visAware\recogHandler.py:43
-#: addon\globalPlugins\visAware\recogHandler.py:1060
-#: addon\globalPlugins\visAware\recogHandler.py:1089
+#: addon\globalPlugins\visAware\recogHandler.py:1061
+#: addon\globalPlugins\visAware\recogHandler.py:1090
 msgid "Image description"
 msgstr "Опис зображення"
 
@@ -453,8 +453,8 @@ msgstr "Помилка мережевого з’єднання. Перевір�
 #. Translators: The title of the OCR engine settings panel.
 #. Translators: A choice meaning automatic recognition should use OCR engines.
 #: addon\globalPlugins\visAware\recogHandler.py:42
-#: addon\globalPlugins\visAware\recogHandler.py:868
-#: addon\globalPlugins\visAware\recogHandler.py:1091
+#: addon\globalPlugins\visAware\recogHandler.py:869
+#: addon\globalPlugins\visAware\recogHandler.py:1092
 msgid "OCR"
 msgstr "OCR"
 
@@ -485,93 +485,93 @@ msgid "Image or image file on the clipboard"
 msgstr "Зображення або файл зображення в буфері обміну"
 
 #. Translators: An error message when failing to prepare the image for upload.
-#: addon\globalPlugins\visAware\recogHandler.py:503
+#: addon\globalPlugins\visAware\recogHandler.py:504
 msgid "Failed to prepare image content for upload."
 msgstr "Не вдалося підготувати вміст зображення для завантаження."
 
 #. Translators: An error message when failing to prepare the image object.
-#: addon\globalPlugins\visAware\recogHandler.py:533
-#: addon\globalPlugins\visAware\recogHandler.py:556
+#: addon\globalPlugins\visAware\recogHandler.py:534
+#: addon\globalPlugins\visAware\recogHandler.py:557
 msgid "Failed to prepare image object."
 msgstr "Не вдалося підготувати об'єкт зображення."
 
 #. Translators: An error message for a blank recognition result.
-#: addon\globalPlugins\visAware\recogHandler.py:589
-#: addon\globalPlugins\visAware\recogHandler.py:596
-#: addon\globalPlugins\visAware\recogHandler.py:622
-#: addon\globalPlugins\visAware\recogHandler.py:657
+#: addon\globalPlugins\visAware\recogHandler.py:590
+#: addon\globalPlugins\visAware\recogHandler.py:597
+#: addon\globalPlugins\visAware\recogHandler.py:623
+#: addon\globalPlugins\visAware\recogHandler.py:658
 #: addon\globalPlugins\visAware\contentRecognizers\paddleOCR.py:734
 #: addon\globalPlugins\visAware\contentRecognizers\paddleOCR.py:742
 msgid "Recognition result is blank."
 msgstr "Результат розпізнавання порожній."
 
 #. Translators: An error message when the image is too large to upload.
-#: addon\globalPlugins\visAware\recogHandler.py:747
+#: addon\globalPlugins\visAware\recogHandler.py:748
 msgid "Image is too large to upload."
 msgstr "Зображення занадто велике для завантаження."
 
 #. Translators: An error message when the image has too many pixels after resizing.
-#: addon\globalPlugins\visAware\recogHandler.py:815
+#: addon\globalPlugins\visAware\recogHandler.py:816
 msgid "Image has too many pixels after resizing."
 msgstr "Зображення має забагато пікселів після зміни розміру."
 
 #. Translators: The label for an engine setting to control image quality.
-#: addon\globalPlugins\visAware\recogHandler.py:833
+#: addon\globalPlugins\visAware\recogHandler.py:834
 msgid "Upload image quality"
 msgstr "Якість завантаженого зображення"
 
-#: addon\globalPlugins\visAware\recogHandler.py:840
+#: addon\globalPlugins\visAware\recogHandler.py:841
 msgid "Automatic recognition &prompt"
 msgstr "&Підказка для автоматичного розпізнавання"
 
 #. Translators: The label for an engine setting to override the model used for automatic recognition.
-#: addon\globalPlugins\visAware\recogHandler.py:850
+#: addon\globalPlugins\visAware\recogHandler.py:851
 msgid "Automatic recognition &model"
 msgstr "&Модель автоматичного розпізнавання"
 
 #. Translators: Reported when the previous image is unavailable for a follow-up question.
-#: addon\globalPlugins\visAware\recogHandler.py:1034
+#: addon\globalPlugins\visAware\recogHandler.py:1035
 msgid "The previous image is no longer available for follow-up questions."
 msgstr "Попереднє зображення більше не доступне для подальших запитань."
 
 #. Translators: An error message for a blank follow-up answer.
-#: addon\globalPlugins\visAware\recogHandler.py:1041
+#: addon\globalPlugins\visAware\recogHandler.py:1042
 msgid "Answer is blank."
 msgstr "Відповідь порожня."
 
 #. Translators: A choice meaning automatic recognition is disabled.
-#: addon\globalPlugins\visAware\recogHandler.py:1087
+#: addon\globalPlugins\visAware\recogHandler.py:1088
 msgid "Off"
 msgstr "Вимкнено"
 
 #. Translators: A choice for automatic recognition to use the current image description engine.
-#: addon\globalPlugins\visAware\recogHandler.py:1112
+#: addon\globalPlugins\visAware\recogHandler.py:1113
 msgid "Current image description engine"
 msgstr "Поточний сервіс опису зображень"
 
 #. Translators: A choice for automatic recognition to use the current OCR engine.
-#: addon\globalPlugins\visAware\recogHandler.py:1123
+#: addon\globalPlugins\visAware\recogHandler.py:1124
 msgid "Current OCR engine"
 msgstr "Поточний сервіс OCR"
 
 #. Translators: The title of the automatic recognition settings panel for the add-on.
-#: addon\globalPlugins\visAware\recogHandler.py:1166
+#: addon\globalPlugins\visAware\recogHandler.py:1167
 msgid "Automatic recognition"
 msgstr "Автоматичне розпізнавання"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1184
+#: addon\globalPlugins\visAware\recogHandler.py:1185
 msgid "Automatic recognition &type:"
 msgstr "Тип &автоматичного розпізнавання:"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1192
+#: addon\globalPlugins\visAware\recogHandler.py:1193
 msgid "Automatic recognition &engine:"
 msgstr "Сервіс автоматичного &розпізнавання:"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1201
+#: addon\globalPlugins\visAware\recogHandler.py:1202
 msgid "Automatic recognition &prompt:"
 msgstr "Підказка для &автоматичного розпізнавання:"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1216
+#: addon\globalPlugins\visAware\recogHandler.py:1217
 msgid "Automatic recognition &model:"
 msgstr "Модель автоматичного &розпізнавання:"
 
@@ -579,7 +579,7 @@ msgstr "Модель автоматичного &розпізнавання:"
 #. Translators: The label for the button that fetches Kimi model names.
 #. Translators: The label for the button that fetches OpenAI model names.
 #. Translators: The label for the button that fetches Ollama model names.
-#: addon\globalPlugins\visAware\recogHandler.py:1224
+#: addon\globalPlugins\visAware\recogHandler.py:1225
 #: addon\globalPlugins\visAware\agent\engines\kimi.py:77
 #: addon\globalPlugins\visAware\agent\engines\openai.py:66
 #: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:132
@@ -587,66 +587,66 @@ msgstr "Модель автоматичного &розпізнавання:"
 msgid "&Fetch models"
 msgstr "&Отримати моделі"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1234
+#: addon\globalPlugins\visAware\recogHandler.py:1235
 msgid "Prefer screenshots for &web images"
 msgstr "Для об'єктів &веб зображень Надавати перевагу знімкам екрана"
 
 #. Translators: A choice meaning automatic recognition should use the engine's regular model setting.
-#: addon\globalPlugins\visAware\recogHandler.py:1312
+#: addon\globalPlugins\visAware\recogHandler.py:1313
 msgid "Use the model selected in engine settings"
 msgstr "Використовувати модель, вибрану в налаштуваннях сервісу"
 
 #. Translators: The title of the general settings panel for the add-on.
-#: addon\globalPlugins\visAware\recogHandler.py:1407
+#: addon\globalPlugins\visAware\recogHandler.py:1408
 msgid "General"
 msgstr "Загальне"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1419
+#: addon\globalPlugins\visAware\recogHandler.py:1420
 msgid "Copy recognition result to the &clipboard"
 msgstr "&Копіювати результат розпізнавання в буфер обміну"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1424
+#: addon\globalPlugins\visAware\recogHandler.py:1425
 msgid "Show text results in a &browsable message"
 msgstr "Показувати текстові результати в &повідомленні з можливістю перегляду"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1429
+#: addon\globalPlugins\visAware\recogHandler.py:1430
 msgid "Automatically &read recognition result documents"
 msgstr "Автоматично &зчитувати документи з результатами розпізнавання"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1434
+#: addon\globalPlugins\visAware\recogHandler.py:1435
 msgid "&Enable more verbose logging for debug purposes"
 msgstr "&Увімкнути детальне ведення журналу для налагодження"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1441
+#: addon\globalPlugins\visAware\recogHandler.py:1442
 msgid "Recognition &sources included when cycling:"
 msgstr "&Джерела розпізнавання, включені під час циклічного перемикання:"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1458
+#: addon\globalPlugins\visAware\recogHandler.py:1459
 msgid "Vis Aware &mode:"
 msgstr "&Режим Vis Aware:"
 
 #. Translators: The label for a group box for NVDACN account settings.
-#: addon\globalPlugins\visAware\recogHandler.py:1468
+#: addon\globalPlugins\visAware\recogHandler.py:1469
 msgid "NVDACN account (for supported engines like Vivo OCR)"
 msgstr "Обліковий запис NVDACN (для підтримуваних сервісів, таких як Vivo OCR)"
 
 #. Translators: The label for the username text control in the NVDACN settings.
-#: addon\globalPlugins\visAware\recogHandler.py:1475
+#: addon\globalPlugins\visAware\recogHandler.py:1476
 msgid "Username:"
 msgstr "Ім'я користувача:"
 
 #. Translators: The label for the password text control in the NVDACN settings.
-#: addon\globalPlugins\visAware\recogHandler.py:1484
+#: addon\globalPlugins\visAware\recogHandler.py:1485
 msgid "Password:"
 msgstr "Пароль:"
 
 #. Translators: Shown when no recognition source is available for the cycle source command.
-#: addon\globalPlugins\visAware\recogHandler.py:1535
+#: addon\globalPlugins\visAware\recogHandler.py:1536
 msgid "At least one recognition source must be selected."
 msgstr "Потрібно вибрати принаймні одне джерело розпізнавання."
 
 #. Translators: The setting name used in the validation error for the recognition source checklist.
-#: addon\globalPlugins\visAware\recogHandler.py:1537
+#: addon\globalPlugins\visAware\recogHandler.py:1538
 msgid "Recognition sources included when cycling"
 msgstr "Джерела розпізнавання, включені під час циклічного перемикання"
 
@@ -2009,10 +2009,11 @@ msgid ""
 "you need to do. Follow the language of the user's image-description request."
 msgstr ""
 "Ви є рушієм опису зображень для користувача програми читання з екрана. "
-"Повертайте лише остаточну відповідь для користувача в полі JSON answer. "
-"Не включайте міркування, планування, чернетки, внутрішні примітки, переформулювання завдання, "
-"переліки обмежень, переклади для внутрішнього розуміння або позначки аналізу. "
-"Не кажіть, що вам потрібно зробити. Дотримуйтеся мови запиту користувача щодо опису зображення."
+"Повертайте лише остаточну відповідь для користувача в полі JSON answer. Не "
+"включайте міркування, планування, чернетки, внутрішні примітки, "
+"переформулювання завдання, переліки обмежень, переклади для внутрішнього "
+"розуміння або позначки аналізу. Не кажіть, що вам потрібно зробити. "
+"Дотримуйтеся мови запиту користувача щодо опису зображення."
 
 #. Translators: The description of the Google Gemma engine.
 #: addon\globalPlugins\visAware\imageDescribers\gemma.py:94
@@ -2201,17 +2202,16 @@ msgstr ""
 
 #: addon\globalPlugins\visAware\imageDescribers\_prompts.py:32
 msgid ""
-"Format the response using simple Markdown when it improves readability. Use "
-"paragraphs, lists, or headings where appropriate. Keep LaTeX formulas "
-"enclosed in single dollar signs, and do not put them in code spans or code "
-"fences."
+"Use simple Markdown where helpful. When the image contains a table, "
+"represent it as a standard Markdown table, not a list. Never wrap the "
+"response in code fences. Keep LaTeX formulas enclosed in single dollar signs."
 msgstr ""
-"Форматуйте відповідь за допомогою простого Markdown, коли це покращує "
-"читабельність. За потреби використовуйте абзаци, списки або заголовки. "
-"Обрамляйте формули LaTeX одинарними знаками долара й не розміщуйте їх у "
-"фрагментах коду або блоках коду."
+"Використовуйте простий Markdown, коли це доречно. Якщо зображення містить "
+"таблицю, подайте її як стандартну таблицю Markdown, а не список. Ніколи не "
+"обрамляйте відповідь блоками коду. Обрамляйте формули LaTeX одинарними "
+"знаками долара."
 
-#: addon\globalPlugins\visAware\imageDescribers\_prompts.py:39
+#: addon\globalPlugins\visAware\imageDescribers\_prompts.py:38
 msgid ""
 "Return plain text only. Do not use Markdown formatting, headings, lists, "
 "tables, code spans, or code fences. Keep LaTeX formulas enclosed in single "
@@ -2221,7 +2221,7 @@ msgstr ""
 "заголовки, списки, таблиці, фрагменти коду або блоки коду. Обрамляйте "
 "формули LaTeX одинарними знаками долара."
 
-#: addon\globalPlugins\visAware\imageDescribers\_prompts.py:46
+#: addon\globalPlugins\visAware\imageDescribers\_prompts.py:45
 msgid ""
 "When mathematical notation or formulas are visible, convert them to LaTeX "
 "and enclose each formula in single dollar signs, for example `$x^2 + y^2 = "
@@ -2262,6 +2262,17 @@ msgstr ""
 "для iOS.\n"
 "* Додано рушії Kimi для опису зображень, додаткових питань, OCR і ШІ-"
 "помічника через сумісний з OpenAI API Kimi."
+
+#~ msgid ""
+#~ "Format the response using simple Markdown when it improves readability. "
+#~ "Use paragraphs, lists, or headings where appropriate. Keep LaTeX formulas "
+#~ "enclosed in single dollar signs, and do not put them in code spans or "
+#~ "code fences."
+#~ msgstr ""
+#~ "Форматуйте відповідь за допомогою простого Markdown, коли це покращує "
+#~ "читабельність. За потреби використовуйте абзаци, списки або заголовки. "
+#~ "Обрамляйте формули LaTeX одинарними знаками долара й не розміщуйте їх у "
+#~ "фрагментах коду або блоках коду."
 
 #~ msgid ""
 #~ "Describe this image objectively. Include all visible text (if none, do "

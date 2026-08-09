@@ -33,6 +33,9 @@ class ImageDescriptionPromptsTestCase(unittest.TestCase):
 		self.assertIn("LaTeX", prompt)
 		self.assertIn("single dollar signs", prompt)
 		self.assertIn("simple Markdown", prompt)
+		self.assertIn("standard Markdown table", prompt)
+		self.assertIn("not a list", prompt)
+		self.assertIn("Never wrap the response in code fences", prompt)
 		self.assertNotIn("Return plain text only", prompt)
 
 	def test_plain_text_instruction_is_selected(self) -> None:
@@ -43,6 +46,8 @@ class ImageDescriptionPromptsTestCase(unittest.TestCase):
 		self.assertIn("LaTeX", prompt)
 		self.assertIn("Return plain text only", prompt)
 		self.assertIn("Do not use Markdown formatting", prompt)
+		self.assertNotIn("standard Markdown table", prompt)
+		self.assertNotIn("Never wrap the response in code fences", prompt)
 		self.assertNotIn("simple Markdown", prompt)
 
 	def test_default_prompt_does_not_repeat_formula_instruction(self) -> None:
