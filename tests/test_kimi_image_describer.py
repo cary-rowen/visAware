@@ -103,6 +103,10 @@ def load_kimi_image_module():
 	sys.modules[recogHandlerModule.__name__] = recogHandlerModule
 
 	_load_module(
+		"addon.globalPlugins.visAware.imageDescribers._prompts",
+		"addon/globalPlugins/visAware/imageDescribers/_prompts.py",
+	)
+	_load_module(
 		"addon.globalPlugins.visAware.kimiModels",
 		"addon/globalPlugins/visAware/kimiModels.py",
 	)
@@ -289,6 +293,13 @@ class KimiImageDescriberTestCase(unittest.TestCase):
 		engine.prompt = "  "
 
 		self.assertEqual(engine.prompt, module.DEFAULT_KIMI_PROMPT)
+
+	def test_custom_prompt_uses_new_configuration_key(self) -> None:
+		module = load_kimi_image_module()
+		engine = module.CustomContentRecognizer()
+
+		promptSetting = next(setting for setting in engine.supportedSettings if setting.name == "prompt")
+		self.assertEqual(promptSetting.configKey, "promptV2")
 
 	def test_context_windows_follow_official_model_limits(self) -> None:
 		load_kimi_image_module()

@@ -31,6 +31,7 @@ from .abstractEngine import AbstractEngine, AbstractEngineHandler, AbstractEngin
 from . import contentRecognizers
 from . import network
 from . import recogHistory
+from .imageDescribers._prompts import DEFAULT_AUTO_RECOGNITION_PROMPT, buildImageDescriptionPrompt
 from .conversation import QuestionStreamEvent, QuestionStreamFinished, QuestionStreamText
 from .engineGUIHelper import NumericEngineSetting, TextInputEngineSetting
 from .exceptions import ApiError, CancellationError, StreamIncompleteError, StreamReplacementError
@@ -176,6 +177,7 @@ class RecognitionRequest:
 
 	textResult: bool
 	streamResult: bool
+	prompt: str | None = None
 
 
 def getConfigChoiceValue(configSection: Any, configName: str, configList: List[Tuple[str, str]]) -> str:
@@ -400,7 +402,34 @@ class BaseRecognizer(ContentRecognizer, AbstractEngine, ABC):
 		"""Returns a raw non-streaming follow-up response, when a provider has one."""
 		return None
 
-	def recognize(self, pixels: bytes, imageInfo: RecogImageInfo, onResult: Callable) -> None:
+	def _buildRecognitionRequest(self, isAutomaticRecognition: bool = False) -> RecognitionRequest:
+		"""Captures request options, including the effective image-description prompt."""
+		prompt = getattr(self, "prompt", None)
+		if (
+			self.configSectionName == "ImageDescriber"
+			and self.textResult
+			and isinstance(prompt, str)
+			and prompt.strip()
+			and not isAutomaticRecognition
+		):
+			prompt = buildImageDescriptionPrompt(
+				prompt,
+				useMarkdown=bool(config.conf["visAwareGeneral"]["useBrowseableMessage"]),
+			)
+		return RecognitionRequest(
+			textResult=self.textResult,
+			streamResult=self.streamResult,
+			prompt=prompt if isinstance(prompt, str) and prompt.strip() else None,
+		)
+
+	def recognize(
+		self,
+		pixels: bytes,
+		imageInfo: RecogImageInfo,
+		onResult: Callable,
+		*,
+		isAutomaticRecognition: bool = False,
+	) -> None:
 		"""
 		Starts the recognition process in a background thread.
 
@@ -408,10 +437,7 @@ class BaseRecognizer(ContentRecognizer, AbstractEngine, ABC):
 		:param imageInfo: Information about the image's location and size.
 		:param onResult: The callback function to be called with the result.
 		"""
-		request = RecognitionRequest(
-			textResult=self.textResult,
-			streamResult=self.streamResult,
-		)
+		request = self._buildRecognitionRequest(isAutomaticRecognition)
 		self._cancellationEvent = Event()
 		self._recognitionThread = Thread(
 			name=f"RecognitionThread-{self.name}",
@@ -420,7 +446,13 @@ class BaseRecognizer(ContentRecognizer, AbstractEngine, ABC):
 		)
 		self._recognitionThread.start()
 
-	def recognizeImage(self, image: Image.Image, onResult: Callable) -> None:
+	def recognizeImage(
+		self,
+		image: Image.Image,
+		onResult: Callable,
+		*,
+		isAutomaticRecognition: bool = False,
+	) -> None:
 		"""
 		Starts recognition for an already available PIL image.
 
@@ -430,10 +462,7 @@ class BaseRecognizer(ContentRecognizer, AbstractEngine, ABC):
 		:param image: The image to recognize.
 		:param onResult: The callback function to be called with the result.
 		"""
-		request = RecognitionRequest(
-			textResult=self.textResult,
-			streamResult=self.streamResult,
-		)
+		request = self._buildRecognitionRequest(isAutomaticRecognition)
 		self._cancellationEvent = Event()
 		self._recognitionThread = Thread(
 			name=f"RecognitionThread-{self.name}",
@@ -807,11 +836,14 @@ class BaseRecognizer(ContentRecognizer, AbstractEngine, ABC):
 	@classmethod
 	def autoRecognitionPromptSetting(cls) -> EngineSetting:
 		# Translators: The label for an engine setting to override the prompt used for automatic recognition.
-		return TextInputEngineSetting(
+		setting = TextInputEngineSetting(
 			"autoRecognitionPrompt",
 			_("Automatic recognition &prompt"),
 			multiline=True,
 		)
+		if cls.configSectionName == "ImageDescriber":
+			setting.configKey = "autoRecognitionPromptV2"
+		return setting
 
 	@classmethod
 	def autoRecognitionModelSetting(cls) -> EngineSetting:
@@ -844,6 +876,13 @@ class BaseDescriber(BaseRecognizer):
 	configSectionName = "ImageDescriber"
 	supportsQuestions: bool = False
 	supportsQuestionStreaming: bool = False
+	_autoRecognitionPrompt: str = DEFAULT_AUTO_RECOGNITION_PROMPT
+
+	def applyAutoRecognitionOverrides(self) -> None:
+		"""Applies automatic settings and the concise default image prompt."""
+		super().applyAutoRecognitionOverrides()
+		if not self.autoRecognitionPrompt and self.isSupported("prompt"):
+			self.prompt = DEFAULT_AUTO_RECOGNITION_PROMPT
 
 	def _convertToLineResultFormat(self, apiResult: dict) -> list:
 		"""Converts plain image-description text into a single-line virtual document result."""

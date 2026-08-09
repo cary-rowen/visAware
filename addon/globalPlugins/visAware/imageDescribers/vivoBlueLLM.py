@@ -23,6 +23,7 @@ from ..engineGUIHelper import (
 	TextInputEngineSetting,
 	NumericEngineSetting,
 )
+from ._prompts import DEFAULT_IMAGE_DESCRIPTION_PROMPT
 
 addonHandler.initTranslation()
 
@@ -55,12 +56,7 @@ class CustomContentRecognizer(BaseDescriber):
 	_useStreaming: bool = False
 	# Translators: This is the default prompt sent to the VIVO BlueLLM model.
 	# It guides the model to provide an objective description.
-	_prompt: str = _(
-		"Describe this image objectively in Chinese. "
-		"Include all visible text (if none, do not mention it). "
-		"Do not include any introductory phrases. "
-		"Avoid subjective descriptions like 'it seems...' or 'it gives a feeling of...'.",
-	)
+	_prompt: str = DEFAULT_IMAGE_DESCRIPTION_PROMPT
 	_temperature: int = 70  # Using an integer range 0-100 for slider control
 	_thinkingLevel: str = "off"
 
@@ -97,6 +93,7 @@ class CustomContentRecognizer(BaseDescriber):
 				# Translators: The label for an engine setting to customize the prompt for the vision model.
 				_("Custom &prompt"),
 				multiline=True,
+				configKey="promptV2",
 			),
 			self.autoRecognitionPromptSetting(),
 			temperatureSetting,
@@ -243,7 +240,11 @@ class CustomContentRecognizer(BaseDescriber):
 					"content": f"data:image/{self.uploadImageFormat};base64,{imageBase64}",
 					"contentType": "image",
 				},
-				{"role": "user", "content": self.prompt, "contentType": "text"},
+				{
+					"role": "user",
+					"content": getattr(request, "prompt", None) or self.prompt,
+					"contentType": "text",
+				},
 			],
 			request,
 		)

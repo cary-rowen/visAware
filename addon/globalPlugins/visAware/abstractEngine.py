@@ -43,6 +43,11 @@ from gui.nvdaControls import EnhancedInputSlider
 addonHandler.initTranslation()
 
 
+def _getSettingConfigKey(setting: EngineSetting) -> str:
+	"""Returns the persisted configuration key for an engine setting."""
+	return getattr(setting, "configKey", None) or setting.name
+
+
 class AbstractEngineHandler(baseObject.AutoPropertyObject):
 	"""
 	Manages the lifecycle and configuration of a collection of engines of a specific type.
@@ -445,7 +450,7 @@ class AbstractEngine(baseObject.AutoPropertyObject, ABC):
 		for setting in self.supportedSettings:
 			if isinstance(setting, ButtonEngineSetting):
 				continue
-			conf[setting.name] = getattr(self, setting.name)
+			conf[_getSettingConfigKey(setting)] = getattr(self, setting.name)
 
 	def loadSettings(self, onlyChanged: bool = False) -> None:
 		"""
@@ -459,8 +464,9 @@ class AbstractEngine(baseObject.AutoPropertyObject, ABC):
 		for s in self.supportedSettings:
 			if isinstance(s, ButtonEngineSetting):
 				continue
+			configKey = _getSettingConfigKey(s)
 			try:
-				val = conf[s.name]
+				val = conf[configKey]
 			except KeyError:
 				continue
 			specStr = s.configSpec
@@ -477,7 +483,7 @@ class AbstractEngine(baseObject.AutoPropertyObject, ABC):
 					val = is_list(val)
 			except (ValueError, TypeError, SyntaxError):
 				log.debugWarning(
-					f"Could not convert setting '{s.name}' with value '{val!r}' based on spec '{specStr}'. Skipping.",
+					f"Could not convert setting '{configKey}' with value '{val!r}' based on spec '{specStr}'. Skipping.",
 				)
 				continue
 			if val is None:
@@ -494,7 +500,7 @@ class AbstractEngine(baseObject.AutoPropertyObject, ABC):
 		"""
 		spec = self.engineConfigSpec.copy()
 		for setting in self.supportedSettings:
-			spec[setting.name] = setting.configSpec
+			spec[_getSettingConfigKey(setting)] = setting.configSpec
 		return spec
 
 	def isSupported(self, settingName: str) -> bool:
@@ -901,9 +907,9 @@ class SpecificEnginePanel(SettingsPanel):
 			return
 		conf = config.conf[engine.configSectionName][engine.name]
 		preservedValues = {
-			setting.name: conf[setting.name]
+			_getSettingConfigKey(setting): conf[_getSettingConfigKey(setting)]
 			for setting in engine.supportedSettings
-			if setting.name.startswith("autoRecognition") and setting.name in conf
+			if setting.name.startswith("autoRecognition") and _getSettingConfigKey(setting) in conf
 		}
 		engine.saveSettings()
 		for name, value in preservedValues.items():

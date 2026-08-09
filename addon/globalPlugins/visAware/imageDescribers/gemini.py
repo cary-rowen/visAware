@@ -22,6 +22,7 @@ from ._googleGenerativeLanguage import (
 	getPromptFeedbackError,
 	parseSseDataChunk,
 )
+from ._prompts import DEFAULT_IMAGE_DESCRIPTION_PROMPT
 from ..recogHandler import BaseDescriber, RecognitionRequest
 from ..geminiModels import (
 	DEFAULT_GEMINI_MEDIA_RESOLUTION,
@@ -55,11 +56,7 @@ class CustomContentRecognizer(BaseDescriber):
 	_mediaResolution: str = DEFAULT_GEMINI_MEDIA_RESOLUTION
 	# Translators: This is the default prompt sent to the Gemini model.
 	# It guides the model to provide an objective description.
-	_prompt: str = _(
-		"Describe this image objectively. Include all visible text (if none, do not mention it). "
-		"Do not include any introductory phrases. "
-		"Avoid subjective descriptions like 'it seems...' or 'it gives a feeling of...'.",
-	)
+	_prompt: str = DEFAULT_IMAGE_DESCRIPTION_PROMPT
 
 	@property
 	def supportedSettings(self) -> List[Any]:
@@ -98,6 +95,7 @@ class CustomContentRecognizer(BaseDescriber):
 				# Translators: The label for a setting to customize the prompt for the vision model.
 				displayNameWithAccelerator=_("Custom &prompt"),
 				multiline=True,
+				configKey="promptV2",
 			),
 			self.autoRecognitionPromptSetting(),
 		]
@@ -204,7 +202,7 @@ class CustomContentRecognizer(BaseDescriber):
 				{
 					"parts": [
 						{"inline_data": {"mime_type": "image/jpeg", "data": imageBase64String}},
-						{"text": self.prompt},
+						{"text": getattr(request, "prompt", None) or self.prompt},
 					],
 				},
 			],

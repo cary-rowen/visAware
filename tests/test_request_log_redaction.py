@@ -100,10 +100,22 @@ def _install_module_stubs() -> None:
 	imageDescribersModule = types.ModuleType("addon.globalPlugins.visAware.imageDescribers")
 	imageDescribersModule.__path__ = []  # type: ignore[attr-defined]
 	sys.modules["addon.globalPlugins.visAware.imageDescribers"] = imageDescribersModule
+	promptsModule = types.ModuleType("addon.globalPlugins.visAware.imageDescribers._prompts")
+	promptsModule.DEFAULT_AUTO_RECOGNITION_PROMPT = "auto prompt"
+	promptsModule.buildImageDescriptionPrompt = lambda prompt, useMarkdown: prompt
+	sys.modules["addon.globalPlugins.visAware.imageDescribers._prompts"] = promptsModule
 
 	engineGUIHelperModule = types.ModuleType("addon.globalPlugins.visAware.engineGUIHelper")
 	engineGUIHelperModule.NumericEngineSetting = type("NumericEngineSetting", (), {})
-	engineGUIHelperModule.TextInputEngineSetting = type("TextInputEngineSetting", (), {})
+
+	class TextInputEngineSetting:
+		def __init__(self, name: str, displayNameWithAccelerator: str, **kwargs):
+			self.name = name
+			self.displayNameWithAccelerator = displayNameWithAccelerator
+			for key, value in kwargs.items():
+				setattr(self, key, value)
+
+	engineGUIHelperModule.TextInputEngineSetting = TextInputEngineSetting
 	sys.modules["addon.globalPlugins.visAware.engineGUIHelper"] = engineGUIHelperModule
 
 	abstractEngineModule = types.ModuleType("addon.globalPlugins.visAware.abstractEngine")
@@ -178,6 +190,43 @@ class RequestLogRedactionTestCase(unittest.TestCase):
 		inlineData = redacted["json"]["contents"][0]["parts"][0]["inline_data"]
 		self.assertEqual(inlineData["data"], "<redacted payload: 12 chars>")
 		self.assertEqual(redacted["files"]["file"][1], "<bytes: 3 bytes>")
+
+	def test_image_description_automatic_prompt_uses_new_configuration_key(self) -> None:
+		setting = self.module.BaseDescriber.autoRecognitionPromptSetting()
+
+		self.assertEqual(setting.name, "autoRecognitionPrompt")
+		self.assertEqual(setting.configKey, "autoRecognitionPromptV2")
+		self.assertEqual(self.module.BaseDescriber._autoRecognitionPrompt, "auto prompt")
+
+	def test_markdown_instruction_only_applies_to_simple_image_results(self) -> None:
+		self.module.config.conf = {"visAwareGeneral": {"useBrowseableMessage": True}}
+		self.module.buildImageDescriptionPrompt = (
+			lambda prompt, useMarkdown: f"{prompt} [markdown={useMarkdown}]"
+		)
+		testDescriber = type(
+			"TestDescriber",
+			(self.module.BaseDescriber,),
+			{
+				"supportedSettings": property(lambda _self: []),
+				"_buildRequestParams": lambda _self, _imageContent, _request: {},
+				"processApiResult": lambda _self, _result: False,
+				"extractText": lambda _self, _apiResult: "",
+			},
+		)
+		engine = object.__new__(testDescriber)
+		engine.prompt = "Describe the image."
+		engine.streamResult = False
+
+		engine.textResult = True
+		simpleRequest = engine._buildRecognitionRequest()
+		self.assertEqual(simpleRequest.prompt, "Describe the image. [markdown=True]")
+		self.module.config.conf["visAwareGeneral"]["useBrowseableMessage"] = False
+		plainRequest = engine._buildRecognitionRequest()
+		self.assertEqual(plainRequest.prompt, "Describe the image. [markdown=False]")
+
+		engine.textResult = False
+		richRequest = engine._buildRecognitionRequest()
+		self.assertEqual(richRequest.prompt, "Describe the image.")
 
 
 if __name__ == "__main__":

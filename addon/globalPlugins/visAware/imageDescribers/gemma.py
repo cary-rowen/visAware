@@ -29,6 +29,7 @@ from ._googleGenerativeLanguage import (
 	getCandidateFinishError,
 	getPromptFeedbackError,
 )
+from ._prompts import DEFAULT_IMAGE_DESCRIPTION_PROMPT
 
 addonHandler.initTranslation()
 
@@ -49,7 +50,8 @@ RESPONSE_SCHEMA = {
 		"answer",
 	],
 }
-SYSTEM_INSTRUCTION = (
+# Translators: The system instruction sent to Gemma for image descriptions.
+SYSTEM_INSTRUCTION = _(
 	"You are an image description engine for a screen reader. "
 	"Return only the final user-facing answer in the JSON answer field. "
 	"Do not include reasoning, planning, drafts, internal notes, task restatements, constraints lists, "
@@ -57,30 +59,7 @@ SYSTEM_INSTRUCTION = (
 	"Do not say what you need to do. "
 	"Follow the language of the user's image-description request."
 )
-LEGACY_DEFAULT_PROMPT_EN = (
-	"Describe this image objectively. Include all visible text (if none, do not mention it). "
-	"Do not include any introductory phrases. "
-	"Avoid subjective descriptions like 'it seems...' or 'it gives a feeling of...'."
-)
-LEGACY_DEFAULT_PROMPT = _(LEGACY_DEFAULT_PROMPT_EN)
-if not LEGACY_DEFAULT_PROMPT.strip():
-	LEGACY_DEFAULT_PROMPT = LEGACY_DEFAULT_PROMPT_EN
-DEFAULT_PROMPT_EN = (
-	"Describe this image objectively. Output only the final image description. "
-	"Do not include reasoning, planning, internal notes, task restatements, constraints lists, "
-	"translations for internal understanding, or introductory phrases. "
-	"Include all visible text (if none, do not mention it). "
-	"Avoid subjective descriptions like 'it seems...' or 'it gives a feeling of...'."
-)
-DEFAULT_PROMPT = _(
-	"Describe this image objectively. Output only the final image description. "
-	"Do not include reasoning, planning, internal notes, task restatements, constraints lists, "
-	"translations for internal understanding, or introductory phrases. "
-	"Include all visible text (if none, do not mention it). "
-	"Avoid subjective descriptions like 'it seems...' or 'it gives a feeling of...'.",
-)
-if not DEFAULT_PROMPT.strip():
-	DEFAULT_PROMPT = DEFAULT_PROMPT_EN
+DEFAULT_PROMPT = DEFAULT_IMAGE_DESCRIPTION_PROMPT
 
 
 def _isVerboseDebugLoggingEnabled() -> bool:
@@ -162,6 +141,7 @@ class CustomContentRecognizer(BaseDescriber):
 				# Translators: The label for a setting to customize the prompt for the vision model.
 				displayNameWithAccelerator=_("Custom &prompt"),
 				multiline=True,
+				configKey="promptV2",
 			),
 			self.autoRecognitionPromptSetting(),
 		]
@@ -241,7 +221,7 @@ class CustomContentRecognizer(BaseDescriber):
 
 	def loadSettings(self, onlyChanged: bool = False) -> None:
 		super().loadSettings(onlyChanged=onlyChanged)
-		if not self.prompt.strip() or self.prompt in {LEGACY_DEFAULT_PROMPT_EN, LEGACY_DEFAULT_PROMPT}:
+		if not self.prompt.strip():
 			self.prompt = DEFAULT_PROMPT
 
 	def _logRequestDiagnostics(
@@ -320,7 +300,7 @@ class CustomContentRecognizer(BaseDescriber):
 				{
 					"parts": [
 						imagePart,
-						{"text": self.prompt},
+						{"text": getattr(request, "prompt", None) or self.prompt},
 					],
 				},
 			],

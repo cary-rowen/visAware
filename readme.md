@@ -106,10 +106,10 @@ output is available only when browse mode is not in use.
 Automatic recognition is off by default. In the **Automatic recognition**
 panel, choose OCR or image description, then choose the current engine or a
 specific enabled engine. The prompt and model fields override that engine only
-for automatic recognition. Leave the prompt blank to use the engine's regular
-prompt, and choose **Use the model selected in engine settings** to follow its
-regular model. When supported, use **Fetch models** to load available model
-names.
+for automatic recognition. Leave the prompt blank to use Vis Aware's concise
+default prompt (20 to 30 characters, without Markdown), and choose **Use the
+model selected in engine settings** to follow its regular model. When
+supported, use **Fetch models** to load available model names.
 
 Automatic recognition runs in the background when the system focus, browse
 mode cursor, or navigator object moves to a supported graphic control. The

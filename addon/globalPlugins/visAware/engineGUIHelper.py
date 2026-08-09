@@ -159,6 +159,7 @@ class TextInputEngineSetting:
 	displayNameWithAccelerator: str
 	multiline: bool = False
 	refreshSettingsOnChange: bool = False
+	configKey: str | None = None
 	configSpec: str = field(init=False, default="string(default=None)")
 
 

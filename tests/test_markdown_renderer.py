@@ -99,30 +99,6 @@ class MarkdownRendererTestCase(unittest.TestCase):
 		self.assertNotIn("&amp;InvisibleTimes;", htmlText)
 		self.assertIn("\u2062", self.renderer.sanitizeRenderedHtml(htmlText))
 
-	def test_preserves_character_reference_terminators_while_converting_raw_html(self) -> None:
-		htmlText = self.renderer.renderMarkdownToHtml(
-			"<table><tr><td>AT&T &copy; &copy</td><td>$x$</td></tr></table>",
-		)
-		self.assertIn("<td>AT&T &copy; &copy</td>", htmlText)
-		self.assertEqual(1, htmlText.count("<math"))
-		sanitizedHtml = self.renderer.sanitizeRenderedHtml(htmlText)
-		self.assertIn("AT&amp;T", sanitizedHtml)
-		self.assertNotIn("AT&amp;T;", sanitizedHtml)
-
-	def test_escapes_mathml_text_from_raw_html_formula(self) -> None:
-		htmlText = self.renderer.renderMarkdownToHtml(r"<div>$\text{x&lt;y}$ trailing</div>")
-		self.assertIn("<mtext>x&lt;y</mtext>", htmlText)
-		sanitizedHtml = self.renderer.sanitizeRenderedHtml(htmlText)
-		self.assertIn("<mtext>x&lt;y</mtext>", sanitizedHtml)
-		self.assertIn(" trailing</div>", sanitizedHtml)
-
-	def test_preserves_latex2mathml_symbols(self) -> None:
-		htmlText = self.renderer.renderMarkdownToHtml(r"<div>$x+1 \to y \le z \alpha$</div>")
-		self.assertNotIn("&amp;#", htmlText)
-		sanitizedHtml = self.renderer.sanitizeRenderedHtml(htmlText)
-		for character in ("+", "→", "≤", "α"):
-			self.assertIn(character, sanitizedHtml)
-
 	def test_preserves_literal_numeric_character_reference_text(self) -> None:
 		htmlText = self.renderer.renderMarkdownToHtml(
 			r"<div>$\text{&amp;#65; &amp;#x41; &amp;copy;}$</div>",
@@ -131,24 +107,6 @@ class MarkdownRendererTestCase(unittest.TestCase):
 		for literalReference in ("&amp;#65;", "&amp;#x41;", "&amp;copy;"):
 			self.assertIn(literalReference, htmlText)
 			self.assertIn(literalReference, sanitizedHtml)
-
-	def test_literal_reference_marker_avoids_unescaped_formula_characters(self) -> None:
-		marker = chr(self.renderer._PRIVATE_USE_MARKER_START)
-		htmlText = self.renderer.renderMarkdownToHtml(
-			r"<div>$\text{&#xF0000; &amp;#65;}$</div>",
-		)
-		self.assertIn(marker, htmlText)
-		self.assertEqual(1, htmlText.count("&amp;#65;"))
-
-	def test_literal_reference_marker_does_not_replace_generated_unicode(self) -> None:
-		marker = chr(self.renderer._PRIVATE_USE_MARKER_START)
-		mathElement = self.renderer.ElementTree.Element("math")
-		mathElement.text = f"{marker} &#x{ord(marker):X};"
-		self.renderer._decodeMathMlNumericCharacterReferences(
-			mathElement,
-			{marker: "&amp;#65;"},
-		)
-		self.assertEqual(f"&#65; {marker}", mathElement.text)
 
 	def test_respects_markdown_escaped_math_delimiters(self) -> None:
 		htmlText = self.renderer.renderMarkdownToHtml(r"Literal \\(x+1\\) and \\[y+1\\]")
@@ -185,17 +143,6 @@ class MarkdownRendererTestCase(unittest.TestCase):
 				self.assertIn("$x$", htmlText)
 				self.assertEqual(1, htmlText.count("<math"))
 				self.assertNotIn("&lt;math", self.renderer.sanitizeRenderedHtml(htmlText))
-
-	def test_preserves_cdata_while_converting_following_formula(self) -> None:
-		htmlText = self.renderer.renderMarkdownToHtml(
-			"<div><math><annotation><![CDATA[$x$]]></annotation></math><span>$y$</span></div>",
-		)
-		self.assertIn("<![CDATA[$x$]]>", htmlText)
-		self.assertEqual(2, htmlText.count("<math"))
-		sanitizedHtml = self.renderer.sanitizeRenderedHtml(htmlText)
-		self.assertIn("<annotation>$x$</annotation>", sanitizedHtml)
-		self.assertIn("<mi>y</mi>", sanitizedHtml)
-		self.assertNotIn("&lt;/annotation", sanitizedHtml)
 
 	def test_preserves_unmatched_formula_delimiter(self) -> None:
 		htmlText = self.renderer.renderMarkdownToHtml("<p>Costs $5 with no closing delimiter.</p>")

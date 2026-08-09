@@ -42,6 +42,7 @@ from ..kimiModels import (
 	requiresPreservedThinking,
 )
 from ..recogHandler import BaseDescriber, RecognitionRequest
+from ._prompts import DEFAULT_IMAGE_DESCRIPTION_PROMPT
 
 addonHandler.initTranslation()
 
@@ -51,11 +52,7 @@ KIMI_CONTEXT_SAFETY_TOKENS = 4_096
 KIMI_FALLBACK_IMAGE_TOKENS = 32_768
 
 # Translators: The default prompt sent to Kimi for an image description.
-DEFAULT_KIMI_PROMPT = _(
-	"Describe this image objectively. Include all visible text (if none, do not mention it). "
-	"Do not include any introductory phrases. "
-	"Avoid subjective descriptions like 'it seems...' or 'it gives a feeling of...'.",
-)
+DEFAULT_KIMI_PROMPT = DEFAULT_IMAGE_DESCRIPTION_PROMPT
 
 
 class CustomContentRecognizer(BaseDescriber):
@@ -118,6 +115,7 @@ class CustomContentRecognizer(BaseDescriber):
 				# Translators: The label for a setting to customize the Kimi prompt.
 				displayNameWithAccelerator=_("Custom &prompt"),
 				multiline=True,
+				configKey="promptV2",
 			),
 			self.autoRecognitionPromptSetting(),
 		]
@@ -213,7 +211,7 @@ class CustomContentRecognizer(BaseDescriber):
 		payload: dict[str, Any] = {
 			"model": self.model,
 			"max_completion_tokens": KIMI_MAX_COMPLETION_TOKENS,
-			"messages": [self._buildInitialUserMessage(imageContent)],
+			"messages": [self._buildInitialUserMessage(imageContent, getattr(request, "prompt", None))],
 		}
 		applyKimiThinking(payload, self.model, self.reasoningEffort)
 		if request.streamResult:
@@ -227,12 +225,12 @@ class CustomContentRecognizer(BaseDescriber):
 			"timeout": KIMI_REQUEST_TIMEOUT,
 		}
 
-	def _buildInitialUserMessage(self, imageContent: bytes) -> dict[str, Any]:
+	def _buildInitialUserMessage(self, imageContent: bytes, prompt: str | None = None) -> dict[str, Any]:
 		return {
 			"role": "user",
 			"content": [
 				self._imageBlock(imageContent),
-				{"type": "text", "text": self.prompt},
+				{"type": "text", "text": prompt if prompt is not None else self.prompt},
 			],
 		}
 

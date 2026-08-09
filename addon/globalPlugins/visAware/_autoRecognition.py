@@ -1183,6 +1183,7 @@ class AutoRecognitionController:
 			engine.recognizeImage(
 				image,
 				lambda result: self._onResult(token, key, result, startedAt, resultCacheKey, resultValidator),
+				isAutomaticRecognition=True,
 			)
 		else:
 			image = image.convert("RGB")
@@ -1192,6 +1193,7 @@ class AutoRecognitionController:
 				pixels,
 				imageInfo,
 				lambda result: self._onResult(token, key, result, startedAt, resultCacheKey, resultValidator),
+				isAutomaticRecognition=True,
 			)
 
 	def _downloadImage(self, src: str, shouldCancel: Callable[[], bool]) -> Image.Image:

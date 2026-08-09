@@ -26,15 +26,13 @@ from ..engineGUIHelper import (
 )
 from ..exceptions import ApiError
 from ..recogHandler import BaseDescriber, RecognitionRequest
+from ._prompts import DEFAULT_IMAGE_DESCRIPTION_PROMPT
 
 addonHandler.initTranslation()
 
 # Translators: This is the default prompt sent to the Ollama vision model.
 # It guides the model to provide an objective image description.
-DEFAULT_OLLAMA_PROMPT = _(
-	"Describe this image objectively. Include all visible text. "
-	"For formulas, use $...$ and do not calculate answers.",
-)
+DEFAULT_OLLAMA_PROMPT = DEFAULT_IMAGE_DESCRIPTION_PROMPT
 
 # Translators: This is the default system prompt sent to the Ollama vision model.
 DEFAULT_OLLAMA_SYSTEM_PROMPT = _(
@@ -111,6 +109,7 @@ class CustomContentRecognizer(OllamaEngineMixin, BaseDescriber):
 				# Translators: The label for a setting to customize the prompt for the model.
 				displayNameWithAccelerator=_("Custom &prompt"),
 				multiline=True,
+				configKey="promptV2",
 			),
 			self.autoRecognitionPromptSetting(),
 		]
@@ -137,7 +136,7 @@ class CustomContentRecognizer(OllamaEngineMixin, BaseDescriber):
 		"""Builds the Ollama chat request for image description."""
 		modelName = self._resolveModel()
 		imageBase64 = imageContent.decode("ascii")
-		messages = [{"role": "system", "content": self._buildSystemPrompt()}]
+		messages = [{"role": "system", "content": self._buildSystemPrompt(getattr(request, "prompt", None))}]
 		messages.append(
 			{
 				"role": "user",
@@ -155,8 +154,8 @@ class CustomContentRecognizer(OllamaEngineMixin, BaseDescriber):
 		}
 		return self._buildOllamaRequestParams("chat", payload)
 
-	def _buildSystemPrompt(self) -> str:
-		return f"Output instructions:\n{self.prompt}\n\n{DEFAULT_OLLAMA_SYSTEM_PROMPT}"
+	def _buildSystemPrompt(self, prompt: str | None = None) -> str:
+		return f"Output instructions:\n{prompt if prompt is not None else self.prompt}\n\n{DEFAULT_OLLAMA_SYSTEM_PROMPT}"
 
 	def processApiResult(self, result: bytes) -> str | bool:
 		"""Handles error checking for Ollama chat responses."""
