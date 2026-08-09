@@ -22,6 +22,9 @@ from .streamingSpeech import StreamingSpeechPresenter
 
 addonHandler.initTranslation()
 
+# Translators: The sender label for assistant answers in the follow-up dialog.
+ANSWER_SENDER = _("Answer")
+
 
 class AskQuestionFrame(DpiScalingHelperMixinWithoutInit, wx.Frame):
 	"""A reusable frame that asks follow-up questions in the background."""
@@ -117,11 +120,6 @@ class AskQuestionFrame(DpiScalingHelperMixinWithoutInit, wx.Frame):
 		"""
 		self._cancelWorker()
 		self._context = context
-		engineDescription = context.engineDescription or context.engineName
-		if engineDescription:
-			self.SetTitle(f"{_('Ask a Follow-up Question')} - {engineDescription}")
-		else:
-			self.SetTitle(_("Ask a Follow-up Question"))
 		self._messagesText.SetValue("")
 		self._formattedContent = context.initialText
 		# Translators: The sender label for the original image description in the follow-up dialog.
@@ -131,7 +129,7 @@ class AskQuestionFrame(DpiScalingHelperMixinWithoutInit, wx.Frame):
 				# Translators: The sender label for the user in the follow-up dialog.
 				sender = _("You")
 			else:
-				sender = context.engineDescription
+				sender = ANSWER_SENDER
 				if turn.role == ROLE_ASSISTANT:
 					self._formattedContent = turn.text
 			self._appendMessage(sender, turn.text, report=False)
@@ -248,7 +246,7 @@ class AskQuestionFrame(DpiScalingHelperMixinWithoutInit, wx.Frame):
 	def _startStreamingAnswer(self, requestSequence: int) -> None:
 		currentText = self._messagesText.GetValue()
 		messagePrefix = "\n\n" if currentText else ""
-		self._messagesText.AppendText(f"{messagePrefix}{self._context.engineDescription}:\n")
+		self._messagesText.AppendText(f"{messagePrefix}{ANSWER_SENDER}:\n")
 		self._messagesText.SetInsertionPointEnd()
 		self._streamingAnswerRequestSequence = requestSequence
 		self._streamingAnswerTextStartPosition = self._messagesText.GetLastPosition()
@@ -309,7 +307,7 @@ class AskQuestionFrame(DpiScalingHelperMixinWithoutInit, wx.Frame):
 		if wasStreaming:
 			self._finishStreamingAnswer(requestSequence, answer)
 		else:
-			self._appendMessage(self._context.engineDescription, answer)
+			self._appendMessage(ANSWER_SENDER, answer)
 		if incompleteReason:
 			log.warning(f"Follow-up streaming answer may be incomplete. reason={incompleteReason}")
 			# Translators: The sender label for an error shown in the follow-up dialog.

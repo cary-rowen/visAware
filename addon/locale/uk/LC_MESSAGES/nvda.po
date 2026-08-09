@@ -104,6 +104,11 @@ msgstr "{engine} (вимкнено)"
 msgid "{engine} (enabled)"
 msgstr "{engine} (увімкнено)"
 
+#. Translators: The sender label for assistant answers in the follow-up dialog.
+#: addon\globalPlugins\visAware\askDialog.py:26
+msgid "Answer"
+msgstr "Відповідь"
+
 #. Translators: The title of the follow-up question dialog.
 #: addon\globalPlugins\visAware\askDialog.py:36
 #: addon\globalPlugins\visAware\askDialog.py:122
