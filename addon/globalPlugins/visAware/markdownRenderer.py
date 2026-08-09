@@ -718,8 +718,8 @@ def sanitizeRenderedHtml(htmlText: str) -> str:
 def showMarkdownBrowseableMessage(
 	text: str,
 	title: str,
-	closeButton: bool = False,
-	copyButton: bool = False,
+	closeButton: bool = True,
+	copyButton: bool = True,
 ) -> None:
 	"""Render text and show it in NVDA's browseable message dialog."""
 	import ui
