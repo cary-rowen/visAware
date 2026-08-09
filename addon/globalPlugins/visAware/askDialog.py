@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 from threading import Event, Thread
+from typing import Any
 
 import addonHandler
 import ui
@@ -210,6 +211,7 @@ class AskQuestionFrame(DpiScalingHelperMixinWithoutInit, wx.Frame):
 						question,
 						event.text,
 						event.incompleteReason,
+						event.response,
 					)
 					return
 			raise RuntimeError("Question answer stream ended without a final answer.")
@@ -295,6 +297,7 @@ class AskQuestionFrame(DpiScalingHelperMixinWithoutInit, wx.Frame):
 		question: str,
 		answer: str,
 		incompleteReason: str | None = None,
+		response: dict[str, Any] | None = None,
 	) -> None:
 		wasStreaming = self._streamingAnswerRequestSequence == requestSequence
 		if not self._finishRequest(requestSequence):
@@ -302,7 +305,7 @@ class AskQuestionFrame(DpiScalingHelperMixinWithoutInit, wx.Frame):
 		answerForContext = answer
 		if incompleteReason:
 			answerForContext = f"{answer}\n\n{incompleteReason}"
-		self._context.addExchange(question, answerForContext)
+		self._context.addExchange(question, answerForContext, response=response)
 		self._formattedContent = answerForContext
 		if wasStreaming:
 			self._finishStreamingAnswer(requestSequence, answer)

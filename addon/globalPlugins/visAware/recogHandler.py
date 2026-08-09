@@ -83,6 +83,7 @@ SENSITIVE_LOG_KEYS = {
 	"x_ai_gateway_app_id",
 	"x_ai_gateway_signature",
 	"x_goog_api_key",
+	"x_api_key",
 }
 
 SENSITIVE_QUERY_KEYS = {
@@ -139,6 +140,8 @@ def _redactUrlForLog(url: str) -> str:
 		parts = urlsplit(url)
 	except ValueError:
 		return url
+	if parts.scheme.lower() == "data":
+		return f"<redacted data URL: {len(url)} chars>"
 	if not parts.query:
 		return url
 	query = urlencode(
@@ -385,6 +388,18 @@ class BaseRecognizer(ContentRecognizer, AbstractEngine, ABC):
 			raise NotImplementedError("Streaming engines must implement processStreamChunk")
 		return None
 
+	def _resetStreamingState(self) -> None:
+		"""Resets provider-specific state before a streaming request."""
+		pass
+
+	def _getStreamingResponse(self, fullResponseText: str) -> dict[str, Any] | None:
+		"""Returns the raw response to store for a streamed recognition."""
+		return {"streamed_text": fullResponseText}
+
+	def _consumeQuestionResponse(self) -> dict[str, Any] | None:
+		"""Returns a raw non-streaming follow-up response, when a provider has one."""
+		return None
+
 	def recognize(self, pixels: bytes, imageInfo: RecogImageInfo, onResult: Callable) -> None:
 		"""
 		Starts the recognition process in a background thread.
@@ -561,6 +576,7 @@ class BaseRecognizer(ContentRecognizer, AbstractEngine, ABC):
 		request: RecognitionRequest,
 	) -> None:
 		"""Handles a streaming API response."""
+		self._resetStreamingState()
 		fullResponseText = ""
 		rawChunkCount = 0
 		textChunkCount = 0
@@ -611,13 +627,31 @@ class BaseRecognizer(ContentRecognizer, AbstractEngine, ABC):
 			)
 			# Translators: An error message for a blank recognition result.
 			raise ApiError(_("Recognition result is blank."))
+		streamingResponse: dict[str, Any] | None = None
+		try:
+			streamingResponse = self._getStreamingResponse(fullResponseText)
+		except StreamIncompleteError as e:
+			if not fullResponseText or fullResponseText.isspace():
+				raise
+			incompleteReason = incompleteReason or str(e)
+			log.warning(
+				"Streaming response did not include a complete provider response. "
+				f"engine={self.name}, reason={incompleteReason}",
+			)
 		historyEntry = None
 		if fullResponseText and self.originalImage:
-			pseudoResponse = {"streamed_text": fullResponseText}
-			historyEntry = recogHistory.createEntry(self, self.originalImage, pseudoResponse)
+			historyEntry = recogHistory.createEntry(
+				self,
+				self.originalImage,
+				streamingResponse or {"streamed_text": fullResponseText},
+			)
 		wx.CallAfter(
 			onResult,
-			StreamFinished(fullResponseText, incompleteReason=incompleteReason, historyEntry=historyEntry),
+			StreamFinished(
+				fullResponseText,
+				incompleteReason=incompleteReason,
+				historyEntry=historyEntry,
+			),
 		)
 
 	def _prepareImageObject(self, pixels: bytes, imageInfo: RecogImageInfo) -> Optional[Image.Image]:
@@ -868,7 +902,7 @@ class BaseDescriber(BaseRecognizer):
 			yield from self.askQuestionStream(context, question, cancellationChecker)
 			return
 		answer = self.askQuestion(context, question, cancellationChecker)
-		yield QuestionStreamFinished(answer)
+		yield QuestionStreamFinished(answer, response=self._consumeQuestionResponse())
 
 	def askQuestionStream(
 		self,
@@ -888,7 +922,7 @@ class BaseDescriber(BaseRecognizer):
 		:returns: An iterator of follow-up answer events.
 		"""
 		answer = self.askQuestion(context, question, cancellationChecker)
-		yield QuestionStreamFinished(answer)
+		yield QuestionStreamFinished(answer, response=self._consumeQuestionResponse())
 
 	def _iterQuestionStreamingResponse(
 		self,
@@ -904,6 +938,7 @@ class BaseDescriber(BaseRecognizer):
 		:param cancellationChecker: Optional callback that raises when cancelled.
 		:returns: An iterator of answer text fragments and a final answer event.
 		"""
+		self._resetStreamingState()
 		fullResponseText = ""
 		incompleteReason: str | None = None
 		self._checkQuestionCancelled(cancellationChecker)
@@ -935,7 +970,20 @@ class BaseDescriber(BaseRecognizer):
 				fullResponseText += processedText
 				yield QuestionStreamText(processedText)
 		answer = self._validateQuestionAnswer(fullResponseText)
-		yield QuestionStreamFinished(answer, incompleteReason=incompleteReason)
+		streamingResponse: dict[str, Any] | None = None
+		try:
+			streamingResponse = self._getStreamingResponse(fullResponseText)
+		except StreamIncompleteError as e:
+			incompleteReason = incompleteReason or str(e)
+			log.warning(
+				"Streaming follow-up did not include a complete provider response. "
+				f"engine={self.name}, reason={incompleteReason}",
+			)
+		yield QuestionStreamFinished(
+			answer,
+			incompleteReason=incompleteReason,
+			response=streamingResponse,
+		)
 
 	def _checkQuestionCancelled(self, cancellationChecker: Callable[[], None] | None) -> None:
 		if cancellationChecker:

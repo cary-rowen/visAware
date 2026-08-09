@@ -1,6 +1,7 @@
 ### 0.7.0
 
 * Added the Apple Vision (OCR Server) engine for local-network OCR through the open-source OCR Server iOS app.
+* Added Kimi image description, follow-up questions, OCR, and AI Agent engines through the OpenAI-compatible Kimi API.
 
 ### 0.6.5
 

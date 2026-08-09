@@ -40,6 +40,15 @@ class EngineSettingChanger:
 class TextInputEngineSettingChanger(EngineSettingChanger):
 	"""Functor for GUI events to change text input settings."""
 
+	def __init__(
+		self,
+		setting: "EngineSetting",
+		engine: "AbstractEngine",
+		panel: wx.Panel | None = None,
+	):
+		self.panel = panel
+		super().__init__(setting, engine)
+
 	def __call__(self, evt: wx.CommandEvent) -> None:
 		"""
 		Handles the GUI event to update the setting.
@@ -48,6 +57,8 @@ class TextInputEngineSettingChanger(EngineSettingChanger):
 		"""
 		evt.Skip()
 		setattr(self.engine, self.setting.name, evt.GetString())
+		if self.panel and hasattr(self.panel, "updateDriverSettings"):
+			self.panel.updateDriverSettings(self.setting.name)
 
 
 class StringEngineSettingChanger(EngineSettingChanger):
@@ -147,6 +158,7 @@ class TextInputEngineSetting:
 	name: str
 	displayNameWithAccelerator: str
 	multiline: bool = False
+	refreshSettingsOnChange: bool = False
 	configSpec: str = field(init=False, default="string(default=None)")
 
 

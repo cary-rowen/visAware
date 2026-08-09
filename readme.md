@@ -97,9 +97,9 @@ supported. In that dialog, `control+enter` sends a question and `escape`
 cancels the request or closes the dialog. Use **View formatted content** to view
 the initial description or latest answer in browse mode.
 
-Follow-up questions are supported by Google Gemini, Google Gemma, VIVO BlueLLM
-Vision, and Ollama Vision. Outside the conversation dialog, streaming output is
-available only when browse mode is not in use.
+Follow-up questions are supported by Google Gemini, Google Gemma, Kimi, VIVO
+BlueLLM Vision, and Ollama Vision. Outside the conversation dialog, streaming
+output is available only when browse mode is not in use.
 
 ## Automatic recognition
 
@@ -162,6 +162,12 @@ sent as an `Authorization: Bearer` token. Ollama engines require a
 vision-capable model, such as Gemma 4; Ollama OCR provides screen coordinates
 only when the model returns valid structured OCR data.
 
+Kimi engines default to the official Kimi Code OpenAI-compatible Base URL
+`https://api.kimi.com/coding/v1`. Enter an API key issued for that endpoint. To use
+the public Kimi API instead, set the base URL to `https://api.moonshot.ai/v1`
+and use a public API key. Kimi K3 is the default model; model and thinking
+options vary by endpoint and model family.
+
 ## Included engines
 
 OCR engines:
@@ -172,6 +178,7 @@ OCR engines:
 * Vivo OCR (NVDACN)
 * PaddleOCR / PaddleOCR-VL
 * Ollama OCR
+* Kimi OCR
 
 Image description engines:
 
@@ -180,12 +187,14 @@ Image description engines:
 * Vivo Image Describer (NVDACN)
 * VIVO BlueLLM Vision (NVDACN)
 * Ollama Vision
+* Kimi
 
 AI Agent engines:
 
 * Google Gemini
 * OpenAI
 * Vivo BlueLM Vision (NVDACN)
+* Kimi
 
 Engine availability depends on its service and configuration.
 

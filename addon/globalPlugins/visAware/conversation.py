@@ -22,10 +22,11 @@ ROLE_ASSISTANT = "assistant"
 
 @dataclass
 class ConversationTurn:
-	"""One text-only turn in a follow-up conversation."""
+	"""One turn in a follow-up conversation."""
 
 	role: str
 	text: str
+	response: dict[str, Any] | None = None
 
 
 @dataclass(frozen=True)
@@ -42,6 +43,7 @@ class QuestionStreamFinished:
 
 	text: str
 	incompleteReason: str | None = None
+	response: dict[str, Any] | None = None
 
 
 QuestionStreamEvent = QuestionStreamText | QuestionStreamFinished
@@ -60,15 +62,27 @@ class ConversationContext:
 	turns: list[ConversationTurn] = field(default_factory=list)
 	metadata: dict[str, Any] = field(default_factory=dict)
 
-	def addExchange(self, question: str, answer: str) -> None:
+	def addExchange(
+		self,
+		question: str,
+		answer: str,
+		response: dict[str, Any] | None = None,
+	) -> None:
 		"""
 		Appends a completed question-answer exchange.
 
 		:param question: The user's question.
 		:param answer: The engine's answer.
+		:param response: The provider response for the assistant turn, when available.
 		"""
 		self.turns.append(ConversationTurn(ROLE_USER, question))
-		self.turns.append(ConversationTurn(ROLE_ASSISTANT, answer))
+		self.turns.append(
+			ConversationTurn(
+				ROLE_ASSISTANT,
+				answer,
+				copy.deepcopy(response) if isinstance(response, dict) else None,
+			),
+		)
 
 
 def makeConversationContext(historyEntry: dict[str, Any]) -> ConversationContext:
@@ -107,7 +121,7 @@ def makeConversationContext(historyEntry: dict[str, Any]) -> ConversationContext
 	return ConversationContext(
 		engine=contextEngine,
 		image=image,
-		response=response.copy(),
+		response=copy.deepcopy(response),
 		initialText=initialText,
 		engineName=getattr(contextEngine, "name", ""),
 		engineDescription=getattr(contextEngine, "description", ""),

@@ -552,7 +552,7 @@ class SpecificEnginePanel(SettingsPanel):
 			BooleanEngineSetting: lambda s, e: getattr(self, f"{s.name}Checkbox").SetValue(
 				getattr(e, s.name),
 			),
-			TextInputEngineSetting: lambda s, e: getattr(self, f"{s.name}TextCtrl").SetValue(
+			TextInputEngineSetting: lambda s, e: getattr(self, f"{s.name}TextCtrl").ChangeValue(
 				str(getattr(e, s.name)),
 			),
 			ReadOnlyEngineSetting: lambda s, e: getattr(self, f"{s.name}ExpandoTextCtrl").SetValue(
@@ -605,7 +605,7 @@ class SpecificEnginePanel(SettingsPanel):
 				self.settingsSizer.Hide(sizer)
 
 		for setting in engine.supportedSettings:
-			if setting.name.startswith("autoRecognition"):
+			if setting.name.startswith("autoRecognition") or not engine.isSupported(setting.name):
 				continue
 			if setting.name == changedSetting:
 				continue
@@ -680,9 +680,10 @@ class SpecificEnginePanel(SettingsPanel):
 		try:
 			options = list(getattr(engine, setting.optionsPropertyName).values())
 			choiceCtrl = getattr(self, f"{setting.name}ComboBox")
-			choiceCtrl.Clear()
-			choiceCtrl.AppendItems([opt.displayName for opt in options])
-			choiceCtrl.SetValue(str(getattr(engine, setting.name)))
+			with wx.EventBlocker(choiceCtrl):
+				choiceCtrl.Clear()
+				choiceCtrl.AppendItems([opt.displayName for opt in options])
+				choiceCtrl.ChangeValue(str(getattr(engine, setting.name)))
 		except AttributeError:
 			pass
 
@@ -736,7 +737,7 @@ class SpecificEnginePanel(SettingsPanel):
 		choiceCtrl = labeledControl.control
 		setattr(self, f"{setting.name}ComboBox", choiceCtrl)
 		choiceCtrl.SetValue(str(getattr(engine, setting.name)))
-		changer = TextInputEngineSettingChanger(setting, engine)
+		changer = TextInputEngineSettingChanger(setting, engine, self)
 		choiceCtrl.Bind(wx.EVT_TEXT, changer)
 		choiceCtrl.Bind(wx.EVT_COMBOBOX, changer)
 		if self._lastControl:
@@ -820,7 +821,14 @@ class SpecificEnginePanel(SettingsPanel):
 			sizer = labeledControl.sizer
 		setattr(self, f"{setting.name}TextCtrl", textCtrl)
 		textCtrl.SetValue(str(getattr(engine, setting.name)))
-		textCtrl.Bind(wx.EVT_TEXT, TextInputEngineSettingChanger(setting, engine))
+		textCtrl.Bind(
+			wx.EVT_TEXT,
+			TextInputEngineSettingChanger(
+				setting,
+				engine,
+				self if setting.refreshSettingsOnChange else None,
+			),
+		)
 		if self._lastControl:
 			textCtrl.MoveAfterInTabOrder(self._lastControl)
 		self._lastControl = textCtrl

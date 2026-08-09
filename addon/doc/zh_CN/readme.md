@@ -62,7 +62,7 @@ AI Agent 模式直接截取全屏幕，不使用已选择的识别来源。
 
 当前 NVDA 会话仅保留上一次识别结果。对于支持追问的图像描述引擎，追问命令会打开多轮对话窗口，并在引擎支持时流式朗读回答。在该窗口中，按 `control+enter` 发送问题，按 `escape` 取消请求或关闭窗口。使用**查看格式化内容**可在浏览模式下查看初始图像描述或最新回答。
 
-Google Gemini、Google Gemma、VIVO BlueLLM Vision 和 Ollama Vision 支持追问。对于非对话窗口，流式输出仅在未使用浏览模式的情况下生效。
+Google Gemini、Google Gemma、Kimi、VIVO BlueLLM Vision 和 Ollama Vision 支持追问。对于非对话窗口，流式输出仅在未使用浏览模式的情况下生效。
 
 ## 自动识别
 
@@ -96,6 +96,8 @@ PaddleOCR / PaddleOCR-VL 支持 AI Studio 托管任务 API、AI Studio 部署服
 
 对于 Ollama 引擎，可以填写完整 API URL，也可以填写主机和端口，例如 `localhost:11434`。默认 API 根地址为 `http://localhost:11434/api`。使用**获取模型**加载模型名称，然后选择模型。如果没有选择模型，将使用 Ollama 返回的第一个模型。可选的 API 密钥会作为 `Authorization: Bearer` 令牌发送。Ollama 引擎需要支持视觉能力的模型，例如 Gemma 4；仅当模型返回有效的结构化 OCR 数据时，Ollama OCR 才会提供屏幕坐标。
 
+Kimi 引擎默认使用 Kimi Code 的官方 OpenAI 兼容 Base URL `https://api.kimi.com/coding/v1`，请填写该端点签发的 API 密钥。如需使用公共 Kimi API，请将 Base URL 设置为 `https://api.moonshot.ai/v1`，并填写公共 API 密钥。默认模型为 Kimi K3；可用模型和思考选项会随端点及模型系列而异。
+
 ## 内置引擎
 
 OCR 引擎：
@@ -106,6 +108,7 @@ OCR 引擎：
 * Vivo OCR（NVDACN）
 * PaddleOCR / PaddleOCR-VL
 * Ollama OCR
+* Kimi OCR
 
 图像描述引擎：
 
@@ -114,12 +117,14 @@ OCR 引擎：
 * Vivo Image Describer（NVDACN）
 * VIVO BlueLLM Vision（NVDACN）
 * Ollama Vision
+* Kimi
 
 AI Agent 引擎：
 
 * Google Gemini
 * OpenAI
 * Vivo BlueLM Vision（NVDACN）
+* Kimi
 
 引擎是否可用取决于相应服务和配置。
 

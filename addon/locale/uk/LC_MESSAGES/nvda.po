@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
-"POT-Creation-Date: 2026-07-30 23:19+0800\n"
+"POT-Creation-Date: 2026-08-09 19:06+0800\n"
 "PO-Revision-Date: 2026-07-29 12:04+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -19,52 +19,52 @@ msgid "Engine settings"
 msgstr "Налаштування сервісу"
 
 #. Translators: The default title for an engine settings panel.
-#: addon\globalPlugins\visAware\abstractEngine.py:909
+#: addon\globalPlugins\visAware\abstractEngine.py:917
 msgid "Engine"
 msgstr "Сервіс"
 
 #. Translators: The label for the group box to select an engine.
-#: addon\globalPlugins\visAware\abstractEngine.py:928
+#: addon\globalPlugins\visAware\abstractEngine.py:936
 msgid "Engines"
 msgstr "Сервіс"
 
 #. Translators: The label for a button to change the current engine.
-#: addon\globalPlugins\visAware\abstractEngine.py:944
+#: addon\globalPlugins\visAware\abstractEngine.py:952
 msgid "C&hange..."
 msgstr "З&мінити..."
 
 #. Translators: The label for a checkbox that enables or disables the selected engine.
-#: addon\globalPlugins\visAware\abstractEngine.py:951
+#: addon\globalPlugins\visAware\abstractEngine.py:959
 msgid "&Enable this engine"
 msgstr "&Увімкнути цей сервіс"
 
-#: addon\globalPlugins\visAware\abstractEngine.py:1026
-#: addon\globalPlugins\visAware\abstractEngine.py:1166
-#: addon\globalPlugins\visAware\abstractEngine.py:1284
+#: addon\globalPlugins\visAware\abstractEngine.py:1034
+#: addon\globalPlugins\visAware\abstractEngine.py:1174
+#: addon\globalPlugins\visAware\abstractEngine.py:1292
 #, python-format
 msgid "Could not load the %s engine."
 msgstr "Не вдалося завантажити сервіс %s."
 
 #. Translators: The title of an error dialog.
-#: addon\globalPlugins\visAware\abstractEngine.py:1028
-#: addon\globalPlugins\visAware\abstractEngine.py:1168
-#: addon\globalPlugins\visAware\abstractEngine.py:1286
+#: addon\globalPlugins\visAware\abstractEngine.py:1036
+#: addon\globalPlugins\visAware\abstractEngine.py:1176
+#: addon\globalPlugins\visAware\abstractEngine.py:1294
 msgid "Engine Error"
 msgstr "Помилка сервісу"
 
 #. Translators: A warning shown when trying to disable every engine in a category.
-#: addon\globalPlugins\visAware\abstractEngine.py:1091
+#: addon\globalPlugins\visAware\abstractEngine.py:1099
 msgid "At least one engine must remain enabled."
 msgstr "Принаймні один сервіс повинен залишатися ввімкненим."
 
 #. Translators: The title of a warning shown for invalid engine enablement settings.
-#: addon\globalPlugins\visAware\abstractEngine.py:1093
-#: addon\globalPlugins\visAware\abstractEngine.py:1113
-#: addon\globalPlugins\visAware\abstractEngine.py:1135
+#: addon\globalPlugins\visAware\abstractEngine.py:1101
+#: addon\globalPlugins\visAware\abstractEngine.py:1121
+#: addon\globalPlugins\visAware\abstractEngine.py:1143
 msgid "Engine Configuration"
 msgstr "Конфігурація сервісу"
 
-#: addon\globalPlugins\visAware\abstractEngine.py:1107
+#: addon\globalPlugins\visAware\abstractEngine.py:1115
 #, python-brace-format
 msgid ""
 "The selected engine {engine} is disabled. Please choose another enabled "
@@ -73,7 +73,7 @@ msgstr ""
 "Вибраний сервіс {engine} вимкнено. Будь ласка, виберіть інший увімкнений "
 "сервіс або знову увімкніть його."
 
-#: addon\globalPlugins\visAware\abstractEngine.py:1129
+#: addon\globalPlugins\visAware\abstractEngine.py:1137
 #, python-brace-format
 msgid ""
 "The current engine {engine} is disabled. Please choose another enabled "
@@ -83,89 +83,87 @@ msgstr ""
 "сервіс або знову увімкніть його."
 
 #. Translators: The title of the engine selection dialog.
-#: addon\globalPlugins\visAware\abstractEngine.py:1192
+#: addon\globalPlugins\visAware\abstractEngine.py:1200
 msgid "Select Engine"
 msgstr "Виберіть сервіс"
 
 #. Translators: The label for the choice control to select an engine.
-#: addon\globalPlugins\visAware\abstractEngine.py:1229
+#: addon\globalPlugins\visAware\abstractEngine.py:1237
 msgid "&Engines:"
 msgstr "&Сервіси:"
 
 #. Translators: A disabled engine option in the engine selection dialog.
-#: addon\globalPlugins\visAware\abstractEngine.py:1270
+#: addon\globalPlugins\visAware\abstractEngine.py:1278
 #, python-brace-format
 msgid "{engine} (disabled)"
 msgstr "{engine} (вимкнено)"
 
 #. Translators: An enabled engine option in the engine selection dialog.
-#: addon\globalPlugins\visAware\abstractEngine.py:1272
+#: addon\globalPlugins\visAware\abstractEngine.py:1280
 #, python-brace-format
 msgid "{engine} (enabled)"
 msgstr "{engine} (увімкнено)"
 
 #. Translators: The sender label for assistant answers in the follow-up dialog.
-#: addon\globalPlugins\visAware\askDialog.py:26
+#: addon\globalPlugins\visAware\askDialog.py:27
 msgid "Answer"
 msgstr "Відповідь"
 
 #. Translators: The title of the follow-up question dialog.
-#: addon\globalPlugins\visAware\askDialog.py:36
-#: addon\globalPlugins\visAware\askDialog.py:122
-#: addon\globalPlugins\visAware\askDialog.py:124
+#: addon\globalPlugins\visAware\askDialog.py:40
 msgid "Ask a Follow-up Question"
 msgstr "Задати додаткове питання"
 
 #. Translators: The label for the conversation history read-only text field in the follow-up dialog.
-#: addon\globalPlugins\visAware\askDialog.py:60
+#: addon\globalPlugins\visAware\askDialog.py:64
 msgid "Conversation &history:"
 msgstr "Історія &розмови:"
 
 #. Translators: The label for the follow-up question edit field.
-#: addon\globalPlugins\visAware\askDialog.py:78
+#: addon\globalPlugins\visAware\askDialog.py:82
 msgid "&Question:"
 msgstr "&Питання:"
 
 #. Translators: The label for a button that sends a follow-up question.
-#: addon\globalPlugins\visAware\askDialog.py:92
+#: addon\globalPlugins\visAware\askDialog.py:96
 msgid "&Send"
 msgstr "&Надіслати"
 
 #. Translators: The label for a button that opens the latest content rendered as Markdown.
-#: addon\globalPlugins\visAware\askDialog.py:95
+#: addon\globalPlugins\visAware\askDialog.py:99
 msgid "View &formatted content"
 msgstr "Переглянути &відформатований вміст"
 
 #. Translators: The label for a button that closes the follow-up question dialog.
-#: addon\globalPlugins\visAware\askDialog.py:98
+#: addon\globalPlugins\visAware\askDialog.py:102
 msgid "&Close"
 msgstr "&Закрити"
 
 #. Translators: The sender label for the original image description in the follow-up dialog.
 #. Translators: The title of the Image Describer engine settings panel.
 #. Translators: A choice meaning automatic recognition should use image description engines.
-#: addon\globalPlugins\visAware\askDialog.py:128
+#: addon\globalPlugins\visAware\askDialog.py:127
 #: addon\globalPlugins\visAware\recogHandler.py:42
-#: addon\globalPlugins\visAware\recogHandler.py:974
-#: addon\globalPlugins\visAware\recogHandler.py:1003
+#: addon\globalPlugins\visAware\recogHandler.py:1022
+#: addon\globalPlugins\visAware\recogHandler.py:1051
 msgid "Image description"
 msgstr "Опис зображення"
 
 #. Translators: The sender label for the user in the follow-up dialog.
-#: addon\globalPlugins\visAware\askDialog.py:132
-#: addon\globalPlugins\visAware\askDialog.py:175
+#: addon\globalPlugins\visAware\askDialog.py:131
+#: addon\globalPlugins\visAware\askDialog.py:174
 msgid "You"
 msgstr "Ви"
 
 #. Translators: Reported while a follow-up question is still being answered.
 #. Translators: Reported while a follow-up question is being answered.
-#: addon\globalPlugins\visAware\askDialog.py:164
-#: addon\globalPlugins\visAware\askDialog.py:182
+#: addon\globalPlugins\visAware\askDialog.py:163
+#: addon\globalPlugins\visAware\askDialog.py:181
 msgid "Waiting for answer."
 msgstr "Чекаю на відповідь."
 
 #. Translators: Reported when the user tries to send an empty follow-up question.
-#: addon\globalPlugins\visAware\askDialog.py:170
+#: addon\globalPlugins\visAware\askDialog.py:169
 msgid "Enter a question."
 msgstr "Введіть питання."
 
@@ -175,39 +173,39 @@ msgid "Question failed with an unexpected error."
 msgstr "Виконання запиту завершилося невдачею через несподівану помилку."
 
 #. Translators: The sender label for an error shown in the follow-up dialog.
-#: addon\globalPlugins\visAware\askDialog.py:316
-#: addon\globalPlugins\visAware\askDialog.py:324
+#: addon\globalPlugins\visAware\askDialog.py:317
+#: addon\globalPlugins\visAware\askDialog.py:325
 msgid "Error"
 msgstr "Помилка"
 
 #. Translators: Reported when there is no follow-up content to show in rendered form.
-#: addon\globalPlugins\visAware\askDialog.py:354
+#: addon\globalPlugins\visAware\askDialog.py:355
 msgid "There is no content to show."
 msgstr "Немає вмісту для показу."
 
-#: addon\globalPlugins\visAware\askDialog.py:359
+#: addon\globalPlugins\visAware\askDialog.py:360
 msgid "Formatted Content"
 msgstr "Форматований вміст"
 
 #. Translators: Reported when the previous recognition engine cannot answer follow-up questions.
-#: addon\globalPlugins\visAware\conversation.py:85
+#: addon\globalPlugins\visAware\conversation.py:99
 msgid "The previous recognition engine does not support follow-up questions."
 msgstr "Сервіс попереднього розпізнавання не підтримує додаткові питання."
 
 #. Translators: Reported when the saved recognition result cannot be reused for follow-up questions.
-#: addon\globalPlugins\visAware\conversation.py:89
+#: addon\globalPlugins\visAware\conversation.py:103
 msgid "The previous recognition result cannot be used for follow-up questions."
 msgstr ""
 "Результат попереднього розпізнавання не можна використовувати для додаткових "
 "питань."
 
 #. Translators: Reported when the saved recognition result cannot be converted to text.
-#: addon\globalPlugins\visAware\conversation.py:98
+#: addon\globalPlugins\visAware\conversation.py:112
 msgid "The previous recognition result cannot be converted to text."
 msgstr "Попередній результат розпізнавання неможливо перетворити на текст."
 
 #. Translators: Reported when there is no text in the previous result to use as conversation context.
-#: addon\globalPlugins\visAware\conversation.py:101
+#: addon\globalPlugins\visAware\conversation.py:115
 msgid "The previous recognition result is blank."
 msgstr "Попередній результат розпізнавання порожній."
 
@@ -281,6 +279,140 @@ msgstr "Середня (збалансовано)"
 msgid "Low (faster, less detail)"
 msgstr "Низька (швидше, менша деталізація)"
 
+#. Translators: An error message for invalid data returned by Kimi.
+#: addon\globalPlugins\visAware\kimiAPI.py:23
+msgid "Kimi returned an invalid response."
+msgstr "Kimi повернув недійсну відповідь."
+
+#. Translators: An error message for malformed Kimi Chat Completion data.
+#: addon\globalPlugins\visAware\kimiAPI.py:25
+msgid "Kimi returned malformed completion data."
+msgstr "Kimi повернув некоректно сформовані дані завершення чату."
+
+#. Translators: An error message for malformed data in a Kimi streaming response.
+#: addon\globalPlugins\visAware\kimiAPI.py:27
+msgid "Kimi streaming response contained malformed data."
+msgstr "Потокова відповідь Kimi містила некоректно сформовані дані."
+
+#. Translators: A fallback message when a Kimi API error has no details.
+#: addon\globalPlugins\visAware\kimiAPI.py:52
+msgid "Unknown API error"
+msgstr "Невідома помилка API"
+
+#. Translators: An error returned by Kimi. The placeholder contains the API's message.
+#. Translators: An error message returned from the Kimi API.
+#: addon\globalPlugins\visAware\kimiAPI.py:66
+#: addon\globalPlugins\visAware\kimiAPI.py:173
+#: addon\globalPlugins\visAware\agent\kimi.py:213
+#, python-brace-format
+msgid "Kimi API error: {}"
+msgstr "Помилка API Kimi: {}"
+
+#. Translators: Reported when Kimi stops because the output token limit was reached.
+#: addon\globalPlugins\visAware\kimiAPI.py:74
+#: addon\globalPlugins\visAware\kimiAPI.py:310
+msgid "Kimi response was truncated at the token limit."
+msgstr "Відповідь Kimi була обрізана через обмеження кількості токенів."
+
+#. Translators: An error for an unsupported Kimi completion finish reason.
+#: addon\globalPlugins\visAware\kimiAPI.py:77
+#: addon\globalPlugins\visAware\kimiAPI.py:313
+msgid "Kimi returned an unsupported completion result."
+msgstr "Kimi повернув непідтримуваний результат завершення."
+
+#. Translators: Reported when a Kimi stream ends without its completion marker.
+#: addon\globalPlugins\visAware\kimiAPI.py:304
+msgid "Kimi streaming response ended before completion."
+msgstr "Потокова відповідь Kimi завершилася передчасно."
+
+#. Translators: Reported when a Kimi stream does not provide a finish reason.
+#: addon\globalPlugins\visAware\kimiAPI.py:307
+msgid "Kimi streaming response did not include a finish reason."
+msgstr "Потокова відповідь Kimi не містила причини завершення."
+
+#. Translators: Reported when a Kimi stream claims to call a tool but supplies none.
+#: addon\globalPlugins\visAware\kimiAPI.py:317
+msgid "Kimi streaming response contained no tool call."
+msgstr "Потокова відповідь Kimi не містила виклику інструменту."
+
+#. Translators: Reported when a Kimi stream unexpectedly includes a tool call.
+#: addon\globalPlugins\visAware\kimiAPI.py:321
+msgid "Kimi streaming response returned an unexpected tool call."
+msgstr "Потокова відповідь Kimi містила неочікуваний виклик інструменту."
+
+#. Translators: A choice that disables Kimi model reasoning.
+#. Translators: A choice that disables reasoning for a Kimi K2.x model.
+#: addon\globalPlugins\visAware\kimiModels.py:25
+#: addon\globalPlugins\visAware\kimiModels.py:47
+msgid "Disabled"
+msgstr "Вимкнено"
+
+#. Translators: A low Kimi model reasoning effort.
+#. Translators: A low Kimi K3 reasoning effort.
+#: addon\globalPlugins\visAware\kimiModels.py:27
+#: addon\globalPlugins\visAware\kimiModels.py:37
+msgid "Low"
+msgstr "Низький"
+
+#. Translators: A high Kimi model reasoning effort.
+#. Translators: A high Kimi K3 reasoning effort.
+#: addon\globalPlugins\visAware\kimiModels.py:29
+#: addon\globalPlugins\visAware\kimiModels.py:39
+msgid "High"
+msgstr "Високий"
+
+#. Translators: The maximum Kimi model reasoning effort.
+#. Translators: The maximum Kimi K3 reasoning effort.
+#: addon\globalPlugins\visAware\kimiModels.py:31
+#: addon\globalPlugins\visAware\kimiModels.py:41
+msgid "Maximum"
+msgstr "Максимальний"
+
+#. Translators: A choice that enables reasoning for a Kimi K2.x model.
+#: addon\globalPlugins\visAware\kimiModels.py:49
+msgid "Enabled"
+msgstr "Увімкнено"
+
+#. Translators: The display name for a Kimi model preset.
+#: addon\globalPlugins\visAware\kimiModels.py:177
+msgid "Kimi K3 (256K context)"
+msgstr "Kimi K3 (контекст 256K)"
+
+#. Translators: The display name for a Kimi model preset.
+#: addon\globalPlugins\visAware\kimiModels.py:179
+msgid "Kimi K3 (1M context)"
+msgstr "Kimi K3 (контекст 1M)"
+
+#. Translators: The display name for a Kimi model preset.
+#: addon\globalPlugins\visAware\kimiModels.py:181
+msgid "Kimi K2.7 Code"
+msgstr "Kimi K2.7 Code"
+
+#. Translators: The display name for a Kimi model preset.
+#: addon\globalPlugins\visAware\kimiModels.py:183
+msgid "Kimi K2.7 Code (high speed)"
+msgstr "Kimi K2.7 Code (висока швидкість)"
+
+#. Translators: The display name for a Kimi model preset.
+#: addon\globalPlugins\visAware\kimiModels.py:189
+msgid "Kimi K3 (public API)"
+msgstr "Kimi K3 (публічний API)"
+
+#. Translators: The display name for a Kimi model preset.
+#: addon\globalPlugins\visAware\kimiModels.py:191
+msgid "Kimi K2.7 Code (public API)"
+msgstr "Kimi K2.7 Code (публічний API)"
+
+#. Translators: The display name for a Kimi model preset.
+#: addon\globalPlugins\visAware\kimiModels.py:193
+msgid "Kimi K2.7 Code (public API high speed)"
+msgstr "Kimi K2.7 Code (публічний API, висока швидкість)"
+
+#. Translators: The display name for a Kimi model preset.
+#: addon\globalPlugins\visAware\kimiModels.py:195
+msgid "Kimi K2.6 (public API)"
+msgstr "Kimi K2.6 (публічний API)"
+
 #: addon\globalPlugins\visAware\network.py:80
 msgid ""
 "Network connection failed after multiple attempts. Please check your "
@@ -321,8 +453,8 @@ msgstr "Помилка мережевого з’єднання. Перевір�
 #. Translators: The title of the OCR engine settings panel.
 #. Translators: A choice meaning automatic recognition should use OCR engines.
 #: addon\globalPlugins\visAware\recogHandler.py:41
-#: addon\globalPlugins\visAware\recogHandler.py:803
-#: addon\globalPlugins\visAware\recogHandler.py:1005
+#: addon\globalPlugins\visAware\recogHandler.py:837
+#: addon\globalPlugins\visAware\recogHandler.py:1053
 msgid "OCR"
 msgstr "OCR"
 
@@ -353,166 +485,168 @@ msgid "Image or image file on the clipboard"
 msgstr "Зображення або файл зображення в буфері обміну"
 
 #. Translators: An error message when failing to prepare the image for upload.
-#: addon\globalPlugins\visAware\recogHandler.py:460
+#: addon\globalPlugins\visAware\recogHandler.py:475
 msgid "Failed to prepare image content for upload."
 msgstr "Не вдалося підготувати вміст зображення для завантаження."
 
 #. Translators: An error message when failing to prepare the image object.
-#: addon\globalPlugins\visAware\recogHandler.py:490
-#: addon\globalPlugins\visAware\recogHandler.py:513
+#: addon\globalPlugins\visAware\recogHandler.py:505
+#: addon\globalPlugins\visAware\recogHandler.py:528
 msgid "Failed to prepare image object."
 msgstr "Не вдалося підготувати об'єкт зображення."
 
 #. Translators: An error message for a blank recognition result.
-#: addon\globalPlugins\visAware\recogHandler.py:546
-#: addon\globalPlugins\visAware\recogHandler.py:553
-#: addon\globalPlugins\visAware\recogHandler.py:578
-#: addon\globalPlugins\visAware\recogHandler.py:613
+#: addon\globalPlugins\visAware\recogHandler.py:561
+#: addon\globalPlugins\visAware\recogHandler.py:568
+#: addon\globalPlugins\visAware\recogHandler.py:594
+#: addon\globalPlugins\visAware\recogHandler.py:629
 #: addon\globalPlugins\visAware\contentRecognizers\paddleOCR.py:734
 #: addon\globalPlugins\visAware\contentRecognizers\paddleOCR.py:742
 msgid "Recognition result is blank."
 msgstr "Результат розпізнавання порожній."
 
 #. Translators: An error message when the image is too large to upload.
-#: addon\globalPlugins\visAware\recogHandler.py:685
+#: addon\globalPlugins\visAware\recogHandler.py:719
 msgid "Image is too large to upload."
 msgstr "Зображення занадто велике для завантаження."
 
 #. Translators: An error message when the image has too many pixels after resizing.
-#: addon\globalPlugins\visAware\recogHandler.py:753
+#: addon\globalPlugins\visAware\recogHandler.py:787
 msgid "Image has too many pixels after resizing."
 msgstr "Зображення має забагато пікселів після зміни розміру."
 
 #. Translators: The label for an engine setting to control image quality.
-#: addon\globalPlugins\visAware\recogHandler.py:771
+#: addon\globalPlugins\visAware\recogHandler.py:805
 msgid "Upload image quality"
 msgstr "Якість завантаженого зображення"
 
-#: addon\globalPlugins\visAware\recogHandler.py:778
+#: addon\globalPlugins\visAware\recogHandler.py:812
 msgid "Automatic recognition &prompt"
 msgstr "&Підказка для автоматичного розпізнавання"
 
 #. Translators: The label for an engine setting to override the model used for automatic recognition.
-#: addon\globalPlugins\visAware\recogHandler.py:785
+#: addon\globalPlugins\visAware\recogHandler.py:819
 msgid "Automatic recognition &model"
 msgstr "&Модель автоматичного розпізнавання"
 
 #. Translators: Reported when the previous image is unavailable for a follow-up question.
-#: addon\globalPlugins\visAware\recogHandler.py:948
+#: addon\globalPlugins\visAware\recogHandler.py:996
 msgid "The previous image is no longer available for follow-up questions."
 msgstr "Попереднє зображення більше не доступне для подальших запитань."
 
 #. Translators: An error message for a blank follow-up answer.
-#: addon\globalPlugins\visAware\recogHandler.py:955
+#: addon\globalPlugins\visAware\recogHandler.py:1003
 msgid "Answer is blank."
 msgstr "Відповідь порожня."
 
 #. Translators: A choice meaning automatic recognition is disabled.
-#: addon\globalPlugins\visAware\recogHandler.py:1001
+#: addon\globalPlugins\visAware\recogHandler.py:1049
 msgid "Off"
 msgstr "Вимкнено"
 
 #. Translators: A choice for automatic recognition to use the current image description engine.
-#: addon\globalPlugins\visAware\recogHandler.py:1026
+#: addon\globalPlugins\visAware\recogHandler.py:1074
 msgid "Current image description engine"
 msgstr "Поточний сервіс опису зображень"
 
 #. Translators: A choice for automatic recognition to use the current OCR engine.
-#: addon\globalPlugins\visAware\recogHandler.py:1037
+#: addon\globalPlugins\visAware\recogHandler.py:1085
 msgid "Current OCR engine"
 msgstr "Поточний сервіс OCR"
 
 #. Translators: The title of the automatic recognition settings panel for the add-on.
-#: addon\globalPlugins\visAware\recogHandler.py:1080
+#: addon\globalPlugins\visAware\recogHandler.py:1128
 msgid "Automatic recognition"
 msgstr "Автоматичне розпізнавання"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1098
+#: addon\globalPlugins\visAware\recogHandler.py:1146
 msgid "Automatic recognition &type:"
 msgstr "Тип &автоматичного розпізнавання:"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1106
+#: addon\globalPlugins\visAware\recogHandler.py:1154
 msgid "Automatic recognition &engine:"
 msgstr "Сервіс автоматичного &розпізнавання:"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1115
+#: addon\globalPlugins\visAware\recogHandler.py:1163
 msgid "Automatic recognition &prompt:"
 msgstr "Підказка для &автоматичного розпізнавання:"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1130
+#: addon\globalPlugins\visAware\recogHandler.py:1178
 msgid "Automatic recognition &model:"
 msgstr "Модель автоматичного &розпізнавання:"
 
 #. Translators: The label for a button that fetches model names.
+#. Translators: The label for the button that fetches Kimi model names.
 #. Translators: The label for the button that fetches OpenAI model names.
 #. Translators: The label for the button that fetches Ollama model names.
-#: addon\globalPlugins\visAware\recogHandler.py:1138
+#: addon\globalPlugins\visAware\recogHandler.py:1186
+#: addon\globalPlugins\visAware\agent\engines\kimi.py:77
 #: addon\globalPlugins\visAware\agent\engines\openai.py:66
 #: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:132
 #: addon\globalPlugins\visAware\imageDescribers\ollama.py:94
 msgid "&Fetch models"
 msgstr "&Отримати моделі"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1148
+#: addon\globalPlugins\visAware\recogHandler.py:1196
 msgid "Prefer screenshots for &web images"
 msgstr "Для об'єктів &веб зображень Надавати перевагу знімкам екрана"
 
 #. Translators: A choice meaning automatic recognition should use the engine's regular model setting.
-#: addon\globalPlugins\visAware\recogHandler.py:1226
+#: addon\globalPlugins\visAware\recogHandler.py:1274
 msgid "Use the model selected in engine settings"
 msgstr "Використовувати модель, вибрану в налаштуваннях сервісу"
 
 #. Translators: The title of the general settings panel for the add-on.
-#: addon\globalPlugins\visAware\recogHandler.py:1321
+#: addon\globalPlugins\visAware\recogHandler.py:1369
 msgid "General"
 msgstr "Загальне"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1333
+#: addon\globalPlugins\visAware\recogHandler.py:1381
 msgid "Copy recognition result to the &clipboard"
 msgstr "&Копіювати результат розпізнавання в буфер обміну"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1338
+#: addon\globalPlugins\visAware\recogHandler.py:1386
 msgid "Show text results in a &browsable message"
 msgstr "Показувати текстові результати в &повідомленні з можливістю перегляду"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1343
+#: addon\globalPlugins\visAware\recogHandler.py:1391
 msgid "Automatically &read recognition result documents"
 msgstr "Автоматично &зчитувати документи з результатами розпізнавання"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1348
+#: addon\globalPlugins\visAware\recogHandler.py:1396
 msgid "&Enable more verbose logging for debug purposes"
 msgstr "&Увімкнути детальне ведення журналу для налагодження"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1355
+#: addon\globalPlugins\visAware\recogHandler.py:1403
 msgid "Recognition &sources included when cycling:"
 msgstr "&Джерела розпізнавання, включені під час циклічного перемикання:"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1372
+#: addon\globalPlugins\visAware\recogHandler.py:1420
 msgid "Vis Aware &mode:"
 msgstr "&Режим Vis Aware:"
 
 #. Translators: The label for a group box for NVDACN account settings.
-#: addon\globalPlugins\visAware\recogHandler.py:1382
+#: addon\globalPlugins\visAware\recogHandler.py:1430
 msgid "NVDACN account (for supported engines like Vivo OCR)"
 msgstr "Обліковий запис NVDACN (для підтримуваних сервісів, таких як Vivo OCR)"
 
 #. Translators: The label for the username text control in the NVDACN settings.
-#: addon\globalPlugins\visAware\recogHandler.py:1389
+#: addon\globalPlugins\visAware\recogHandler.py:1437
 msgid "Username:"
 msgstr "Ім'я користувача:"
 
 #. Translators: The label for the password text control in the NVDACN settings.
-#: addon\globalPlugins\visAware\recogHandler.py:1398
+#: addon\globalPlugins\visAware\recogHandler.py:1446
 msgid "Password:"
 msgstr "Пароль:"
 
 #. Translators: Shown when no recognition source is available for the cycle source command.
-#: addon\globalPlugins\visAware\recogHandler.py:1449
+#: addon\globalPlugins\visAware\recogHandler.py:1497
 msgid "At least one recognition source must be selected."
 msgstr "Потрібно вибрати принаймні одне джерело розпізнавання."
 
 #. Translators: The setting name used in the validation error for the recognition source checklist.
-#: addon\globalPlugins\visAware\recogHandler.py:1451
+#: addon\globalPlugins\visAware\recogHandler.py:1499
 msgid "Recognition sources included when cycling"
 msgstr "Джерела розпізнавання, включені під час циклічного перемикання"
 
@@ -864,6 +998,7 @@ msgid "{} returned an unsupported agent action: {}"
 msgstr "{} повернув непідтримувану дію помічника: {}"
 
 #: addon\globalPlugins\visAware\agent\gemini.py:51
+#: addon\globalPlugins\visAware\agent\kimi.py:73
 #: addon\globalPlugins\visAware\agent\openai.py:48
 msgid "API key is missing. Please configure it in the AI Agent settings."
 msgstr ""
@@ -896,6 +1031,47 @@ msgstr "Gemini не відповів на виклик інструменту п
 #: addon\globalPlugins\visAware\agent\gemini.py:314
 msgid "Gemini returned invalid agent action JSON."
 msgstr "Gemini повернув недійсний JSON дії помічника."
+
+#. Translators: An error message for malformed Kimi Agent tool-call data.
+#: addon\globalPlugins\visAware\agent\kimi.py:50
+msgid "Kimi returned malformed agent action data."
+msgstr "Kimi повернув некоректно сформовані дані про дії помічника."
+
+#: addon\globalPlugins\visAware\agent\kimi.py:205
+msgid "The current screenshot is too large for the Kimi request limit."
+msgstr "Поточний знімок екрана перевищує обмеження розміру запиту Kimi."
+
+#. Translators: Reported when Kimi cannot finish an Agent action within the token limit.
+#: addon\globalPlugins\visAware\agent\kimi.py:219
+msgid "Kimi agent response was truncated at the token limit."
+msgstr ""
+"Відповідь помічника Kimi була обрізана через обмеження кількості токенів."
+
+#. Translators: Reported when Kimi returns zero or multiple actions for one Agent step.
+#: addon\globalPlugins\visAware\agent\kimi.py:227
+msgid "Kimi did not return exactly one agent tool call."
+msgstr "Kimi не повернув рівно одного виклику інструменту помічника."
+
+#. Translators: Reported when Kimi calls a tool unsupported by the desktop Agent.
+#: addon\globalPlugins\visAware\agent\kimi.py:236
+msgid "Kimi returned an unsupported agent tool call."
+msgstr "Kimi повернув непідтримуваний виклик інструменту помічника."
+
+#. Translators: Reported when Kimi reuses an Agent tool-call identifier.
+#: addon\globalPlugins\visAware\agent\kimi.py:246
+msgid "Kimi returned a duplicate agent tool call ID."
+msgstr ""
+"Kimi повернув повторюваний ідентифікатор виклику інструменту помічника."
+
+#. Translators: Reported when Kimi returns invalid JSON for an Agent action.
+#: addon\globalPlugins\visAware\agent\kimi.py:253
+msgid "Kimi returned invalid agent action JSON."
+msgstr "Kimi повернув недійсний JSON дії помічника."
+
+#. Translators: Reported when Kimi omits reasoning required for the next Agent step.
+#: addon\globalPlugins\visAware\agent\kimi.py:261
+msgid "Kimi returned incomplete preserved thinking data."
+msgstr "Kimi повернув неповні дані збереженого міркування."
 
 #: addon\globalPlugins\visAware\agent\openai.py:70
 #: addon\globalPlugins\visAware\agent\session.py:145
@@ -1093,38 +1269,50 @@ msgid "Google Gemini"
 msgstr "Google Gemini"
 
 #. Translators: The label for the Gemini API key used by the Agent.
+#. Translators: The label for the Kimi API key used by the Agent.
 #. Translators: The label for the OpenAI API key used by the Agent.
 #. Translators: The label for the text field to enter the Gemini API Key.
+#. Translators: The label for the text field to enter the Kimi API key.
 #. Translators: The label for the Ollama API key field.
 #. Translators: The label for the text field to enter the Gemini API Key.
 #. Translators: The label for the text field to enter the Gemma API Key.
+#. Translators: The label for the text field to enter the Kimi API key.
 #. Translators: The label for the Ollama API key field.
 #: addon\globalPlugins\visAware\agent\engines\gemini.py:48
+#: addon\globalPlugins\visAware\agent\engines\kimi.py:66
 #: addon\globalPlugins\visAware\agent\engines\openai.py:56
 #: addon\globalPlugins\visAware\contentRecognizers\baiduOCR.py:65
 #: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:112
+#: addon\globalPlugins\visAware\contentRecognizers\kimiOCR.py:126
 #: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:127
 #: addon\globalPlugins\visAware\imageDescribers\gemini.py:75
 #: addon\globalPlugins\visAware\imageDescribers\gemma.py:144
+#: addon\globalPlugins\visAware\imageDescribers\kimi.py:89
 #: addon\globalPlugins\visAware\imageDescribers\ollama.py:89
 msgid "API &key"
 msgstr "&Ключ API"
 
 #. Translators: The label for the Gemini model used by the Agent.
+#. Translators: The label for the Kimi model used by the Agent.
 #. Translators: The label for the OpenAI model used by the Agent.
 #. Translators: The label for a setting to select the Gemini model.
+#. Translators: The label for a setting to select the Kimi model.
 #. Translators: The label for a setting to select the Ollama model.
 #. Translators: The label for selecting a PaddleOCR model.
 #. Translators: The label for a setting to select the Gemini model.
 #. Translators: The label for a setting to select the Gemma model.
+#. Translators: The label for a setting to select the Kimi model.
 #. Translators: The label for a setting to select the Ollama model.
 #: addon\globalPlugins\visAware\agent\engines\gemini.py:53
+#: addon\globalPlugins\visAware\agent\engines\kimi.py:82
 #: addon\globalPlugins\visAware\agent\engines\openai.py:71
 #: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:117
+#: addon\globalPlugins\visAware\contentRecognizers\kimiOCR.py:137
 #: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:137
 #: addon\globalPlugins\visAware\contentRecognizers\paddleOCR.py:437
 #: addon\globalPlugins\visAware\imageDescribers\gemini.py:85
 #: addon\globalPlugins\visAware\imageDescribers\gemma.py:149
+#: addon\globalPlugins\visAware\imageDescribers\kimi.py:105
 #: addon\globalPlugins\visAware\imageDescribers\ollama.py:99
 msgid "&Model"
 msgstr "&Модель"
@@ -1136,15 +1324,59 @@ msgstr "&Модель"
 msgid "Media &resolution"
 msgstr "&Роздільна здатність медіа"
 
+#. Translators: The description of the Kimi Agent engine. "Moonshot AI" is a proper noun
+#. and should not be translated.
+#. Translators: The description of the Kimi engine. "Moonshot AI" is a proper noun
+#. and should not be translated.
+#: addon\globalPlugins\visAware\agent\engines\kimi.py:49
+#: addon\globalPlugins\visAware\imageDescribers\kimi.py:67
+msgid "Kimi (Moonshot AI)"
+msgstr "Kimi (Moonshot AI)"
+
+#. Translators: The label for the Kimi-compatible base URL used by the Agent.
+#. Translators: The label for the OpenAI-compatible base URL used by the Agent.
+#. Translators: The label for the text field to enter the Kimi API base URL.
+#: addon\globalPlugins\visAware\agent\engines\kimi.py:71
+#: addon\globalPlugins\visAware\agent\engines\openai.py:61
+#: addon\globalPlugins\visAware\contentRecognizers\kimiOCR.py:131
+#: addon\globalPlugins\visAware\imageDescribers\kimi.py:94
+msgid "Base &URL"
+msgstr "Базова URL"
+
+#. Translators: The label for Kimi K3 reasoning effort.
+#. Translators: The label for Kimi thinking effort.
+#: addon\globalPlugins\visAware\agent\engines\kimi.py:88
+#: addon\globalPlugins\visAware\contentRecognizers\kimiOCR.py:144
+#: addon\globalPlugins\visAware\imageDescribers\kimi.py:112
+msgid "&Thinking effort"
+msgstr "Інтенсивність &міркування"
+
+#. Translators: Reported while fetching the Kimi model list.
+#: addon\globalPlugins\visAware\agent\engines\kimi.py:187
+msgid "Fetching Kimi model list"
+msgstr "Отримання списку моделей Kimi"
+
+#. Translators: Reported when Kimi returns no models.
+#: addon\globalPlugins\visAware\agent\engines\kimi.py:212
+msgid "No Kimi models were found."
+msgstr "Моделей Kimi не знайдено."
+
+#. Translators: Reported after fetching Kimi models. {count} is the number of models.
+#: addon\globalPlugins\visAware\agent\engines\kimi.py:218
+#, python-brace-format
+msgid "Kimi models loaded: {count}"
+msgstr "Завантажено {count} моделей Kimi"
+
+#. Translators: Reported when fetching Kimi models fails. {message} is the error message.
+#: addon\globalPlugins\visAware\agent\engines\kimi.py:224
+#, python-brace-format
+msgid "Could not fetch Kimi models: {message}"
+msgstr "Не вдалося отримати моделі Kimi: {message}"
+
 #. Translators: The description of the OpenAI Agent engine.
 #: addon\globalPlugins\visAware\agent\engines\openai.py:40
 msgid "OpenAI"
 msgstr "OpenAI"
-
-#. Translators: The label for the OpenAI-compatible base URL used by the Agent.
-#: addon\globalPlugins\visAware\agent\engines\openai.py:61
-msgid "Base &URL"
-msgstr "Базова URL"
 
 #. Translators: Reported while fetching the OpenAI model list.
 #: addon\globalPlugins\visAware\agent\engines\openai.py:139
@@ -1410,12 +1642,14 @@ msgstr "Контент заблоковано через налаштуванн�
 #. Translators: An error message for an empty but successful server response.
 #. Translators: An error message for an empty but successful Ollama response.
 #. Translators: An error message for an empty but successful server response.
+#. Translators: An error message for an empty response from an image-description server.
 #. Translators: An error message for an empty but successful Ollama response.
 #. Translators: An error message for an empty but successful server response.
 #: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:293
 #: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:217
 #: addon\globalPlugins\visAware\imageDescribers\gemini.py:347
 #: addon\globalPlugins\visAware\imageDescribers\gemma.py:475
+#: addon\globalPlugins\visAware\imageDescribers\kimi.py:428
 #: addon\globalPlugins\visAware\imageDescribers\ollama.py:178
 #: addon\globalPlugins\visAware\imageDescribers\vivoBlueLLM.py:404
 msgid "Server returned a successful but empty response."
@@ -1438,6 +1672,41 @@ msgid "Gemini OCR cannot convert coordinates without the uploaded image size."
 msgstr ""
 "Gemini OCR не може конвертувати координати без розміру завантаженого "
 "зображення."
+
+#. Translators: An error message for malformed Kimi OCR structured data.
+#: addon\globalPlugins\visAware\contentRecognizers\kimiOCR.py:61
+msgid "Kimi OCR returned malformed structured data."
+msgstr "Kimi OCR повернув некоректно сформовані структуровані дані."
+
+#. Translators: Reported when OCR coordinates cannot be mapped because the image size is unavailable.
+#: addon\globalPlugins\visAware\contentRecognizers\kimiOCR.py:63
+msgid "Kimi OCR cannot convert coordinates without the uploaded image size."
+msgstr ""
+"Kimi OCR не може конвертувати координати без розміру завантаженого "
+"зображення."
+
+#. Translators: The description of the Kimi OCR engine. "Moonshot AI" is a proper noun
+#. and should not be translated.
+#: addon\globalPlugins\visAware\contentRecognizers\kimiOCR.py:108
+msgid "Kimi (Moonshot AI) OCR"
+msgstr "Kimi (Moonshot AI) OCR"
+
+#: addon\globalPlugins\visAware\contentRecognizers\kimiOCR.py:216
+msgid ""
+"API key is missing. Please configure it in the Kimi OCR engine settings."
+msgstr ""
+"Відсутній ключ API. Будь ласка, налаштуйте його в налаштуваннях сервісу Kimi "
+"OCR."
+
+#. Translators: An error message for an empty Kimi OCR response.
+#: addon\globalPlugins\visAware\contentRecognizers\kimiOCR.py:300
+msgid "Kimi OCR returned an empty response."
+msgstr "Kimi OCR повернув порожню відповідь."
+
+#. Translators: An error message for malformed Kimi OCR structured JSON.
+#: addon\globalPlugins\visAware\contentRecognizers\kimiOCR.py:305
+msgid "Kimi OCR returned invalid JSON."
+msgstr "Kimi OCR повернув недійсний JSON."
 
 #: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:37
 msgid ""
@@ -1478,11 +1747,13 @@ msgstr "&Увімкнути потоковий вивід"
 
 #. Translators: The label for a setting to customize the OCR prompt.
 #. Translators: The label for a setting to customize the prompt for the vision model.
+#. Translators: The label for a setting to customize the Kimi prompt.
 #. Translators: The label for a setting to customize the prompt for the model.
 #. Translators: The label for an engine setting to customize the prompt for the vision model.
 #: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:150
 #: addon\globalPlugins\visAware\imageDescribers\gemini.py:99
 #: addon\globalPlugins\visAware\imageDescribers\gemma.py:163
+#: addon\globalPlugins\visAware\imageDescribers\kimi.py:119
 #: addon\globalPlugins\visAware\imageDescribers\ollama.py:112
 #: addon\globalPlugins\visAware\imageDescribers\vivoBlueLLM.py:98
 msgid "Custom &prompt"
@@ -1707,6 +1978,7 @@ msgid "Invalid response from the authentication server."
 msgstr "Недійсна відповідь від сервера автентифікації."
 
 #: addon\globalPlugins\visAware\imageDescribers\gemini.py:59
+#: addon\globalPlugins\visAware\imageDescribers\kimi.py:55
 msgid ""
 "Describe this image objectively. Include all visible text (if none, do not "
 "mention it). Do not include any introductory phrases. Avoid subjective "
@@ -1718,6 +1990,7 @@ msgstr ""
 
 #. Translators: The label for an engine setting to enable streaming output.
 #: addon\globalPlugins\visAware\imageDescribers\gemini.py:80
+#: addon\globalPlugins\visAware\imageDescribers\kimi.py:100
 #: addon\globalPlugins\visAware\imageDescribers\vivoBlueLLM.py:87
 msgid "&Enable streaming output (if available)"
 msgstr "&Увімкнути голосовий вивід (якщо доступно)"
@@ -1796,6 +2069,27 @@ msgstr ""
 #, python-brace-format
 msgid "Gemma API error: {}"
 msgstr "Помилка API Gemma: {}"
+
+#: addon\globalPlugins\visAware\imageDescribers\kimi.py:211
+#: addon\globalPlugins\visAware\imageDescribers\kimi.py:271
+msgid "API key is missing. Please configure it in the Kimi engine settings."
+msgstr ""
+"Відсутній ключ API. Будь ласка, налаштуйте його в налаштуваннях сервісу Kimi."
+
+#: addon\globalPlugins\visAware\imageDescribers\kimi.py:261
+msgid "Kimi returned a successful but empty response."
+msgstr "Kimi повернув успішну, але порожню відповідь."
+
+#. Translators: Reported when the required Kimi follow-up context exceeds the model limit.
+#: addon\globalPlugins\visAware\imageDescribers\kimi.py:290
+msgid "The Kimi conversation is too large for the selected model."
+msgstr "Розмова Kimi завелика для вибраної моделі."
+
+#. Translators: Reported when Kimi cannot continue without preserved reasoning.
+#: addon\globalPlugins\visAware\imageDescribers\kimi.py:320
+#: addon\globalPlugins\visAware\imageDescribers\kimi.py:328
+msgid "Kimi follow-up history is missing the complete assistant response."
+msgstr "В історії додаткових питань Kimi відсутня повна відповідь помічника."
 
 #: addon\globalPlugins\visAware\imageDescribers\ollama.py:35
 msgid ""
@@ -1899,9 +2193,7 @@ msgstr ""
 msgid "Model response stopped before completion: {}"
 msgstr "Відповідь моделі зупинено до завершення: {}"
 
-#. Add-on description
-#. Translators: Long description to be shown for this add-on on add-on information from add-on store
-#: buildVars.py:30
+#: buildVars.py:31
 msgid ""
 "NVDA add-on for OCR, AI-powered image description, automatic recognition, "
 "and AI-assisted computer control."
@@ -1910,20 +2202,22 @@ msgstr ""
 "ШІ, автоматичного розпізнавання та керування комп’ютером за допомогою ШІ "
 "помічника."
 
-#. Brief changelog for this version
-#. Translators: what's new content for the add-on version to be shown in the add-on store
-#: buildVars.py:35
+#: buildVars.py:38
 msgid ""
 "### 0.7.0\n"
 "\n"
 "* Added the Apple Vision (OCR Server) engine for local-network OCR through "
-"the open-source OCR Server iOS app."
+"the open-source OCR Server iOS app.\n"
+"* Added Kimi image description, follow-up questions, OCR, and AI Agent "
+"engines through the OpenAI-compatible Kimi API."
 msgstr ""
 "### 0.7.0\n"
 "\n"
 "* Додано рушій Apple Vision (OCR Server) для локального мережевого "
 "розпізнавання тексту за допомогою застосунку OCR Server з відкритим кодом "
-"для iOS."
+"для iOS.\n"
+"* Додано рушії Kimi для опису зображень, додаткових питань, OCR і ШІ-"
+"помічника через сумісний з OpenAI API Kimi."
 
 #~ msgid ""
 #~ "### 0.6.5\n"

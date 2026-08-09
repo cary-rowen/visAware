@@ -34,9 +34,12 @@ addon_info = AddonInfo(
 	addon_version="0.7.0",
 	# Brief changelog for this version
 	# Translators: what's new content for the add-on version to be shown in the add-on store
-	addon_changelog=_("""### 0.7.0
+	addon_changelog=_(
+		"""### 0.7.0
 
-* Added the Apple Vision (OCR Server) engine for local-network OCR through the open-source OCR Server iOS app."""),
+* Added the Apple Vision (OCR Server) engine for local-network OCR through the open-source OCR Server iOS app.
+* Added Kimi image description, follow-up questions, OCR, and AI Agent engines through the OpenAI-compatible Kimi API.""",
+	),
 	# Author(s)
 	addon_author="cary-rowen <manchen_0528@outlook.com>",
 	# URL for the add-on documentation support

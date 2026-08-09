@@ -136,12 +136,14 @@ class RequestLogRedactionTestCase(unittest.TestCase):
 		requestParams = {
 			"headers": {
 				"x-goog-api-key": "gemini-key",
+				"x-api-key": "kimi-key",
 				"app_key": "app-key",
 			},
 			"imageContent": memoryview(b"image-bytes"),
 			"url": "https://example.test/ocr?access_token=secret-token&safe=1",
 			"json": {
 				"src": "data:image/png;base64,abc",
+				"image_url": {"url": "data:image/jpeg;base64,encoded-image"},
 				"imageBytes": "encoded-image",
 				"contents": [
 					{
@@ -163,10 +165,15 @@ class RequestLogRedactionTestCase(unittest.TestCase):
 		redacted = self.module._redactRequestParamsForLog(requestParams)
 
 		self.assertEqual(redacted["headers"]["x-goog-api-key"], "<redacted>")
+		self.assertEqual(redacted["headers"]["x-api-key"], "<redacted>")
 		self.assertEqual(redacted["headers"]["app_key"], "<redacted>")
 		self.assertEqual(redacted["imageContent"], "<memoryview: 11 bytes>")
 		self.assertIn("access_token=%3Credacted%3E", redacted["url"])
 		self.assertEqual(redacted["json"]["src"], "<redacted>")
+		self.assertEqual(
+			redacted["json"]["image_url"]["url"],
+			"<redacted data URL: 36 chars>",
+		)
 		self.assertEqual(redacted["json"]["imageBytes"], "<redacted payload: 13 chars>")
 		inlineData = redacted["json"]["contents"][0]["parts"][0]["inline_data"]
 		self.assertEqual(inlineData["data"], "<redacted payload: 12 chars>")
