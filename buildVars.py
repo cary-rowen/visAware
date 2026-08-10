@@ -31,14 +31,19 @@ addon_info = AddonInfo(
 		"""NVDA add-on for OCR, AI-powered image description, automatic recognition, and AI-assisted computer control.""",
 	),
 	# version
-	addon_version="0.7.0",
+	addon_version="0.8.0",
 	# Brief changelog for this version
 	# Translators: what's new content for the add-on version to be shown in the add-on store
 	addon_changelog=_(
-		"""### 0.7.0
+		"""### 0.8.0
 
-* Added the Apple Vision (OCR Server) engine for local-network OCR through the open-source OCR Server iOS app.
-* Added Kimi image description, follow-up questions, OCR, and AI Agent engines through the OpenAI-compatible Kimi API.""",
+* Added Kimi image description, follow-up questions, OCR with structured coordinates, and AI Agent support through the OpenAI-compatible Kimi API.
+* Improved image-description prompts across supported engines with localized defaults.
+* Improved mathematical image descriptions by converting visible formulas to LaTeX and returning formula-only images as LaTeX formulas.
+* Improved automatic image recognition with concise 20 to 30 word descriptions without Markdown.
+* Improved browsable image-description output by using standard Markdown tables for tabular content and avoiding code fences.
+* Removed model and model-provider names from the follow-up dialog.
+* Added Copy and Close buttons to browsable recognition and follow-up result dialogs.""",
 	),
 	# Author(s)
 	addon_author="cary-rowen <manchen_0528@outlook.com>",

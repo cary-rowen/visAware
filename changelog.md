@@ -1,7 +1,16 @@
+### 0.8.0
+
+* Added Kimi image description, follow-up questions, OCR with structured coordinates, and AI Agent support through the OpenAI-compatible Kimi API.
+* Improved image-description prompts across supported engines with localized defaults.
+* Improved mathematical image descriptions by converting visible formulas to LaTeX and returning formula-only images as LaTeX formulas.
+* Improved automatic image recognition with concise 20 to 30 word descriptions without Markdown.
+* Improved browsable image-description output by using standard Markdown tables for tabular content and avoiding code fences.
+* Removed model and model-provider names from the follow-up dialog.
+* Added Copy and Close buttons to browsable recognition and follow-up result dialogs.
+
 ### 0.7.0
 
 * Added the Apple Vision (OCR Server) engine for local-network OCR through the open-source OCR Server iOS app.
-* Added Kimi image description, follow-up questions, OCR, and AI Agent engines through the OpenAI-compatible Kimi API.
 
 ### 0.6.5
 
