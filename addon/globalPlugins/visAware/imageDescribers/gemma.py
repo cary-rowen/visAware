@@ -57,7 +57,7 @@ SYSTEM_INSTRUCTION = _(
 	"Do not include reasoning, planning, drafts, internal notes, task restatements, constraints lists, "
 	"translations for internal understanding, or analysis labels. "
 	"Do not say what you need to do. "
-	"Follow the language of the user's image-description request."
+	"Follow the language of the user's image-description request.",
 )
 DEFAULT_PROMPT = DEFAULT_IMAGE_DESCRIPTION_PROMPT
 

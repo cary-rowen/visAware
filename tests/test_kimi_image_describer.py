@@ -202,8 +202,8 @@ class KimiImageDescriberTestCase(unittest.TestCase):
 						"content": "initial answer",
 					},
 					"finish_reason": "stop",
-				}
-			]
+				},
+			],
 		}
 		turnContent = {
 			"choices": [
@@ -214,8 +214,8 @@ class KimiImageDescriberTestCase(unittest.TestCase):
 						"content": "turn answer",
 					},
 					"finish_reason": "stop",
-				}
-			]
+				},
+			],
 		}
 		context = SimpleNamespace(
 			image=object(),
@@ -331,7 +331,7 @@ class KimiImageDescriberTestCase(unittest.TestCase):
 							"content": text,
 						},
 						"finish_reason": "stop",
-					}
+					},
 				],
 				"usage": usage,
 			}
@@ -380,7 +380,7 @@ class KimiImageDescriberTestCase(unittest.TestCase):
 					{
 						"message": {"role": "assistant", "content": "initial"},
 						"finish_reason": "stop",
-					}
+					},
 				],
 				"usage": {"prompt_tokens": 200, "completion_tokens": 100},
 			},

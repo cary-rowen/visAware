@@ -157,7 +157,7 @@ class KimiOCRTestCase(unittest.TestCase):
 						{
 							"finish_reason": "length",
 							"message": {"role": "assistant", "content": '{"lines": []}'},
-						}
+						},
 					],
 				},
 			)
@@ -173,7 +173,7 @@ class KimiOCRTestCase(unittest.TestCase):
 						{
 							"finish_reason": "stop",
 							"message": {"role": "assistant", "content": ""},
-						}
+						},
 					],
 				},
 			)
@@ -191,7 +191,7 @@ class KimiOCRTestCase(unittest.TestCase):
 							"role": "assistant",
 							"content": '```json\n{"lines": []}\n```',
 						},
-					}
+					},
 				],
 			},
 		)

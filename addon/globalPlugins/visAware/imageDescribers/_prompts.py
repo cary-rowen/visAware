@@ -17,27 +17,27 @@ DEFAULT_IMAGE_DESCRIPTION_PROMPT = _(
 	"When mathematical notation or formulas are visible, convert them to LaTeX and enclose each formula "
 	"in single dollar signs, for example `$x^2 + y^2 = z^2$`. Do not solve, simplify, or invent missing parts. "
 	"If the image contains only a mathematical formula, output only the formula in LaTeX enclosed in single "
-	"dollar signs. Do not describe the background, layout, colors, or introduce the formula."
+	"dollar signs. Do not describe the background, layout, colors, or introduce the formula.",
 )
 
 # Translators: The default prompt sent to automatic image description models.
 DEFAULT_AUTO_RECOGNITION_PROMPT = _(
 	"Briefly describe the main subject of the image in 20 to 30 words. "
 	"Output one sentence only. Avoid Markdown, LaTeX, headings, lists, introductions, and explanations. "
-	"Do not make subjective guesses or transcribe text unrelated to the main subject."
+	"Do not make subjective guesses or transcribe text unrelated to the main subject.",
 )
 
 # Translators: The instruction appended when image description results are shown in a browsable message.
 _MARKDOWN_OUTPUT_INSTRUCTION = _(
 	"Use simple Markdown where helpful. When the image contains a table, represent it as a standard Markdown table, "
-	"not a list. Never wrap the response in code fences. Keep LaTeX formulas enclosed in single dollar signs."
+	"not a list. Never wrap the response in code fences. Keep LaTeX formulas enclosed in single dollar signs.",
 )
 
 # Translators: The instruction appended when image description results are announced as plain text.
 _PLAIN_TEXT_OUTPUT_INSTRUCTION = _(
 	"Return plain text only. "
 	"Do not use Markdown formatting, headings, lists, tables, code spans, or code fences. "
-	"Keep LaTeX formulas enclosed in single dollar signs."
+	"Keep LaTeX formulas enclosed in single dollar signs.",
 )
 
 # Translators: The instruction appended to ordinary image description prompts for mathematical formulas.
@@ -46,7 +46,7 @@ _FORMULA_INSTRUCTION = _(
 	"in single dollar signs, for example `$x^2 + y^2 = z^2$`. "
 	"Do not solve, simplify, or invent missing parts of a formula. "
 	"If the image contains only a mathematical formula, output only the formula in LaTeX enclosed in single "
-	"dollar signs. Do not describe the background, layout, colors, or introduce the formula."
+	"dollar signs. Do not describe the background, layout, colors, or introduce the formula.",
 )
 
 

@@ -144,13 +144,13 @@ class KimiAgentClient:
 					"role": "tool",
 					"tool_call_id": self._pendingToolUseId,
 					"content": _formatToolResult(history),
-				}
+				},
 			)
 			self._messages.append(
 				{
 					"role": "user",
 					"content": self._buildUserContent(goal, screenshot, history),
-				}
+				},
 			)
 			self._pendingToolUseId = None
 			self._trimMessages()
@@ -160,7 +160,7 @@ class KimiAgentClient:
 			{
 				"role": "user",
 				"content": self._buildUserContent(goal, screenshot, history),
-			}
+			},
 		)
 		self._trimMessages()
 

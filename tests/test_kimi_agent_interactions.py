@@ -233,7 +233,8 @@ class KimiAgentInteractionsTestCase(unittest.TestCase):
 
 		secondMessages = secondRequest["json"]["messages"]
 		self.assertEqual(
-			[message["role"] for message in secondMessages], ["system", "user", "assistant", "tool", "user"]
+			[message["role"] for message in secondMessages],
+			["system", "user", "assistant", "tool", "user"],
 		)
 		self.assertEqual(secondMessages[2]["reasoning_content"], "reasoning")
 		self.assertEqual(secondMessages[3]["tool_call_id"], "call-1")
@@ -284,9 +285,9 @@ class KimiAgentInteractionsTestCase(unittest.TestCase):
 							"role": "assistant",
 							"tool_calls": [],
 						},
-					}
-				]
-			}
+					},
+				],
+			},
 		)
 		client = module.KimiAgentClient(module.KimiAgentSettings(apiKey="secret", model="k3"))
 
@@ -319,7 +320,7 @@ class KimiAgentInteractionsTestCase(unittest.TestCase):
 		state.consume(
 			b'data: {"choices":[{"delta":{"tool_calls":[{"index":0,"id":"call-1",'
 			b'"type":"function","function":{"name":"agent_decision"}}]},'
-			b'"finish_reason":null}]}'
+			b'"finish_reason":null}]}',
 		)
 		state.consume(b'data: {"choices":[{"delta":{},"finish_reason":"tool_calls"}]}')
 		state.consume(b"data: [DONE]")

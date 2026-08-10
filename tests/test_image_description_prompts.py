@@ -64,10 +64,12 @@ class ImageDescriptionPromptsTestCase(unittest.TestCase):
 		module = load_prompt_module()
 
 		self.assertIn(
-			"If the image contains only a mathematical formula", module.DEFAULT_IMAGE_DESCRIPTION_PROMPT
+			"If the image contains only a mathematical formula",
+			module.DEFAULT_IMAGE_DESCRIPTION_PROMPT,
 		)
 		self.assertIn(
-			"Do not describe the background, layout, colors", module.DEFAULT_IMAGE_DESCRIPTION_PROMPT
+			"Do not describe the background, layout, colors",
+			module.DEFAULT_IMAGE_DESCRIPTION_PROMPT,
 		)
 
 	def test_automatic_prompt_is_concise_localizable_text(self) -> None:
