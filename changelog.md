@@ -1,4 +1,4 @@
-### 0.8.0
+### 0.8.1
 
 * Added Kimi image description, follow-up questions, OCR with structured coordinates, and AI Agent support through the OpenAI-compatible Kimi API.
 * Improved image-description prompts across supported engines with localized defaults.

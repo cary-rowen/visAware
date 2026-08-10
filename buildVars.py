@@ -31,11 +31,11 @@ addon_info = AddonInfo(
 		"""NVDA add-on for OCR, AI-powered image description, automatic recognition, and AI-assisted computer control.""",
 	),
 	# version
-	addon_version="0.8.0",
+	addon_version="0.8.1",
 	# Brief changelog for this version
 	# Translators: what's new content for the add-on version to be shown in the add-on store
 	addon_changelog=_(
-		"""### 0.8.0
+		"""### 0.8.1
 
 * Added Kimi image description, follow-up questions, OCR with structured coordinates, and AI Agent support through the OpenAI-compatible Kimi API.
 * Improved image-description prompts across supported engines with localized defaults.
