@@ -21,6 +21,20 @@ P = ParamSpec("P")
 R = TypeVar("R")
 
 
+def sleepWithCancellation(seconds: float, cancelCheck: Any) -> None:
+	"""Sleeps in short slices when a request supplies a cancellation callback."""
+	if not callable(cancelCheck):
+		time.sleep(seconds)
+		return
+	deadline = time.monotonic() + seconds
+	while True:
+		cancelCheck()
+		remaining = deadline - time.monotonic()
+		if remaining <= 0:
+			return
+		time.sleep(min(0.1, remaining))
+
+
 def retryOnNetworkError(
 	attempts: int = 3,
 	delay: float = 0.5,
@@ -38,9 +52,16 @@ def retryOnNetworkError(
 	def decorator(func: Callable[P, R]) -> Callable[P, R]:
 		@functools.wraps(func)
 		def wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
+			cancelCheck = kwargs.get("cancelCheck")
+
+			def checkCancelled() -> None:
+				if callable(cancelCheck):
+					cancelCheck()
+
 			currentDelay = delay
 			lastException: Exception | None = None
 			for attempt in range(attempts):
+				checkCancelled()
 				try:
 					return func(*args, **kwargs)
 				except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) as e:
@@ -67,8 +88,9 @@ def retryOnNetworkError(
 					)
 					break
 
+				checkCancelled()
 				log.warning(f"{logMessagePrefix}: {lastException}. Retrying in {currentDelay:.1f}s...")
-				time.sleep(currentDelay)
+				sleepWithCancellation(currentDelay, cancelCheck)
 				currentDelay *= backoff
 
 			assert lastException is not None
@@ -196,6 +218,7 @@ def sendRequest(method: str, url: str, **kwargs: Any) -> requests.Response:
 	:raises ApiError: For other non-retryable client or server HTTP errors.
 	:returns: A `requests.Response` object on success.
 	"""
+	kwargs.pop("cancelCheck", None)
 	if "timeout" not in kwargs:
 		kwargs["timeout"] = 100
 	# if "proxies" not in kwargs:
@@ -226,6 +249,12 @@ def sendStreamingRequest(method: str, url: str, **kwargs: Any) -> Iterator[bytes
 	:raises ApiError: For other non-retryable client or server HTTP errors.
 	:yields: Raw byte chunks of the response content.
 	"""
+	cancelCheck = kwargs.pop("cancelCheck", None)
+
+	def checkCancelled() -> None:
+		if callable(cancelCheck):
+			cancelCheck()
+
 	if "timeout" not in kwargs:
 		kwargs["timeout"] = 100
 	if "proxies" not in kwargs:
@@ -240,10 +269,12 @@ def sendStreamingRequest(method: str, url: str, **kwargs: Any) -> Iterator[bytes
 
 	while attempt < attempts:
 		try:
+			checkCancelled()
 			with requests.request(method=method, url=url, **kwargs) as response:
 				# This will raise an HTTPError for 4xx/5xx responses.
 				response.raise_for_status()
 				for chunk in response.iter_lines():
+					checkCancelled()
 					if chunk:
 						hasYieldedChunk = True
 						yield chunk
@@ -256,7 +287,8 @@ def sendStreamingRequest(method: str, url: str, **kwargs: Any) -> Iterator[bytes
 					f"Retryable streaming HTTP {statusCode} before first chunk. "
 					f"Retrying in {retryDelay:.1f}s...",
 				)
-				time.sleep(retryDelay)
+				checkCancelled()
+				sleepWithCancellation(retryDelay, cancelCheck)
 				continue
 			# Delegate error handling to the centralized function.
 			_handleHttpError(e)
@@ -266,7 +298,8 @@ def sendStreamingRequest(method: str, url: str, **kwargs: Any) -> Iterator[bytes
 				log.warning(
 					f"Streaming network error before first chunk: {e}. Retrying in {retryDelay:.1f}s...",
 				)
-				time.sleep(retryDelay)
+				checkCancelled()
+				sleepWithCancellation(retryDelay, cancelCheck)
 				continue
 			# Handle non-HTTP network errors directly for streaming requests.
 			# Translators: An error message for network connection failures.

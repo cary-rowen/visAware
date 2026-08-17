@@ -18,7 +18,7 @@ from typing import Any
 from ..engineGUIHelper import BooleanEngineSetting, ChoiceEngineSetting, TextInputEngineSetting
 from ..exceptions import ApiError, AuthenticationError
 from .. import recogHistory
-from ..recogHandler import BaseRecognizer, RecognitionRequest
+from ..recogHandler import AUTO_RECOGNITION_REQUEST_TIMEOUT, BaseRecognizer, RecognitionRequest
 from ._paddleOCRClient import (
 	DEFAULT_AISTUDIO_ASYNC_URL,
 	MODEL_PADDLEOCR_VL,
@@ -719,6 +719,7 @@ class CustomContentRecognizer(BaseRecognizer):
 		client = PaddleOCRClient(
 			self._buildClientOptions(),
 			cancellationChecker=lambda: self._checkCancelled(cancellationEvent),
+			requestTimeout=(AUTO_RECOGNITION_REQUEST_TIMEOUT if request.isAutomaticRecognition else None),
 		)
 		apiResult = client.recognizeImage(requestParams["imageContent"])
 		self._checkCancelled(cancellationEvent)

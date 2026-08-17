@@ -145,6 +145,61 @@ class NetworkRequestRetryTestCase(unittest.TestCase):
 
 		self.assertIn("Missing or empty 'file' part", str(error.exception))
 
+	def test_send_request_does_not_retry_after_cancellation(self) -> None:
+		requestCalls = []
+		cancelChecks = 0
+
+		def request(**kwargs):
+			requestCalls.append(kwargs)
+			raise requests.exceptions.ConnectionError("offline")
+
+		def cancelCheck() -> None:
+			nonlocal cancelChecks
+			cancelChecks += 1
+			if cancelChecks > 1:
+				raise RuntimeError
+
+		self.module.requests.request = request
+
+		with self.assertRaises(RuntimeError):
+			self.module.sendRequest("GET", "https://example.test", cancelCheck=cancelCheck)
+
+		self.assertEqual(len(requestCalls), 1)
+		self.assertNotIn("cancelCheck", requestCalls[0])
+
+	def test_streaming_request_checks_cancellation_on_empty_lines(self) -> None:
+		class StreamingResponse(_FakeResponse):
+			def __enter__(self):
+				return self
+
+			def __exit__(self, *_args) -> None:
+				pass
+
+			def iter_lines(self):
+				yield b""
+				yield b"data"
+
+		cancelChecks = 0
+
+		def cancelCheck() -> None:
+			nonlocal cancelChecks
+			cancelChecks += 1
+			if cancelChecks == 2:
+				raise RuntimeError
+
+		self.module.requests.request = lambda **_kwargs: StreamingResponse(200)
+
+		with self.assertRaises(RuntimeError):
+			list(
+				self.module.sendStreamingRequest(
+					"GET",
+					"https://example.test/stream",
+					cancelCheck=cancelCheck,
+				),
+			)
+
+		self.assertEqual(cancelChecks, 2)
+
 
 if __name__ == "__main__":
 	unittest.main()

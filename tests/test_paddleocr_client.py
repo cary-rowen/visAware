@@ -9,8 +9,9 @@ import unittest
 
 
 class _FakeResponse:
-	content = b'{"errorCode": 0}'
-	text = content.decode()
+	def __init__(self, content: bytes = b'{"errorCode": 0}') -> None:
+		self.content = content
+		self.text = content.decode()
 
 
 def _install_module_stubs() -> None:
@@ -56,6 +57,7 @@ def _install_module_stubs() -> None:
 
 	networkModule = types.ModuleType("addon.globalPlugins.visAware.network")
 	networkModule.sendRequest = lambda *args, **kwargs: None
+	networkModule.sleepWithCancellation = lambda _seconds, _cancelCheck: None
 	sys.modules["addon.globalPlugins.visAware.network"] = networkModule
 
 
@@ -139,6 +141,7 @@ def load_paddleocr_module():
 	recogHandlerModule = types.ModuleType("addon.globalPlugins.visAware.recogHandler")
 	recogHandlerModule.BaseRecognizer = _BaseRecognizer
 	recogHandlerModule.RecognitionRequest = type("RecognitionRequest", (), {})
+	recogHandlerModule.AUTO_RECOGNITION_REQUEST_TIMEOUT = (3, 30)
 	sys.modules["addon.globalPlugins.visAware.recogHandler"] = recogHandlerModule
 
 	load_paddleocr_client_module()
@@ -220,6 +223,49 @@ class PaddleOCRClientTestCase(unittest.TestCase):
 
 		self.assertEqual(calls[0][1]["headers"]["Authorization"], "Bearer secret-token")
 
+	def test_automatic_request_policy_applies_to_all_async_http_requests(self) -> None:
+		calls = []
+		waitCalls = []
+		responses = [
+			b'{"data":{"jobId":"job-1"}}',
+			b'{"data":{"status":"running"}}',
+			b'{"data":{"status":"success","resultJsonUrl":"https://result.example.test/result"}}',
+			b'{"errorCode":0}',
+		]
+
+		def sendRequest(*args, **kwargs):
+			calls.append((args, kwargs))
+			return _FakeResponse(responses.pop(0))
+
+		def sleepWithCancellation(seconds, cancelCheck) -> None:
+			waitCalls.append(seconds)
+			cancelCheck()
+
+		self.module.network.sendRequest = sendRequest
+		self.module.network.sleepWithCancellation = sleepWithCancellation
+		options = self.module.PaddleOCRClientOptions(
+			serviceType=self.module.SERVICE_TYPE_AISTUDIO_ASYNC,
+			apiUrl="https://paddleocr.example.test/jobs",
+			token="secret-token",
+			model=self.module.MODEL_PADDLEOCR_VL_1_5,
+			useDocOrientationClassify=False,
+			useDocUnwarping=False,
+			useTextlineOrientation=False,
+			useChartRecognition=False,
+		)
+		client = self.module.PaddleOCRClient(
+			options,
+			cancellationChecker=lambda: None,
+			requestTimeout=(3, 30),
+		)
+
+		client.recognizeImage(b"eA==")
+
+		self.assertEqual(waitCalls, [self.module.DEFAULT_AISTUDIO_POLL_INTERVAL_SECONDS])
+		self.assertEqual(len(calls), 4)
+		self.assertTrue(all(call[1]["timeout"] == (3, 30) for call in calls))
+		self.assertTrue(all(callable(call[1]["cancelCheck"]) for call in calls))
+
 
 class PaddleOCRSettingsTestCase(unittest.TestCase):
 	def setUp(self) -> None:
@@ -252,6 +298,37 @@ class PaddleOCRSettingsTestCase(unittest.TestCase):
 		self.assertEqual(saved["aistudioAsyncToken"], "official-token")
 		self.assertEqual(saved["selfHostedApiUrl"], "https://self.example.test")
 		self.assertEqual(saved["selfHostedToken"], "self-token")
+
+	def test_only_automatic_recognition_uses_the_short_client_timeout(self) -> None:
+		capturedTimeouts = []
+
+		class FakeClient:
+			def __init__(self, _options, cancellationChecker=None, requestTimeout=None):
+				capturedTimeouts.append((cancellationChecker, requestTimeout))
+
+			def recognizeImage(self, _imageContent):
+				return {}
+
+		self.module.PaddleOCRClient = FakeClient
+		self.module.SimpleTextResult = lambda text: types.SimpleNamespace(text=text)
+		engine = object.__new__(self.module.CustomContentRecognizer)
+		engine._buildClientOptions = lambda: object()
+		engine._checkCancelled = lambda _event: None
+		engine.originalImage = None
+		engine.extractText = lambda _result: "recognized"
+
+		for isAutomaticRecognition in (True, False):
+			request = types.SimpleNamespace(
+				isAutomaticRecognition=isAutomaticRecognition,
+				textResult=True,
+			)
+			engine._handleStandardResponse({"imageContent": b""}, object(), object(), request)
+
+		self.assertEqual(
+			[capturedTimeout for _checker, capturedTimeout in capturedTimeouts],
+			[(3, 30), None],
+		)
+		self.assertTrue(all(callable(checker) for checker, _timeout in capturedTimeouts))
 
 
 if __name__ == "__main__":

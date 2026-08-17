@@ -4,6 +4,7 @@ import importlib.util
 import builtins
 from pathlib import Path
 import sys
+from threading import Event, current_thread
 import types
 import unittest
 
@@ -227,6 +228,70 @@ class RequestLogRedactionTestCase(unittest.TestCase):
 		engine.textResult = False
 		richRequest = engine._buildRecognitionRequest()
 		self.assertEqual(richRequest.prompt, "Describe the image.")
+
+		automaticRequest = engine._buildRecognitionRequest(isAutomaticRecognition=True)
+		self.assertTrue(automaticRequest.isAutomaticRecognition)
+
+	def test_automatic_requests_use_short_timeout_and_cancellation_check(self) -> None:
+		capturedParams = {}
+		testRecognizer = type(
+			"TestRecognizer",
+			(self.module.BaseRecognizer,),
+			{
+				"supportedSettings": property(lambda _self: []),
+				"supportsStreaming": False,
+				"_prepareImageContent": lambda _self, _image, _imageInfo: b"image",
+				"_buildRequestParams": lambda _self, _imageContent, _request: {
+					"method": "POST",
+					"url": "https://example.test",
+				},
+				"_handleStandardResponse": lambda _self, requestParams, *_args: capturedParams.update(
+					requestParams,
+				),
+				"processApiResult": lambda _self, _result: False,
+				"extractText": lambda _self, _apiResult: "",
+				"_convertToLineResultFormat": lambda _self, _apiResult: [],
+			},
+		)
+		engine = object.__new__(testRecognizer)
+		engine.name = "test"
+		request = self.module.RecognitionRequest(
+			textResult=False,
+			streamResult=False,
+			isAutomaticRecognition=True,
+		)
+		cancellationEvent = Event()
+		self.module.config.conf = {"visAwareGeneral": {"verboseDebugLogging": False}}
+		self.module.wx.CallAfter = lambda *_args: None
+
+		engine._runRecognition(object(), object(), lambda _result: None, cancellationEvent, request)
+
+		self.assertEqual(capturedParams["timeout"], self.module.AUTO_RECOGNITION_REQUEST_TIMEOUT)
+		self.assertTrue(callable(capturedParams["cancelCheck"]))
+		cancellationEvent.set()
+		with self.assertRaises(self.module.CancellationError):
+			capturedParams["cancelCheck"]()
+
+	def test_automatic_recognition_can_reuse_the_controller_worker(self) -> None:
+		workerThreads = []
+		engine = types.SimpleNamespace(
+			_buildRecognitionRequest=lambda _automatic: self.module.RecognitionRequest(False, False),
+		)
+		engine._recognitionImageWorker = (
+			lambda _image, _onResult, _cancellationEvent, _request: workerThreads.append(
+				engine._recognitionThread,
+			)
+		)
+
+		self.module.BaseRecognizer.recognizeImage(
+			engine,
+			object(),
+			lambda _result: None,
+			isAutomaticRecognition=True,
+			runInBackground=False,
+		)
+
+		self.assertEqual(workerThreads, [current_thread()])
 
 
 if __name__ == "__main__":

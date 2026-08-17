@@ -10,7 +10,7 @@ import hashlib
 from collections import OrderedDict
 from collections.abc import Callable
 from io import BytesIO
-from threading import Lock, Thread
+from threading import Event, Lock, Thread
 import time
 from typing import Any
 from urllib.parse import urldefrag, urlsplit
@@ -472,6 +472,9 @@ class AutoRecognitionController:
 		self._activeCurrentKeyGetter: Callable[[], str | None] | None = None
 		self._activeEngine: Any | None = None
 		self._workerThread: Thread | None = None
+		self._workerStateLock = Lock()
+		self._queuedWorker: tuple[Callable[..., None], tuple[Any, ...]] | None = None
+		self._terminated = False
 		self._pendingTimer: wx.CallLater | None = None
 		self._pendingKey: str | None = None
 		self._pendingSerial = 0
@@ -780,6 +783,41 @@ class AutoRecognitionController:
 			self._makeCurrentTargetKeyGetter(currentKeyGetter),
 		)
 
+	def _startWorker(self, target: Callable[..., None], args: tuple[Any, ...]) -> None:
+		"""Runs at most one automatic worker and keeps only the newest queued task."""
+		with self._workerStateLock:
+			if self._terminated:
+				return
+			if self._workerThread is not None:
+				self._queuedWorker = (target, args)
+				return
+			worker = Thread(
+				name="VisAwareAutoRecognition",
+				target=self._runWorker,
+				args=(target, args),
+				daemon=True,
+			)
+			self._workerThread = worker
+			try:
+				worker.start()
+			except Exception:
+				self._workerThread = None
+				raise
+
+	def _runWorker(self, target: Callable[..., None], args: tuple[Any, ...]) -> None:
+		while True:
+			try:
+				target(*args)
+			except Exception:
+				log.debugWarning("Automatic recognition worker failed.", exc_info=True)
+			with self._workerStateLock:
+				queuedWorker = self._queuedWorker
+				self._queuedWorker = None
+				if self._terminated or not queuedWorker:
+					self._workerThread = None
+					return
+				target, args = queuedWorker
+
 	def _startUrlDescription(
 		self,
 		key: str,
@@ -816,14 +854,10 @@ class AutoRecognitionController:
 		self._activeCurrentKeyGetter = currentKeyGetter
 		if _verboseDebugLogging():
 			_debug(f"{source} triggered: {_urlForLog(src)}")
-		_playStartTone()
-		self._workerThread = Thread(
-			name="VisAwareAutoRecognition",
-			target=self._downloadAndDescribe,
-			args=(token, key, src, startedAt),
-			daemon=True,
+		self._startWorker(
+			self._downloadAndDescribe,
+			(token, key, src, startedAt),
 		)
-		self._workerThread.start()
 
 	def _startScreenshotDescription(
 		self,
@@ -873,13 +907,10 @@ class AutoRecognitionController:
 		self._activeCurrentKeyGetter = currentKeyGetter
 		if _verboseDebugLogging():
 			_debug(f"{source} triggered: location={location!r}")
-		self._workerThread = Thread(
-			name="VisAwareAutoRecognition",
-			target=self._captureAndDescribe,
-			args=(token, key, location, startedAt, fallbackSrc, fallbackCurrentKeyGetter),
-			daemon=True,
+		self._startWorker(
+			self._captureAndDescribe,
+			(token, key, location, startedAt, fallbackSrc, fallbackCurrentKeyGetter),
 		)
-		self._workerThread.start()
 
 	def _scheduleDescriptionStart(
 		self,
@@ -936,7 +967,13 @@ class AutoRecognitionController:
 		self._pendingKey = None
 
 	def cancel(self) -> bool:
-		hadTask = bool(self._pendingKey or self._activeKey or self._hasActiveTask())
+		with self._workerStateLock:
+			queuedWorker = self._queuedWorker is not None
+			self._queuedWorker = None
+		engineThread = getattr(self._activeEngine, "_recognitionThread", None)
+		hadTask = bool(
+			self._pendingKey or self._activeKey or queuedWorker or (engineThread and engineThread.is_alive())
+		)
 		self._cancelPendingStart()
 		self._token += 1
 		self._activeKey = None
@@ -952,9 +989,11 @@ class AutoRecognitionController:
 		return hadTask
 
 	def terminate(self) -> None:
+		with self._workerStateLock:
+			self._terminated = True
 		self.cancel()
 
-	def _createRecognitionEngine(self, token: int, key: str) -> Any | None:
+	def _createRecognitionEngine(self, token: int, key: str) -> tuple[Any, Event | None] | None:
 		engineInfo = self._resolveRecognitionScopedEngine(key)
 		if not engineInfo:
 			return None
@@ -969,18 +1008,30 @@ class AutoRecognitionController:
 		)
 		if not self._isCurrent(token, key):
 			return None
+		prepareCancellation = getattr(engine, "_prepareCancellation", None)
+		cancellationEvent = prepareCancellation() if callable(prepareCancellation) else None
+		if not self._isCurrent(token, key):
+			return None
 		self._activeEngine = engine
+		if not self._isCurrent(token, key):
+			if self._activeEngine is engine:
+				self._activeEngine = None
+			return None
 		if hasattr(engine, "prefetchAuthHeaders"):
 			engine.prefetchAuthHeaders()
-		return engine
+		return engine, cancellationEvent
 
 	def _downloadAndDescribe(self, token: int, key: str, src: str, startedAt: float) -> None:
 		try:
-			engine = self._createRecognitionEngine(token, key)
-			if not engine:
+			if not self._isCurrent(token, key):
+				return
+			_playStartTone()
+			engineAndCancellation = self._createRecognitionEngine(token, key)
+			if not engineAndCancellation:
 				_debug("download task ignored: task is no longer current.")
 				return
-			self._downloadAndDescribeWithEngine(engine, token, key, src, startedAt)
+			engine, cancellationEvent = engineAndCancellation
+			self._downloadAndDescribeWithEngine(engine, cancellationEvent, token, key, src, startedAt)
 		except Exception:
 			if self._isCurrent(token, key):
 				log.debugWarning("Automatic recognition could not start.", exc_info=True)
@@ -989,6 +1040,7 @@ class AutoRecognitionController:
 	def _downloadAndDescribeWithEngine(
 		self,
 		engine: Any,
+		cancellationEvent: Event | None,
 		token: int,
 		key: str,
 		src: str,
@@ -1004,7 +1056,7 @@ class AutoRecognitionController:
 		if not self._isCurrent(token, key):
 			_debug("download result ignored: task is no longer current.")
 			return
-		self._recognizeImage(engine, image, token, key, startedAt)
+		self._recognizeImage(engine, image, cancellationEvent, token, key, startedAt)
 
 	def _captureAndDescribe(
 		self,
@@ -1016,6 +1068,8 @@ class AutoRecognitionController:
 		fallbackCurrentKeyGetter: Callable[[], str | None] | None,
 	) -> None:
 		try:
+			if not self._isCurrent(token, key):
+				return
 			left, top, width, height = location
 			isDebug = _verboseDebugLogging()
 			captureStartedAt = time.perf_counter() if isDebug else 0
@@ -1038,35 +1092,37 @@ class AutoRecognitionController:
 					key,
 					contentKey,
 					cachedResult,
-					location,
 					startedAt,
 				)
 				return
-			engine = self._createRecognitionEngine(token, key)
-			if not engine:
+			engineAndCancellation = self._createRecognitionEngine(token, key)
+			if not engineAndCancellation:
 				_debug("screenshot task ignored: task is no longer current.")
 				return
+			engine, cancellationEvent = engineAndCancellation
 			_playStartTone()
 			self._recognizeImage(
 				engine,
 				image,
+				cancellationEvent,
 				token,
 				key,
 				startedAt,
 				resultCacheKey=contentKey,
-				resultValidator=self._makeScreenshotContentValidator(key, location, contentKey),
 			)
 		except Exception as e:
 			if self._isCurrent(token, key):
 				if fallbackSrc and fallbackCurrentKeyGetter:
-					engine = self._createRecognitionEngine(token, key)
-					if not engine:
+					engineAndCancellation = self._createRecognitionEngine(token, key)
+					if not engineAndCancellation:
 						_debug("image URL fallback ignored: task is no longer current.")
 						return
+					engine, cancellationEvent = engineAndCancellation
 					_debug(f"object screenshot failed; falling back to image URL: {e!r}")
 					_playStartTone()
 					self._fallbackToSrc(
 						engine,
+						cancellationEvent,
 						token,
 						key,
 						fallbackSrc,
@@ -1080,6 +1136,7 @@ class AutoRecognitionController:
 	def _fallbackToSrc(
 		self,
 		engine: Any,
+		cancellationEvent: Event | None,
 		token: int,
 		key: str,
 		src: str,
@@ -1092,7 +1149,14 @@ class AutoRecognitionController:
 		if _verboseDebugLogging():
 			_debug(f"starting image URL fallback: {_urlForLog(src)}")
 		try:
-			self._downloadAndDescribeWithEngine(engine, token, key, src, startedAt)
+			self._downloadAndDescribeWithEngine(
+				engine,
+				cancellationEvent,
+				token,
+				key,
+				src,
+				startedAt,
+			)
 		except Exception:
 			if self._isCurrent(token, key):
 				log.debugWarning("Automatic image URL fallback recognition could not start.", exc_info=True)
@@ -1104,7 +1168,6 @@ class AutoRecognitionController:
 		key: str,
 		contentKey: str,
 		resultText: str,
-		location: tuple[int, int, int, int],
 		startedAt: float,
 	) -> None:
 		try:
@@ -1113,9 +1176,6 @@ class AutoRecognitionController:
 				return
 			if not self._currentKeyMatches(key):
 				_debug("screenshot cache hit ignored: current target changed.")
-				return
-			if not self._screenshotContentMatches(key, location, contentKey):
-				_debug("screenshot cache hit ignored: content changed.")
 				return
 			if _verboseDebugLogging():
 				_debug(
@@ -1126,64 +1186,35 @@ class AutoRecognitionController:
 		finally:
 			self._clearActive(token, key)
 
-	def _makeScreenshotContentValidator(
-		self,
-		key: str,
-		location: tuple[int, int, int, int],
-		expectedContentKey: str,
-	) -> Callable[[], bool]:
-		isValidated = False
-
-		def validate() -> bool:
-			nonlocal isValidated
-			if isValidated:
-				return True
-			if not self._screenshotContentMatches(key, location, expectedContentKey):
-				return False
-			isValidated = True
-			return True
-
-		return validate
-
-	def _screenshotContentMatches(
-		self,
-		key: str,
-		location: tuple[int, int, int, int],
-		expectedContentKey: str,
-	) -> bool:
-		try:
-			left, top, width, height = location
-			image = ImageGrab.grab(bbox=(left, top, left + width, top + height))
-			contentKey, _image = makeScreenshotContentKey(image)
-			contentKey = self._makeTargetScopedContentKey(key, contentKey)
-		except Exception:
-			log.debugWarning("Could not verify automatic screenshot content.", exc_info=True)
-			return False
-		if contentKey != expectedContentKey:
-			_debug("automatic screenshot content verification failed: content changed.")
-			return False
-		return True
-
 	def _recognizeImage(
 		self,
 		engine: Any,
 		image: Image.Image,
+		cancellationEvent: Event | None,
 		token: int,
 		key: str,
 		startedAt: float,
 		resultCacheKey: str | None = None,
-		resultValidator: Callable[[], bool] | None = None,
 	) -> None:
+		if not self._isCurrent(token, key):
+			_debug("automatic recognition start ignored: task is no longer current.")
+			return
 		if _verboseDebugLogging():
 			_debug(
 				f"starting {getattr(engine, 'name', 'unknown')} automatic recognition: "
 				f"{image.width}x{image.height}",
 			)
+		recognitionArgs: dict[str, Any] = {
+			"isAutomaticRecognition": True,
+			"runInBackground": False,
+		}
+		if cancellationEvent is not None:
+			recognitionArgs["cancellationEvent"] = cancellationEvent
 		if hasattr(engine, "recognizeImage"):
 			engine.recognizeImage(
 				image,
-				lambda result: self._onResult(token, key, result, startedAt, resultCacheKey, resultValidator),
-				isAutomaticRecognition=True,
+				lambda result: self._onResult(token, key, result, startedAt, resultCacheKey),
+				**recognitionArgs,
 			)
 		else:
 			image = image.convert("RGB")
@@ -1192,22 +1223,25 @@ class AutoRecognitionController:
 			engine.recognize(
 				pixels,
 				imageInfo,
-				lambda result: self._onResult(token, key, result, startedAt, resultCacheKey, resultValidator),
-				isAutomaticRecognition=True,
+				lambda result: self._onResult(token, key, result, startedAt, resultCacheKey),
+				**recognitionArgs,
 			)
 
 	def _downloadImage(self, src: str, shouldCancel: Callable[[], bool]) -> Image.Image:
-		if shouldCancel():
-			raise CancellationError("Image download was cancelled.")
+		def checkCancelled() -> None:
+			if shouldCancel():
+				raise CancellationError("Image download was cancelled.")
+
+		checkCancelled()
 		with sendRequest(
 			"GET",
 			src,
 			headers=IMAGE_REQUEST_HEADERS,
 			stream=True,
 			timeout=DOWNLOAD_TIMEOUT,
+			cancelCheck=checkCancelled,
 		) as response:
-			if shouldCancel():
-				raise CancellationError("Image download was cancelled.")
+			checkCancelled()
 			response.raise_for_status()
 			contentType = response.headers.get("content-type", "").split(";", 1)[0].strip().lower()
 			if contentType == "image/svg+xml":
@@ -1219,8 +1253,7 @@ class AutoRecognitionController:
 				raise ValueError("Focused image is too large to download.")
 			data = bytearray()
 			for chunk in response.iter_content(DOWNLOAD_CHUNK_SIZE):
-				if shouldCancel():
-					raise CancellationError("Image download was cancelled.")
+				checkCancelled()
 				if not chunk:
 					continue
 				data.extend(chunk)
@@ -1246,7 +1279,6 @@ class AutoRecognitionController:
 		result: Any,
 		startedAt: float,
 		resultCacheKey: str | None = None,
-		resultValidator: Callable[[], bool] | None = None,
 	) -> None:
 		shouldClearActive = True
 		try:
@@ -1263,11 +1295,6 @@ class AutoRecognitionController:
 					log.debugWarning(f"Automatic recognition failed: {result!r}")
 				if self._streamingSpeechPresenter.isActive:
 					self._streamingSpeechPresenter.cancel()
-				return
-			if resultValidator and not resultValidator():
-				_debug("automatic recognition result ignored: screenshot content changed.")
-				self.cancel()
-				shouldClearActive = False
 				return
 			if isinstance(result, StreamText):
 				shouldClearActive = False
@@ -1366,11 +1393,8 @@ class AutoRecognitionController:
 		self._activeEngine = None
 
 	def _hasActiveTask(self) -> bool:
-		return bool(
-			(self._workerThread and self._workerThread.is_alive())
-			or (
-				self._activeEngine
-				and self._activeEngine._recognitionThread
-				and self._activeEngine._recognitionThread.is_alive()
-			),
-		)
+		with self._workerStateLock:
+			workerActive = self._workerThread is not None
+			queuedWorker = self._queuedWorker is not None
+		engineThread = getattr(self._activeEngine, "_recognitionThread", None)
+		return bool(workerActive or queuedWorker or (engineThread and engineThread.is_alive()))

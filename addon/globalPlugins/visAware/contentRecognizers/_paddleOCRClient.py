@@ -57,9 +57,11 @@ class PaddleOCRClient:
 		self,
 		options: PaddleOCRClientOptions,
 		cancellationChecker: Callable[[], None] | None = None,
+		requestTimeout: float | tuple[float, float] | None = None,
 	) -> None:
 		self.options = options
 		self._cancellationChecker = cancellationChecker
+		self._requestTimeout = requestTimeout
 
 	def recognizeImage(self, imageContent: bytes) -> dict[str, Any]:
 		"""
@@ -94,7 +96,7 @@ class PaddleOCRClient:
 
 		payload = self._buildJsonPayload(imageContent)
 		self._checkCancelled()
-		response = network.sendRequest(
+		response = self._sendRequest(
 			"POST",
 			url,
 			headers=headers,
@@ -142,7 +144,7 @@ class PaddleOCRClient:
 		return self._downloadAsyncResult(resultUrl)
 
 	def _requestJson(self, method: str, url: str, **kwargs: Any) -> dict[str, Any]:
-		response = network.sendRequest(method, url, **kwargs)
+		response = self._sendRequest(method, url, **kwargs)
 		result = self._loadJsonResponse(response.content)
 		self._raiseForApiError(result)
 		return result
@@ -166,14 +168,17 @@ class PaddleOCRClient:
 				message = self._extractErrorMessage(lastResult) or status
 				# Translators: An error message when a PaddleOCR async job fails.
 				raise ApiError(_("PaddleOCR job failed: {}").format(message))
-			time.sleep(DEFAULT_AISTUDIO_POLL_INTERVAL_SECONDS)
+			network.sleepWithCancellation(
+				DEFAULT_AISTUDIO_POLL_INTERVAL_SECONDS,
+				self._cancellationChecker,
+			)
 		log.debugWarning(f"PaddleOCR async job timed out. Last result: {lastResult!r}")
 		# Translators: An error message when PaddleOCR does not finish within the timeout.
 		raise ApiError(_("PaddleOCR job did not finish before the timeout."))
 
 	def _downloadAsyncResult(self, resultUrl: str) -> dict[str, Any]:
 		self._checkCancelled()
-		response = network.sendRequest("GET", resultUrl, timeout=120)
+		response = self._sendRequest("GET", resultUrl, timeout=120)
 		text = response.text.strip()
 		if not text:
 			# Translators: An error message when PaddleOCR returns an empty result file.
@@ -280,6 +285,14 @@ class PaddleOCRClient:
 	def _checkCancelled(self) -> None:
 		if self._cancellationChecker:
 			self._cancellationChecker()
+
+	def _sendRequest(self, method: str, url: str, **kwargs: Any) -> Any:
+		"""Sends one PaddleOCR request with the active cancellation and timeout policy."""
+		if self._cancellationChecker:
+			kwargs["cancelCheck"] = self._checkCancelled
+		if self._requestTimeout is not None:
+			kwargs["timeout"] = self._requestTimeout
+		return network.sendRequest(method, url, **kwargs)
 
 	@staticmethod
 	def _decodeBase64Image(imageContent: bytes) -> bytes:

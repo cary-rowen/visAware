@@ -19,7 +19,7 @@ from gui.settingsDialogs import SettingsPanel
 from . import imageDescribers
 import json
 from logHandler import log
-from threading import Thread, Event, current_thread
+from threading import Event, Thread, current_thread
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 import wx
 from io import BytesIO
@@ -65,6 +65,7 @@ AUTO_RECOGNITION_CURRENT_IMAGE_DESCRIBER = (
 	f"{AUTO_RECOGNITION_IMAGE_DESCRIBER_PREFIX}{AUTO_RECOGNITION_CURRENT_ENGINE_NAME}"
 )
 AUTO_RECOGNITION_CURRENT_OCR = f"{AUTO_RECOGNITION_OCR_PREFIX}{AUTO_RECOGNITION_CURRENT_ENGINE_NAME}"
+AUTO_RECOGNITION_REQUEST_TIMEOUT = (3, 30)
 
 SENSITIVE_LOG_KEYS = {
 	"authorization",
@@ -178,6 +179,7 @@ class RecognitionRequest:
 	textResult: bool
 	streamResult: bool
 	prompt: str | None = None
+	isAutomaticRecognition: bool = False
 
 
 def getConfigChoiceValue(configSection: Any, configName: str, configList: List[Tuple[str, str]]) -> str:
@@ -420,6 +422,7 @@ class BaseRecognizer(ContentRecognizer, AbstractEngine, ABC):
 			textResult=self.textResult,
 			streamResult=self.streamResult,
 			prompt=prompt if isinstance(prompt, str) and prompt.strip() else None,
+			isAutomaticRecognition=isAutomaticRecognition,
 		)
 
 	def recognize(
@@ -429,6 +432,8 @@ class BaseRecognizer(ContentRecognizer, AbstractEngine, ABC):
 		onResult: Callable,
 		*,
 		isAutomaticRecognition: bool = False,
+		runInBackground: bool = True,
+		cancellationEvent: Event | None = None,
 	) -> None:
 		"""
 		Starts the recognition process in a background thread.
@@ -436,9 +441,17 @@ class BaseRecognizer(ContentRecognizer, AbstractEngine, ABC):
 		:param pixels: The raw pixel data of the image.
 		:param imageInfo: Information about the image's location and size.
 		:param onResult: The callback function to be called with the result.
+		:param runInBackground: False to run on the caller's existing worker thread.
+		:param cancellationEvent: An already armed event for serialized recognition.
 		"""
 		request = self._buildRecognitionRequest(isAutomaticRecognition)
-		self._cancellationEvent = Event()
+		if cancellationEvent is None:
+			cancellationEvent = Event()
+		self._cancellationEvent = cancellationEvent
+		if not runInBackground:
+			self._recognitionThread = current_thread()
+			self._recognitionWorker(pixels, imageInfo, onResult, self._cancellationEvent, request)
+			return
 		self._recognitionThread = Thread(
 			name=f"RecognitionThread-{self.name}",
 			target=self._recognitionWorker,
@@ -452,6 +465,8 @@ class BaseRecognizer(ContentRecognizer, AbstractEngine, ABC):
 		onResult: Callable,
 		*,
 		isAutomaticRecognition: bool = False,
+		runInBackground: bool = True,
+		cancellationEvent: Event | None = None,
 	) -> None:
 		"""
 		Starts recognition for an already available PIL image.
@@ -461,9 +476,17 @@ class BaseRecognizer(ContentRecognizer, AbstractEngine, ABC):
 
 		:param image: The image to recognize.
 		:param onResult: The callback function to be called with the result.
+		:param runInBackground: False to run on the caller's existing worker thread.
+		:param cancellationEvent: An already armed event for serialized recognition.
 		"""
 		request = self._buildRecognitionRequest(isAutomaticRecognition)
-		self._cancellationEvent = Event()
+		if cancellationEvent is None:
+			cancellationEvent = Event()
+		self._cancellationEvent = cancellationEvent
+		if not runInBackground:
+			self._recognitionThread = current_thread()
+			self._recognitionImageWorker(image, onResult, self._cancellationEvent, request)
+			return
 		self._recognitionThread = Thread(
 			name=f"RecognitionThread-{self.name}",
 			target=self._recognitionImageWorker,
@@ -475,6 +498,11 @@ class BaseRecognizer(ContentRecognizer, AbstractEngine, ABC):
 		if self._cancellationEvent:
 			self._cancellationEvent.is_user_initiated = isUserInitiated
 			self._cancellationEvent.set()
+
+	def _prepareCancellation(self) -> Event:
+		"""Arms cancellation before a controller exposes this engine to callers."""
+		self._cancellationEvent = Event()
+		return self._cancellationEvent
 
 	def terminate(self) -> None:
 		self.cancel()
@@ -504,8 +532,15 @@ class BaseRecognizer(ContentRecognizer, AbstractEngine, ABC):
 			raise ApiError(_("Failed to prepare image content for upload."))
 		self._checkCancelled(cancellationEvent)
 		requestParams = self._buildRequestParams(imageContent, request)
+		self._checkCancelled(cancellationEvent)
 		if config.conf["visAwareGeneral"]["verboseDebugLogging"]:
 			log.debug(f"Request Params for {self.name}: {_redactRequestParamsForLog(requestParams)}")
+		if request.isAutomaticRecognition:
+			requestParams = {
+				**requestParams,
+				"cancelCheck": lambda: self._checkCancelled(cancellationEvent),
+				"timeout": AUTO_RECOGNITION_REQUEST_TIMEOUT,
+			}
 		if request.streamResult and self.supportsStreaming:
 			self._handleStreamingResponse(requestParams, onResult, cancellationEvent, request)
 		else:
