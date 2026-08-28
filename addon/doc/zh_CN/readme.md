@@ -123,6 +123,7 @@ AI Agent 引擎：
 
 * Google Gemini
 * OpenAI
+* DeepSeek
 * Vivo BlueLM Vision（NVDACN）
 * Kimi
 

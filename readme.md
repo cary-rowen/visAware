@@ -193,6 +193,7 @@ AI Agent engines:
 
 * Google Gemini
 * OpenAI
+* DeepSeek
 * Vivo BlueLM Vision (NVDACN)
 * Kimi
 
