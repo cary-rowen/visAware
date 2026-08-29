@@ -20,6 +20,7 @@ from ..deepseekModels import (
 	DEFAULT_DEEPSEEK_VISION_MODEL,
 	buildDeepSeekResponsesUrl,
 	getDeepSeekVisionModelChoices,
+	redactDeepSeekImageUrlsForLog,
 )
 from ..engineGUIHelper import ChoiceEngineSetting, TextInputEngineSetting
 from .actions import Screenshot, formatScreenshotPromptContext
@@ -387,22 +388,10 @@ def _verboseDebugLogging() -> bool:
 
 
 def _redactForLog(value: Any) -> Any:
-	value = _redactDeepSeekImageUrls(value)
+	value = redactDeepSeekImageUrlsForLog(value)
 	from ..recogHandler import _redactRequestParamsForLog
 
 	return _redactRequestParamsForLog(value)
-
-
-def _redactDeepSeekImageUrls(value: Any, keyName: str = "") -> Any:
-	if isinstance(value, dict):
-		return {key: _redactDeepSeekImageUrls(childValue, str(key)) for key, childValue in value.items()}
-	if isinstance(value, list):
-		return [_redactDeepSeekImageUrls(item, keyName) for item in value]
-	if isinstance(value, tuple):
-		return tuple(_redactDeepSeekImageUrls(item, keyName) for item in value)
-	if keyName == "image_url" and isinstance(value, str):
-		return f"<redacted data URL: {len(value)} chars>"
-	return value
 
 
 class DeepSeekAgentSettings:

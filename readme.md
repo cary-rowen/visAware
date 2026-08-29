@@ -184,6 +184,7 @@ Image description engines:
 
 * Google Gemini
 * Google Gemma
+* DeepSeek
 * Vivo Image Describer (NVDACN)
 * VIVO BlueLLM Vision (NVDACN)
 * Ollama Vision

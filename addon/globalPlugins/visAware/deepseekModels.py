@@ -5,6 +5,7 @@
 """Shared DeepSeek vision model presets and request helpers."""
 
 from collections import OrderedDict
+from typing import Any
 
 import addonHandler
 
@@ -29,6 +30,14 @@ def buildDeepSeekResponsesUrl(baseUrl: str) -> str:
 	return f"{baseUrl}/responses"
 
 
+def buildDeepSeekChatCompletionsUrl(baseUrl: str) -> str:
+	"""Builds the DeepSeek Chat Completions endpoint URL."""
+	baseUrl = baseUrl.rstrip("/")
+	if baseUrl.endswith("/chat/completions"):
+		return baseUrl
+	return f"{baseUrl}/chat/completions"
+
+
 def getDeepSeekVisionModelChoices(baseUrl: str = DEFAULT_DEEPSEEK_BASE_URL) -> OrderedDict[str, str]:
 	"""Returns supported DeepSeek vision model presets."""
 	del baseUrl
@@ -39,3 +48,21 @@ def getDefaultDeepSeekVisionModel(baseUrl: str = DEFAULT_DEEPSEEK_BASE_URL) -> s
 	"""Returns the default DeepSeek vision model."""
 	del baseUrl
 	return DEFAULT_DEEPSEEK_VISION_MODEL
+
+
+def redactDeepSeekImageUrlsForLog(value: Any, keyName: str = "") -> Any:
+	"""Redacts DeepSeek image data URLs before verbose logging."""
+	if isinstance(value, dict):
+		redacted = {
+			key: redactDeepSeekImageUrlsForLog(childValue, str(key)) for key, childValue in value.items()
+		}
+		if keyName == "image_url" and isinstance(value.get("url"), str):
+			redacted["url"] = f"<redacted data URL: {len(value['url'])} chars>"
+		return redacted
+	if isinstance(value, list):
+		return [redactDeepSeekImageUrlsForLog(item, keyName) for item in value]
+	if isinstance(value, tuple):
+		return tuple(redactDeepSeekImageUrlsForLog(item, keyName) for item in value)
+	if keyName == "image_url" and isinstance(value, str):
+		return f"<redacted data URL: {len(value)} chars>"
+	return value
