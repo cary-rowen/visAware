@@ -67,7 +67,17 @@ IMAGE_REQUEST_HEADERS = {
 	"Accept": "image/avif,image/webp,image/apng,image/*,*/*;q=0.8",
 }
 OBJECT_SRC_KEYS = ("src", "IAccessible2::attribute_src", "HTMLAttrib::src", "IAccessible::value", "value")
-CONTROL_FIELD_SRC_KEYS = OBJECT_SRC_KEYS
+CONTROL_FIELD_SRC_KEYS = (
+	"src",
+	"currentSrc",
+	"data-src",
+	"data-original",
+	"data-lazy-src",
+	"IAccessible2::attribute_src",
+	"HTMLAttrib::src",
+	"IAccessible::value",
+	"value",
+)
 SCREENSHOT_CONTENT_KEY_PREFIX = "screenshotImage:"
 RECOGNITION_KEY_SEPARATOR = "|"
 
@@ -278,17 +288,12 @@ def getImageObjectAndSrcFromBrowseModeCaret(cursorManager: Any) -> tuple[Any | N
 	field = getImageControlFieldFromBrowseModeCaretInfo(info)
 	if field:
 		src = getImageSrcFromControlField(field)
-		if not src:
-			obj = getImageObjectFromBrowseModeCaretInfo(info)
-			if getattr(obj, "role", None) == controlTypes.Role.GRAPHIC:
-				return obj, None
-			return None, None
-		obj = None
-		if _preferScreenshotForWebImages():
-			obj = getImageObjectFromBrowseModeCaretInfo(info)
-		if getattr(obj, "role", None) == controlTypes.Role.GRAPHIC:
+		obj = getImageObjectFromBrowseModeCaretInfo(info)
+		if src:
 			return obj, src
-		return None, src
+		if obj is not None:
+			return obj, None
+		return None, None
 	obj = getImageObjectFromBrowseModeCaretInfo(info)
 	if getattr(obj, "role", None) == controlTypes.Role.GRAPHIC:
 		src = getImageSrcFromObject(obj)
@@ -341,10 +346,10 @@ def getNavigatorGraphicScreenshotTargetKey() -> str | None:
 		return None
 
 
-def getBrowseModeGraphicScreenshotTargetKey(cursorManager: Any) -> str | None:
+def getBrowseModeScreenshotTargetKey(cursorManager: Any) -> str | None:
 	info = getBrowseModeCaretInfo(cursorManager)
 	obj = getImageObjectFromBrowseModeCaretInfo(info)
-	return getGraphicScreenshotTargetKey(obj)
+	return getScreenshotTargetKey(obj)
 
 
 def _hasAnyMappingValue(container: Any, keys: tuple[str, ...]) -> bool:
@@ -633,7 +638,7 @@ class AutoRecognitionController:
 				self.handleGraphicScreenshotFallback(
 					obj,
 					source="browse mode screenshot fallback",
-					currentKeyGetter=lambda: getBrowseModeGraphicScreenshotTargetKey(cursorManager),
+					currentKeyGetter=lambda: getBrowseModeScreenshotTargetKey(cursorManager),
 				)
 				return
 			self._skipAndCancel("browse mode skipped: no supported graphic src at virtual caret.")

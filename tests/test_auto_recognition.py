@@ -35,8 +35,14 @@ def _installModuleStubs() -> None:
 	textInfosModule = types.ModuleType("textInfos")
 	textInfosModule.POSITION_CARET = "caret"
 	textInfosModule.UNIT_CHARACTER = "character"
+
+	class _FieldCommand:
+		def __init__(self, command: str, field: dict | None = None) -> None:
+			self.command = command
+			self.field = field or {}
+
 	textInfosModule.TextInfo = object
-	textInfosModule.FieldCommand = object
+	textInfosModule.FieldCommand = _FieldCommand
 	sys.modules["textInfos"] = textInfosModule
 
 	uiModule = types.ModuleType("ui")
@@ -125,6 +131,108 @@ def loadAutoRecognitionModule():
 class AutoRecognitionP0TestCase(unittest.TestCase):
 	def setUp(self) -> None:
 		self.module = loadAutoRecognitionModule()
+
+	def test_browse_mode_caret_keeps_object_without_src(self) -> None:
+		module = self.module
+
+		class _Obj:
+			__module__ = "NVDAObjects.UIA.web.test"
+			role = module.controlTypes.Role.BUTTON
+
+		class _Info:
+			def __init__(self) -> None:
+				self.NVDAObjectAtStart = _Obj()
+
+			def copy(self):
+				return self
+
+			def expand(self, _unit):
+				pass
+
+			def getTextWithFields(self):
+				return [
+					module.textInfos.FieldCommand(
+						"controlStart",
+						{"role": module.controlTypes.Role.GRAPHIC},
+					),
+				]
+
+		cursorManager = types.SimpleNamespace(
+			makeTextInfo=lambda _position: _Info(),
+		)
+
+		obj, src = module.getImageObjectAndSrcFromBrowseModeCaret(cursorManager)
+
+		self.assertIsInstance(obj, _Obj)
+		self.assertIsNone(src)
+
+	def test_browse_mode_caret_returns_object_with_src_even_if_not_graphic(self) -> None:
+		module = self.module
+
+		class _Obj:
+			__module__ = "NVDAObjects.UIA.web.test"
+			role = module.controlTypes.Role.BUTTON
+
+		class _Info:
+			def __init__(self) -> None:
+				self.NVDAObjectAtStart = _Obj()
+
+			def copy(self):
+				return self
+
+			def expand(self, _unit):
+				pass
+
+			def getTextWithFields(self):
+				return [
+					module.textInfos.FieldCommand(
+						"controlStart",
+						{"role": module.controlTypes.Role.GRAPHIC, "src": "https://example.test/a.jpg"},
+					),
+				]
+
+		cursorManager = types.SimpleNamespace(
+			makeTextInfo=lambda _position: _Info(),
+		)
+
+		obj, src = module.getImageObjectAndSrcFromBrowseModeCaret(cursorManager)
+
+		self.assertIsInstance(obj, _Obj)
+		self.assertEqual(src, "https://example.test/a.jpg")
+
+	def test_browse_mode_screenshot_target_key_accepts_web_object(self) -> None:
+		module = self.module
+
+		class _Obj:
+			__module__ = "NVDAObjects.UIA.web.test"
+			role = module.controlTypes.Role.BUTTON
+			windowHandle = 1
+			windowClassName = "test"
+			name = "Image"
+			appModule = types.SimpleNamespace(appName="app")
+			location = (10, 20, 30, 40)
+
+		class _Info:
+			def __init__(self) -> None:
+				self.NVDAObjectAtStart = _Obj()
+
+			def copy(self):
+				return self
+
+			def expand(self, _unit):
+				pass
+
+			def getTextWithFields(self):
+				return []
+
+		cursorManager = types.SimpleNamespace(
+			makeTextInfo=lambda _position: _Info(),
+		)
+
+		key = module.getBrowseModeScreenshotTargetKey(cursorManager)
+
+		self.assertIsNotNone(key)
+		self.assertIn("screenshotTarget:", key)
 
 	def test_worker_keeps_only_latest_queued_task(self) -> None:
 		controller = self.module.AutoRecognitionController()
