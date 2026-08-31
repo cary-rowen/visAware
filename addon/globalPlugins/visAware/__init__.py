@@ -31,7 +31,7 @@ import ui
 import vision
 from PIL import Image, ImageGrab
 
-from ._autoRecognition import AutoRecognitionController
+from ._autoRecognition import AutoRecognitionController, getNextAutoRecognitionSetting
 from .askDialog import AskQuestionFrame
 from .agent.settings import AgentHandler, AgentPanel
 from .agent.session import AgentSession
@@ -49,7 +49,10 @@ from .recogHandler import (
 	StreamFinished,
 	StreamText,
 	getCycleSourceTypes,
+	getAutoRecognitionTypeAndEngine,
+	getAutoRecognitionTypeChoices,
 	getConfigChoiceValue,
+	getEffectiveAutoRecognitionEngine,
 	getValidSourceType,
 	isAutomaticRecognitionEnabled,
 	ENGINE_TYPES,
@@ -788,6 +791,22 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def script_cycleRecognitionEngineType(self, gesture: "inputCore.InputGesture") -> None:
 		name = self._cycleThroughSettings(config.conf["visAwareGeneral"], "engineType", ENGINE_TYPES)
 		ui.message(name)
+
+	@script(
+		# Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
+		description=_("Cycles through automatic recognition modes: off, image description, and OCR"),
+		category=CATEGORY_NAME,
+		gestures=[],
+	)
+	def script_cycleAutomaticRecognitionMode(self, gesture: "inputCore.InputGesture") -> None:
+		conf = config.conf["visAwareGeneral"]
+		nextSetting = getNextAutoRecognitionSetting(getEffectiveAutoRecognitionEngine())
+		conf["autoRecognitionEngine"] = nextSetting
+		if self._autoRecognitionController:
+			self._autoRecognitionController.cancel()
+		nextType, _engineName = getAutoRecognitionTypeAndEngine(nextSetting)
+		nextTypeDescription = dict(getAutoRecognitionTypeChoices())[nextType]
+		ui.message(nextTypeDescription)
 
 	@script(
 		# Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.

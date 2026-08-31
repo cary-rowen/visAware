@@ -73,6 +73,7 @@ The following commands have no default gesture:
 * Recognizes text in images on the clipboard using OCR
 * Shows the previous recognition result
 * Cancels the current recognition
+* Cycles through automatic recognition modes: off, image description, and OCR
 
 After assigning a gesture to **Describes images on the clipboard**, press it
 once to present the result in an NVDA recognition result document. Press it

@@ -93,6 +93,8 @@ def _installModuleStubs() -> None:
 
 	recogHandlerModule = types.ModuleType("addon.globalPlugins.visAware.recogHandler")
 	recogHandlerModule.AUTO_RECOGNITION_CURRENT_ENGINE_NAME = "current"
+	recogHandlerModule.AUTO_RECOGNITION_CURRENT_IMAGE_DESCRIBER = "imageDescriber:current"
+	recogHandlerModule.AUTO_RECOGNITION_CURRENT_OCR = "ocr:current"
 	recogHandlerModule.AUTO_RECOGNITION_IMAGE_DESCRIBER_PREFIX = "imageDescriber:"
 	recogHandlerModule.AUTO_RECOGNITION_OCR_PREFIX = "ocr:"
 	recogHandlerModule.AUTO_RECOGNITION_OFF = "off"
@@ -131,6 +133,13 @@ def loadAutoRecognitionModule():
 class AutoRecognitionP0TestCase(unittest.TestCase):
 	def setUp(self) -> None:
 		self.module = loadAutoRecognitionModule()
+
+	def test_automatic_recognition_setting_cycle(self) -> None:
+		getNextSetting = self.module.getNextAutoRecognitionSetting
+		self.assertEqual(getNextSetting("off"), "imageDescriber:current")
+		self.assertEqual(getNextSetting("imageDescriber:gemini"), "ocr:current")
+		self.assertEqual(getNextSetting("ocr:paddleOCR"), "off")
+		self.assertEqual(getNextSetting("invalid"), "imageDescriber:current")
 
 	def test_browse_mode_caret_keeps_object_without_src(self) -> None:
 		module = self.module

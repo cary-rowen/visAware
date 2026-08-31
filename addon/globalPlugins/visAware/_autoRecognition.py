@@ -30,6 +30,8 @@ from .exceptions import CancellationError
 from .network import sendRequest
 from .recogHandler import (
 	AUTO_RECOGNITION_CURRENT_ENGINE_NAME,
+	AUTO_RECOGNITION_CURRENT_IMAGE_DESCRIBER,
+	AUTO_RECOGNITION_CURRENT_OCR,
 	AUTO_RECOGNITION_IMAGE_DESCRIBER_PREFIX,
 	AUTO_RECOGNITION_OCR_PREFIX,
 	AUTO_RECOGNITION_OFF,
@@ -94,6 +96,15 @@ def _preferScreenshotForWebImages() -> bool:
 		return bool(config.conf["visAwareGeneral"]["preferScreenshotForWebImages"])
 	except Exception:
 		return False
+
+
+def getNextAutoRecognitionSetting(setting: str) -> str:
+	"""Returns the next automatic recognition setting in the mode cycle."""
+	if setting.startswith(AUTO_RECOGNITION_IMAGE_DESCRIBER_PREFIX):
+		return AUTO_RECOGNITION_CURRENT_OCR
+	if setting.startswith(AUTO_RECOGNITION_OCR_PREFIX):
+		return AUTO_RECOGNITION_OFF
+	return AUTO_RECOGNITION_CURRENT_IMAGE_DESCRIBER
 
 
 def _debug(message: str) -> None:

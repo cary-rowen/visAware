@@ -31,7 +31,7 @@ addon_info = AddonInfo(
 		"""NVDA add-on for OCR, AI-powered image description, automatic recognition, and AI-assisted computer control.""",
 	),
 	# version
-	addon_version="0.8.1",
+	addon_version="0.8.2",
 	# Brief changelog for this version
 	# Translators: what's new content for the add-on version to be shown in the add-on store
 	addon_changelog=_(
