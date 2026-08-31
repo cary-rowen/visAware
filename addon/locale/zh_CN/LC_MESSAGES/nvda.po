@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 'customOCR' '0.1.1-dev'\n"
 "Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
-"POT-Creation-Date: 2026-08-28 17:03+0800\n"
+"POT-Creation-Date: 2026-09-01 07:21+0800\n"
 "PO-Revision-Date: 2025-11-02 16:14+0800\n"
 "Last-Translator: Larry Wang <larry.wang.801@gmail.com>\n"
 "Language-Team: \n"
@@ -204,7 +204,7 @@ msgid "The previous recognition result is blank."
 msgstr "上一次识别结果为空。"
 
 #. Translators: The display name for the DeepSeek vision model preset.
-#: addon\globalPlugins\visAware\deepseekModels.py:19
+#: addon\globalPlugins\visAware\deepseekModels.py:20
 msgid "DeepSeek V4 Flash Vision"
 msgstr ""
 
@@ -495,8 +495,6 @@ msgstr "无法准备图像对象。"
 #: addon\globalPlugins\visAware\recogHandler.py:693
 #: addon\globalPlugins\visAware\contentRecognizers\paddleOCR.py:735
 #: addon\globalPlugins\visAware\contentRecognizers\paddleOCR.py:743
-#: addon\globalPlugins\visAware\contentRecognizers\rapidOCR.py:180
-#: addon\globalPlugins\visAware\contentRecognizers\rapidOCR.py:185
 msgid "Recognition result is blank."
 msgstr "识别结果为空。"
 
@@ -762,69 +760,69 @@ msgid "Previous recognition result is blank."
 msgstr "上一次识别结果为空。"
 
 #. Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:484
+#: addon\globalPlugins\visAware\__init__.py:483
 msgid "Asks a follow-up question about the previous image description"
 msgstr "对上一次图像描述进行追问"
 
 #. Translators: Reported when there is no previous recognition result to ask about.
-#: addon\globalPlugins\visAware\__init__.py:492
+#: addon\globalPlugins\visAware\__init__.py:491
 msgid "There is no previous recognition result to ask about."
 msgstr "没有可追问的上一次识别结果。"
 
 #. Translators: Reported when the follow-up question dialog cannot be opened.
-#: addon\globalPlugins\visAware\__init__.py:508
+#: addon\globalPlugins\visAware\__init__.py:507
 msgid "Could not open the follow-up question dialog."
 msgstr "无法打开追问对话框。"
 
 #. Translators: A message shown when trying to use the AI agent with screen curtain enabled.
-#: addon\globalPlugins\visAware\__init__.py:531
+#: addon\globalPlugins\visAware\__init__.py:530
 msgid "Please disable screen curtain before starting the AI Agent."
 msgstr "请在启动 AI Agent 之前关闭黑屏。"
 
 #. Translators: Prompt shown when starting the AI agent.
-#: addon\globalPlugins\visAware\__init__.py:549
+#: addon\globalPlugins\visAware\__init__.py:548
 msgid "What should the AI Agent do?"
 msgstr "希望 AI Agent 做什么？"
 
 #. Translators: Title for the AI agent command dialog.
-#: addon\globalPlugins\visAware\__init__.py:551
-#: addon\globalPlugins\visAware\__init__.py:607
+#: addon\globalPlugins\visAware\__init__.py:550
+#: addon\globalPlugins\visAware\__init__.py:606
 msgid "Vis Aware Agent"
 msgstr "Vis Aware Agent"
 
 #. Translators: Reported when the AI agent is being stopped by the user.
-#: addon\globalPlugins\visAware\__init__.py:583
+#: addon\globalPlugins\visAware\__init__.py:582
 msgid "Agent is stopping."
 msgstr "Agent 正在停止。"
 
 #. Translators: Reported when content recognition (e.g. OCR) is attempted, but the content is not visible.
-#: addon\globalPlugins\visAware\__init__.py:653
+#: addon\globalPlugins\visAware\__init__.py:652
 msgid "Content is not visible"
 msgstr "内容不可见"
 
 #. Translators: A message shown when screen capture fails.
-#: addon\globalPlugins\visAware\__init__.py:681
+#: addon\globalPlugins\visAware\__init__.py:680
 msgid "Failed to capture screen image."
 msgstr "无法捕获屏幕图像。"
 
 #. Translators: Reported when a recognition task is cancelled by the user.
-#: addon\globalPlugins\visAware\__init__.py:697
-#: addon\globalPlugins\visAware\__init__.py:714
-#: addon\globalPlugins\visAware\__init__.py:977
+#: addon\globalPlugins\visAware\__init__.py:696
+#: addon\globalPlugins\visAware\__init__.py:713
+#: addon\globalPlugins\visAware\__init__.py:967
 msgid "Recognition cancelled"
 msgstr "识别已取消"
 
 #. Translators: Describes the command to cancel an ongoing recognition task.
-#: addon\globalPlugins\visAware\__init__.py:725
+#: addon\globalPlugins\visAware\__init__.py:724
 msgid "Cancels the current recognition"
 msgstr "取消当前识别"
 
 #. Translators: Reported when the cancel command is used but no recognition is in progress.
-#: addon\globalPlugins\visAware\__init__.py:732
+#: addon\globalPlugins\visAware\__init__.py:731
 msgid "No recognition is in progress."
 msgstr "当前没有正在进行的识别。"
 
-#: addon\globalPlugins\visAware\__init__.py:758
+#: addon\globalPlugins\visAware\__init__.py:757
 msgid ""
 "Performs recognition using the current settings. In OCR and image "
 "description modes, press once for a recognition result document. Press twice "
@@ -836,99 +834,98 @@ msgstr ""
 "识别结果。在 AI Agent 模式下启动或终止 Agent"
 
 #. Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:785
+#: addon\globalPlugins\visAware\__init__.py:784
 msgid "Cycles through recognition modes"
 msgstr "循环切换识别模式"
 
 #. Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:795
+#: addon\globalPlugins\visAware\__init__.py:794
 msgid "Cycles through recognition sources"
 msgstr "循环切换识别来源"
 
 #. Translators: Reported when recognition source cycling is requested while AI Agent mode is active.
-#: addon\globalPlugins\visAware\__init__.py:803
+#: addon\globalPlugins\visAware\__init__.py:802
 msgid "Changing recognition source is not supported in AI Agent mode."
 msgstr "AI Agent 模式下不支持切换识别来源。"
 
 #. Translators: Reported when attempting to recognize a clipboard image, but no image is found.
-#: addon\globalPlugins\visAware\__init__.py:887
+#: addon\globalPlugins\visAware\__init__.py:886
 msgid "No image in clipboard"
 msgstr "剪贴板中没有图像"
 
-#. Translators: The title for the browsable message showing the recognition result.
-#: addon\globalPlugins\visAware\__init__.py:958
-#: addon\globalPlugins\visAware\__init__.py:1015
-msgid "Recognition result"
-msgstr "识别结果"
-
 #. Translators: An error message for authentication failures. The placeholder is the specific error.
-#: addon\globalPlugins\visAware\__init__.py:981
+#: addon\globalPlugins\visAware\__init__.py:971
 #, python-brace-format
 msgid "Authentication failed: {}"
 msgstr "身份验证失败：{}"
 
 #. Translators: An error message for network issues. The placeholder is the specific error.
-#: addon\globalPlugins\visAware\__init__.py:984
+#: addon\globalPlugins\visAware\__init__.py:974
 #, python-brace-format
 msgid "Network error: {}"
 msgstr "网络错误：{}"
 
 #. Translators: A generic error message for recognition failures from the API.
-#: addon\globalPlugins\visAware\__init__.py:987
+#: addon\globalPlugins\visAware\__init__.py:977
 #, python-brace-format
 msgid "Recognition failed: {}"
 msgstr "识别失败：{}"
 
 #. Translators: A message for an unexpected error during recognition.
-#: addon\globalPlugins\visAware\__init__.py:991
+#: addon\globalPlugins\visAware\__init__.py:981
 msgid "Recognition failed with an unexpected error."
 msgstr "识别失败，发生意外错误。"
 
 #. Translators: An error message for an unknown result type.
-#: addon\globalPlugins\visAware\__init__.py:997
-#: addon\globalPlugins\visAware\__init__.py:1062
+#: addon\globalPlugins\visAware\__init__.py:987
+#: addon\globalPlugins\visAware\__init__.py:1050
 msgid "Recognition returned an unknown result type."
 msgstr "识别返回了未知的结果类型。"
 
+#. Translators: The title for the browsable message showing the recognition result.
+#: addon\globalPlugins\visAware\__init__.py:1003
+msgid "Recognition result"
+msgstr "识别结果"
+
 #. Translators: Reported after partial streaming output when the service stopped before completing.
-#: addon\globalPlugins\visAware\__init__.py:1047
+#: addon\globalPlugins\visAware\__init__.py:1035
 msgid "Recognition was interrupted. The result may be incomplete."
 msgstr "识别过程中断，结果可能不完整。"
 
 #. Translators: A message indicating that no recognition engine is configured.
-#: addon\globalPlugins\visAware\__init__.py:1116
+#: addon\globalPlugins\visAware\__init__.py:1104
 msgid "No recognition engine is configured."
 msgstr "未配置识别引擎。"
 
 #. Translators: A message shown when trying to recognize with screen curtain enabled.
-#: addon\globalPlugins\visAware\__init__.py:1121
+#: addon\globalPlugins\visAware\__init__.py:1109
 msgid "Please disable screen curtain before recognition."
 msgstr "请在识别之前关闭黑屏。"
 
 #. Translators: Reporting when content recognition (e.g. OCR) begins.
-#: addon\globalPlugins\visAware\__init__.py:1142
+#: addon\globalPlugins\visAware\__init__.py:1130
 msgid "Recognizing"
 msgstr "正在识别"
 
-#: addon\globalPlugins\visAware\__init__.py:1155
+#: addon\globalPlugins\visAware\__init__.py:1143
 msgid ""
 "An error occurred before starting recognition. Please check your settings "
 "and try again."
 msgstr "识别开始前发生错误。请检查设置后重试。"
 
 #. Translators: Reported when there are no alternative engines to switch to.
-#: addon\globalPlugins\visAware\__init__.py:1170
+#: addon\globalPlugins\visAware\__init__.py:1158
 msgid "No other engines to switch to."
 msgstr "没有其他可切换的引擎。"
 
 #. Translators: Reports the name of the only available engine.
-#: addon\globalPlugins\visAware\__init__.py:1175
+#: addon\globalPlugins\visAware\__init__.py:1163
 #, python-brace-format
 msgid "Current engine: {engine_name}"
 msgstr "当前引擎：{engine_name}"
 
 #. Translators: Describes a command to cycle through available recognition engines.
-#: addon\globalPlugins\visAware\__init__.py:1193
+#: addon\globalPlugins\visAware\__init__.py:1181
 msgid "Cycles through engines for the current mode"
 msgstr "循环切换当前模式的引擎"
 
@@ -988,7 +985,9 @@ msgid "{} returned an unsupported agent action: {}"
 msgstr "{} 返回了不支持的 Agent 动作：{}"
 
 #. Translators: The description of the DeepSeek Agent engine.
-#: addon\globalPlugins\visAware\agent\deepseek.py:44
+#. Translators: The description of the DeepSeek image describer engine.
+#: addon\globalPlugins\visAware\agent\deepseek.py:45
+#: addon\globalPlugins\visAware\imageDescribers\deepseek.py:41
 msgid "DeepSeek"
 msgstr ""
 
@@ -999,11 +998,12 @@ msgstr ""
 #. Translators: The label for the text field to enter the Gemini API Key.
 #. Translators: The label for the text field to enter the Kimi API key.
 #. Translators: The label for the Ollama API key field.
+#. Translators: The label for the DeepSeek API key used by the image describer.
 #. Translators: The label for the text field to enter the Gemini API Key.
 #. Translators: The label for the text field to enter the Gemma API Key.
 #. Translators: The label for the text field to enter the Kimi API key.
 #. Translators: The label for the Ollama API key field.
-#: addon\globalPlugins\visAware\agent\deepseek.py:56
+#: addon\globalPlugins\visAware\agent\deepseek.py:57
 #: addon\globalPlugins\visAware\agent\engines\gemini.py:48
 #: addon\globalPlugins\visAware\agent\engines\kimi.py:66
 #: addon\globalPlugins\visAware\agent\engines\openai.py:56
@@ -1011,6 +1011,7 @@ msgstr ""
 #: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:112
 #: addon\globalPlugins\visAware\contentRecognizers\kimiOCR.py:126
 #: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:127
+#: addon\globalPlugins\visAware\imageDescribers\deepseek.py:61
 #: addon\globalPlugins\visAware\imageDescribers\gemini.py:72
 #: addon\globalPlugins\visAware\imageDescribers\gemma.py:123
 #: addon\globalPlugins\visAware\imageDescribers\kimi.py:86
@@ -1022,10 +1023,13 @@ msgstr "API 密钥(&K)"
 #. Translators: The label for the Kimi-compatible base URL used by the Agent.
 #. Translators: The label for the OpenAI-compatible base URL used by the Agent.
 #. Translators: The label for the text field to enter the Kimi API base URL.
-#: addon\globalPlugins\visAware\agent\deepseek.py:61
+#. Translators: The label for the DeepSeek base URL used by the image describer.
+#. Translators: The label for the text field to enter the Kimi API base URL.
+#: addon\globalPlugins\visAware\agent\deepseek.py:62
 #: addon\globalPlugins\visAware\agent\engines\kimi.py:71
 #: addon\globalPlugins\visAware\agent\engines\openai.py:61
 #: addon\globalPlugins\visAware\contentRecognizers\kimiOCR.py:131
+#: addon\globalPlugins\visAware\imageDescribers\deepseek.py:66
 #: addon\globalPlugins\visAware\imageDescribers\kimi.py:91
 msgid "Base &URL"
 msgstr "基础 URL(&U)"
@@ -1038,11 +1042,12 @@ msgstr "基础 URL(&U)"
 #. Translators: The label for a setting to select the Kimi model.
 #. Translators: The label for a setting to select the Ollama model.
 #. Translators: The label for selecting a PaddleOCR model.
+#. Translators: The label for the DeepSeek model used by the image describer.
 #. Translators: The label for a setting to select the Gemini model.
 #. Translators: The label for a setting to select the Gemma model.
 #. Translators: The label for a setting to select the Kimi model.
 #. Translators: The label for a setting to select the Ollama model.
-#: addon\globalPlugins\visAware\agent\deepseek.py:67
+#: addon\globalPlugins\visAware\agent\deepseek.py:68
 #: addon\globalPlugins\visAware\agent\engines\gemini.py:53
 #: addon\globalPlugins\visAware\agent\engines\kimi.py:82
 #: addon\globalPlugins\visAware\agent\engines\openai.py:71
@@ -1050,6 +1055,7 @@ msgstr "基础 URL(&U)"
 #: addon\globalPlugins\visAware\contentRecognizers\kimiOCR.py:137
 #: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:137
 #: addon\globalPlugins\visAware\contentRecognizers\paddleOCR.py:437
+#: addon\globalPlugins\visAware\imageDescribers\deepseek.py:72
 #: addon\globalPlugins\visAware\imageDescribers\gemini.py:82
 #: addon\globalPlugins\visAware\imageDescribers\gemma.py:128
 #: addon\globalPlugins\visAware\imageDescribers\kimi.py:102
@@ -1057,63 +1063,64 @@ msgstr "基础 URL(&U)"
 msgid "&Model"
 msgstr "模型(&M)"
 
-#: addon\globalPlugins\visAware\agent\deepseek.py:128
+#: addon\globalPlugins\visAware\agent\deepseek.py:129
 #: addon\globalPlugins\visAware\agent\gemini.py:51
 #: addon\globalPlugins\visAware\agent\kimi.py:73
 #: addon\globalPlugins\visAware\agent\openai.py:48
 msgid "API key is missing. Please configure it in the AI Agent settings."
 msgstr "缺少 API 密钥。请在 AI Agent 设置中配置。"
 
-#: addon\globalPlugins\visAware\agent\deepseek.py:231
+#: addon\globalPlugins\visAware\agent\deepseek.py:232
 #, fuzzy
 msgid "The current screenshot is too large for the DeepSeek request limit."
 msgstr "当前屏幕截图超过 Kimi 的请求大小限制。"
 
-#: addon\globalPlugins\visAware\agent\deepseek.py:237
+#: addon\globalPlugins\visAware\agent\deepseek.py:238
 #, fuzzy
 msgid "DeepSeek did not return exactly one agent tool call."
 msgstr "Kimi 返回的 Agent 工具调用数量不是一个。"
 
-#: addon\globalPlugins\visAware\agent\deepseek.py:241
-#: addon\globalPlugins\visAware\agent\deepseek.py:254
+#: addon\globalPlugins\visAware\agent\deepseek.py:242
+#: addon\globalPlugins\visAware\agent\deepseek.py:255
 #, fuzzy
 msgid "DeepSeek returned malformed agent action data."
 msgstr "Gemini 返回了格式错误的 Agent 动作数据。"
 
-#: addon\globalPlugins\visAware\agent\deepseek.py:246
+#: addon\globalPlugins\visAware\agent\deepseek.py:247
 #, fuzzy
 msgid "DeepSeek returned a duplicate agent tool call ID."
 msgstr "Kimi 返回了重复的 Agent 工具调用 ID。"
 
-#: addon\globalPlugins\visAware\agent\deepseek.py:252
+#: addon\globalPlugins\visAware\agent\deepseek.py:253
 #, fuzzy
 msgid "DeepSeek returned invalid agent action JSON."
 msgstr "Gemini 返回了无效的 Agent 动作 JSON。"
 
-#: addon\globalPlugins\visAware\agent\deepseek.py:271
+#: addon\globalPlugins\visAware\agent\deepseek.py:272
+#: addon\globalPlugins\visAware\imageDescribers\deepseek.py:261
 #, fuzzy, python-brace-format
 msgid "DeepSeek API error: {}"
 msgstr "OpenAI API 错误：{}"
 
-#: addon\globalPlugins\visAware\agent\deepseek.py:274
+#: addon\globalPlugins\visAware\agent\deepseek.py:275
 msgid "DeepSeek agent response failed."
 msgstr ""
 
-#: addon\globalPlugins\visAware\agent\deepseek.py:279
+#: addon\globalPlugins\visAware\agent\deepseek.py:280
 #, fuzzy
 msgid "DeepSeek agent response was truncated at the token limit."
 msgstr "Kimi Agent 响应因达到 token 上限而被截断。"
 
-#: addon\globalPlugins\visAware\agent\deepseek.py:281
+#: addon\globalPlugins\visAware\agent\deepseek.py:282
 msgid "DeepSeek agent response was blocked by content filtering."
 msgstr ""
 
-#: addon\globalPlugins\visAware\agent\deepseek.py:282
+#: addon\globalPlugins\visAware\agent\deepseek.py:283
 msgid "DeepSeek agent response was incomplete."
 msgstr ""
 
-#: addon\globalPlugins\visAware\agent\deepseek.py:284
-#: addon\globalPlugins\visAware\agent\deepseek.py:290
+#: addon\globalPlugins\visAware\agent\deepseek.py:285
+#: addon\globalPlugins\visAware\agent\deepseek.py:291
 #, fuzzy
 msgid "DeepSeek returned an invalid agent response."
 msgstr "服务器返回的响应无效。"
@@ -1332,6 +1339,7 @@ msgstr "截图质量"
 
 #. Translators: An error message for an invalid server response.
 #: addon\globalPlugins\visAware\agent\vivo.py:106
+#: addon\globalPlugins\visAware\imageDescribers\deepseek.py:241
 #: addon\globalPlugins\visAware\imageDescribers\vivoBlueLLM.py:385
 msgid "Invalid response from server."
 msgstr "服务器响应无效。"
@@ -1697,6 +1705,7 @@ msgstr "由于安全设置，内容已被屏蔽。"
 #. Translators: An error message for an empty but successful server response.
 #: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:293
 #: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:217
+#: addon\globalPlugins\visAware\imageDescribers\deepseek.py:237
 #: addon\globalPlugins\visAware\imageDescribers\gemini.py:345
 #: addon\globalPlugins\visAware\imageDescribers\gemma.py:455
 #: addon\globalPlugins\visAware\imageDescribers\kimi.py:426
@@ -1788,11 +1797,13 @@ msgid "&Enable streaming output"
 msgstr "启用流式输出(&E)"
 
 #. Translators: The label for a setting to customize the OCR prompt.
+#. Translators: The label for the DeepSeek prompt used by the image describer.
 #. Translators: The label for a setting to customize the prompt for the vision model.
 #. Translators: The label for a setting to customize the Kimi prompt.
 #. Translators: The label for a setting to customize the prompt for the model.
 #. Translators: The label for an engine setting to customize the prompt for the vision model.
 #: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:150
+#: addon\globalPlugins\visAware\imageDescribers\deepseek.py:79
 #: addon\globalPlugins\visAware\imageDescribers\gemini.py:96
 #: addon\globalPlugins\visAware\imageDescribers\gemma.py:142
 #: addon\globalPlugins\visAware\imageDescribers\kimi.py:116
@@ -1909,32 +1920,6 @@ msgstr "缺少 API 令牌。请在 PaddleOCR 设置中配置。"
 msgid "API URL is missing. Please configure it in PaddleOCR settings."
 msgstr "缺少 API 地址。请在 PaddleOCR 设置中配置。"
 
-#. Translators: An error shown when RapidOCR receives invalid image bytes.
-#: addon\globalPlugins\visAware\contentRecognizers\rapidOCR.py:150
-msgid "RapidOCR received invalid image content."
-msgstr "RapidOCR 收到的图像内容无效。"
-
-#. Translators: A low-level error reported by the bundled RapidOCR DLL.
-#: addon\globalPlugins\visAware\contentRecognizers\rapidOCR.py:157
-#, python-brace-format
-msgid "RapidOCR failed: {}"
-msgstr "RapidOCR 失败：{}"
-
-#. Translators: An error shown when neither RapidOCR table mode found a reliable table.
-#: addon\globalPlugins\visAware\contentRecognizers\rapidOCR.py:197
-msgid "No reliable table structure was detected."
-msgstr "未检测到可靠的表格结构。"
-
-#. Translators: The name of the bundled offline RapidOCR text engine.
-#: addon\globalPlugins\visAware\contentRecognizers\rapidOCR.py:273
-msgid "RapidOCR Text (PP-OCRv6 Small)"
-msgstr "RapidOCR 文字（PP-OCRv6 Small）"
-
-#. Translators: The name of the bundled automatic RapidOCR table engine.
-#: addon\globalPlugins\visAware\contentRecognizers\rapidOCR.py:282
-msgid "RapidOCR Table (automatic)"
-msgstr "RapidOCR 表格（自动）"
-
 #. Translators: The description of the Vivo OCR engine.
 #: addon\globalPlugins\visAware\contentRecognizers\vivoOCR.py:24
 msgid "Vivo OCR (NVDACN)"
@@ -2039,6 +2024,39 @@ msgstr "无法连接到身份验证服务器。"
 msgid "Invalid response from the authentication server."
 msgstr "认证服务器响应无效。"
 
+#: addon\globalPlugins\visAware\imageDescribers\deepseek.py:138
+#: addon\globalPlugins\visAware\imageDescribers\deepseek.py:191
+#, fuzzy
+msgid ""
+"API key is missing. Please configure it in the DeepSeek engine settings."
+msgstr "缺少 API 密钥。请在 Gemma 引擎设置中配置。"
+
+#. Translators: An error message for malformed Gemini response data.
+#. Translators: An error message for malformed Gemma response data.
+#: addon\globalPlugins\visAware\imageDescribers\deepseek.py:234
+#: addon\globalPlugins\visAware\imageDescribers\gemini.py:335
+#: addon\globalPlugins\visAware\imageDescribers\gemma.py:441
+#: addon\globalPlugins\visAware\imageDescribers\gemma.py:444
+msgid "Server returned an invalid response."
+msgstr "服务器返回的响应无效。"
+
+#: addon\globalPlugins\visAware\imageDescribers\deepseek.py:264
+#: addon\globalPlugins\visAware\imageDescribers\deepseek.py:267
+#: addon\globalPlugins\visAware\imageDescribers\deepseek.py:274
+#, fuzzy
+msgid "DeepSeek returned an invalid response."
+msgstr "服务器返回的响应无效。"
+
+#: addon\globalPlugins\visAware\imageDescribers\deepseek.py:270
+#, fuzzy
+msgid "DeepSeek response was truncated at the token limit."
+msgstr "Kimi Agent 响应因达到 token 上限而被截断。"
+
+#: addon\globalPlugins\visAware\imageDescribers\deepseek.py:272
+#, fuzzy
+msgid "DeepSeek response was blocked by content filtering."
+msgstr "Kimi Agent 响应因达到 token 上限而被截断。"
+
 #. Translators: The label for an engine setting to enable streaming output.
 #: addon\globalPlugins\visAware\imageDescribers\gemini.py:77
 #: addon\globalPlugins\visAware\imageDescribers\kimi.py:97
@@ -2051,14 +2069,6 @@ msgstr "启用流式输出（如果可用）(&S)"
 #: addon\globalPlugins\visAware\imageDescribers\gemini.py:300
 msgid "API key is missing. Please configure it in the Gemini engine settings."
 msgstr "缺少 API 密钥。请在 Gemini 引擎设置中配置。"
-
-#. Translators: An error message for malformed Gemini response data.
-#. Translators: An error message for malformed Gemma response data.
-#: addon\globalPlugins\visAware\imageDescribers\gemini.py:335
-#: addon\globalPlugins\visAware\imageDescribers\gemma.py:441
-#: addon\globalPlugins\visAware\imageDescribers\gemma.py:444
-msgid "Server returned an invalid response."
-msgstr "服务器返回的响应无效。"
 
 #: addon\globalPlugins\visAware\imageDescribers\gemma.py:55
 msgid ""
@@ -2290,7 +2300,6 @@ msgstr "为 NVDA 提供 OCR、AI 图像描述、自动识别和 AI 辅助计算�
 msgid ""
 "### 0.8.1\n"
 "\n"
-"* Added bundled offline RapidOCR text and automatic table engines.\n"
 "* Added Kimi image description, follow-up questions, OCR with structured "
 "coordinates, and AI Agent support through the OpenAI-compatible Kimi API.\n"
 "* Improved image-description prompts across supported engines with localized "
@@ -2307,7 +2316,6 @@ msgid ""
 msgstr ""
 "### 0.8.1\n"
 "\n"
-"* 新增内置离线 RapidOCR 文字和自动表格引擎。\n"
 "* 新增基于 OpenAI 兼容 Kimi API 的 Kimi 图像描述、追问、带结构化坐标的 OCR "
 "和 AI Agent 支持。\n"
 "* 改进受支持引擎的图像描述提示词，提供本地化默认值。\n"
@@ -2466,6 +2474,3 @@ msgstr ""
 
 #~ msgid "API &Key:"
 #~ msgstr "API 密钥(&K):"
-
-#~ msgid "RapidOCR Table (bordered)"
-#~ msgstr "RapidOCR 表格（有线框）"

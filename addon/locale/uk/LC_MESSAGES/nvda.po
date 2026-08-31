@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
-"POT-Creation-Date: 2026-08-28 17:03+0800\n"
+"POT-Creation-Date: 2026-09-01 07:21+0800\n"
 "PO-Revision-Date: 2026-07-29 12:04+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -210,7 +210,7 @@ msgid "The previous recognition result is blank."
 msgstr "Попередній результат розпізнавання порожній."
 
 #. Translators: The display name for the DeepSeek vision model preset.
-#: addon\globalPlugins\visAware\deepseekModels.py:19
+#: addon\globalPlugins\visAware\deepseekModels.py:20
 msgid "DeepSeek V4 Flash Vision"
 msgstr ""
 
@@ -507,8 +507,6 @@ msgstr "Не вдалося підготувати об'єкт зображен�
 #: addon\globalPlugins\visAware\recogHandler.py:693
 #: addon\globalPlugins\visAware\contentRecognizers\paddleOCR.py:735
 #: addon\globalPlugins\visAware\contentRecognizers\paddleOCR.py:743
-#: addon\globalPlugins\visAware\contentRecognizers\rapidOCR.py:180
-#: addon\globalPlugins\visAware\contentRecognizers\rapidOCR.py:185
 msgid "Recognition result is blank."
 msgstr "Результат розпізнавання порожній."
 
@@ -775,69 +773,69 @@ msgid "Previous recognition result is blank."
 msgstr "Попередній результат розпізнавання порожній."
 
 #. Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:484
+#: addon\globalPlugins\visAware\__init__.py:483
 msgid "Asks a follow-up question about the previous image description"
 msgstr "Задати додаткове питання щодо попереднього опису зображення"
 
 #. Translators: Reported when there is no previous recognition result to ask about.
-#: addon\globalPlugins\visAware\__init__.py:492
+#: addon\globalPlugins\visAware\__init__.py:491
 msgid "There is no previous recognition result to ask about."
 msgstr "Для питання немає попереднього результату розпізнавання."
 
 #. Translators: Reported when the follow-up question dialog cannot be opened.
-#: addon\globalPlugins\visAware\__init__.py:508
+#: addon\globalPlugins\visAware\__init__.py:507
 msgid "Could not open the follow-up question dialog."
 msgstr "Не вдалося відкрити діалог з додатковим питанням."
 
 #. Translators: A message shown when trying to use the AI agent with screen curtain enabled.
-#: addon\globalPlugins\visAware\__init__.py:531
+#: addon\globalPlugins\visAware\__init__.py:530
 msgid "Please disable screen curtain before starting the AI Agent."
 msgstr "Будь ласка, вимкніть екранну завісу перед запуском помічника."
 
 #. Translators: Prompt shown when starting the AI agent.
-#: addon\globalPlugins\visAware\__init__.py:549
+#: addon\globalPlugins\visAware\__init__.py:548
 msgid "What should the AI Agent do?"
 msgstr "Що повинен зробити помічник?"
 
 #. Translators: Title for the AI agent command dialog.
-#: addon\globalPlugins\visAware\__init__.py:551
-#: addon\globalPlugins\visAware\__init__.py:607
+#: addon\globalPlugins\visAware\__init__.py:550
+#: addon\globalPlugins\visAware\__init__.py:606
 msgid "Vis Aware Agent"
 msgstr "Помічник Vis Aware"
 
 #. Translators: Reported when the AI agent is being stopped by the user.
-#: addon\globalPlugins\visAware\__init__.py:583
+#: addon\globalPlugins\visAware\__init__.py:582
 msgid "Agent is stopping."
 msgstr "Помічник завершує роботу."
 
 #. Translators: Reported when content recognition (e.g. OCR) is attempted, but the content is not visible.
-#: addon\globalPlugins\visAware\__init__.py:653
+#: addon\globalPlugins\visAware\__init__.py:652
 msgid "Content is not visible"
 msgstr "Вміст не видно"
 
 #. Translators: A message shown when screen capture fails.
-#: addon\globalPlugins\visAware\__init__.py:681
+#: addon\globalPlugins\visAware\__init__.py:680
 msgid "Failed to capture screen image."
 msgstr "Не вдалося зробити знімок екрана."
 
 #. Translators: Reported when a recognition task is cancelled by the user.
-#: addon\globalPlugins\visAware\__init__.py:697
-#: addon\globalPlugins\visAware\__init__.py:714
-#: addon\globalPlugins\visAware\__init__.py:977
+#: addon\globalPlugins\visAware\__init__.py:696
+#: addon\globalPlugins\visAware\__init__.py:713
+#: addon\globalPlugins\visAware\__init__.py:967
 msgid "Recognition cancelled"
 msgstr "Розпізнавання скасовано"
 
 #. Translators: Describes the command to cancel an ongoing recognition task.
-#: addon\globalPlugins\visAware\__init__.py:725
+#: addon\globalPlugins\visAware\__init__.py:724
 msgid "Cancels the current recognition"
 msgstr "Скасувати поточне розпізнавання"
 
 #. Translators: Reported when the cancel command is used but no recognition is in progress.
-#: addon\globalPlugins\visAware\__init__.py:732
+#: addon\globalPlugins\visAware\__init__.py:731
 msgid "No recognition is in progress."
 msgstr "Розпізнавання не виконується."
 
-#: addon\globalPlugins\visAware\__init__.py:758
+#: addon\globalPlugins\visAware\__init__.py:757
 msgid ""
 "Performs recognition using the current settings. In OCR and image "
 "description modes, press once for a recognition result document. Press twice "
@@ -852,81 +850,80 @@ msgstr ""
 "помічника"
 
 #. Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:785
+#: addon\globalPlugins\visAware\__init__.py:784
 msgid "Cycles through recognition modes"
 msgstr "Перемикає режими розпізнавання"
 
 #. Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:795
+#: addon\globalPlugins\visAware\__init__.py:794
 msgid "Cycles through recognition sources"
 msgstr "Перемикає джерела розпізнавання"
 
 #. Translators: Reported when recognition source cycling is requested while AI Agent mode is active.
-#: addon\globalPlugins\visAware\__init__.py:803
+#: addon\globalPlugins\visAware\__init__.py:802
 msgid "Changing recognition source is not supported in AI Agent mode."
 msgstr "Зміна джерела розпізнавання не підтримується в режимі помічника."
 
 #. Translators: Reported when attempting to recognize a clipboard image, but no image is found.
-#: addon\globalPlugins\visAware\__init__.py:887
+#: addon\globalPlugins\visAware\__init__.py:886
 msgid "No image in clipboard"
 msgstr "У буфері обміну немає зображення"
 
-#. Translators: The title for the browsable message showing the recognition result.
-#: addon\globalPlugins\visAware\__init__.py:958
-#: addon\globalPlugins\visAware\__init__.py:1015
-msgid "Recognition result"
-msgstr "Результат розпізнавання"
-
 #. Translators: An error message for authentication failures. The placeholder is the specific error.
-#: addon\globalPlugins\visAware\__init__.py:981
+#: addon\globalPlugins\visAware\__init__.py:971
 #, python-brace-format
 msgid "Authentication failed: {}"
 msgstr "Помилка автентифікації: {}"
 
 #. Translators: An error message for network issues. The placeholder is the specific error.
-#: addon\globalPlugins\visAware\__init__.py:984
+#: addon\globalPlugins\visAware\__init__.py:974
 #, python-brace-format
 msgid "Network error: {}"
 msgstr "Помилка мережі: {}"
 
 #. Translators: A generic error message for recognition failures from the API.
-#: addon\globalPlugins\visAware\__init__.py:987
+#: addon\globalPlugins\visAware\__init__.py:977
 #, python-brace-format
 msgid "Recognition failed: {}"
 msgstr "Помилка розпізнавання: {}"
 
 #. Translators: A message for an unexpected error during recognition.
-#: addon\globalPlugins\visAware\__init__.py:991
+#: addon\globalPlugins\visAware\__init__.py:981
 msgid "Recognition failed with an unexpected error."
 msgstr "Розпізнавання не вдалося через неочікувану помилку."
 
 #. Translators: An error message for an unknown result type.
-#: addon\globalPlugins\visAware\__init__.py:997
-#: addon\globalPlugins\visAware\__init__.py:1062
+#: addon\globalPlugins\visAware\__init__.py:987
+#: addon\globalPlugins\visAware\__init__.py:1050
 msgid "Recognition returned an unknown result type."
 msgstr "Розпізнавання повернуло невідомий тип результату."
 
+#. Translators: The title for the browsable message showing the recognition result.
+#: addon\globalPlugins\visAware\__init__.py:1003
+msgid "Recognition result"
+msgstr "Результат розпізнавання"
+
 #. Translators: Reported after partial streaming output when the service stopped before completing.
-#: addon\globalPlugins\visAware\__init__.py:1047
+#: addon\globalPlugins\visAware\__init__.py:1035
 msgid "Recognition was interrupted. The result may be incomplete."
 msgstr "Розпізнавання перервано. Результат може бути неповним."
 
 #. Translators: A message indicating that no recognition engine is configured.
-#: addon\globalPlugins\visAware\__init__.py:1116
+#: addon\globalPlugins\visAware\__init__.py:1104
 msgid "No recognition engine is configured."
 msgstr "Сервіс розпізнавання не налаштовано."
 
 #. Translators: A message shown when trying to recognize with screen curtain enabled.
-#: addon\globalPlugins\visAware\__init__.py:1121
+#: addon\globalPlugins\visAware\__init__.py:1109
 msgid "Please disable screen curtain before recognition."
 msgstr "Будь ласка, вимкніть екранну завісу перед розпізнаванням."
 
 #. Translators: Reporting when content recognition (e.g. OCR) begins.
-#: addon\globalPlugins\visAware\__init__.py:1142
+#: addon\globalPlugins\visAware\__init__.py:1130
 msgid "Recognizing"
 msgstr "Розпізнавання"
 
-#: addon\globalPlugins\visAware\__init__.py:1155
+#: addon\globalPlugins\visAware\__init__.py:1143
 msgid ""
 "An error occurred before starting recognition. Please check your settings "
 "and try again."
@@ -935,18 +932,18 @@ msgstr ""
 "повторіть спробу."
 
 #. Translators: Reported when there are no alternative engines to switch to.
-#: addon\globalPlugins\visAware\__init__.py:1170
+#: addon\globalPlugins\visAware\__init__.py:1158
 msgid "No other engines to switch to."
 msgstr "Немає інших сервісів для перемикання."
 
 #. Translators: Reports the name of the only available engine.
-#: addon\globalPlugins\visAware\__init__.py:1175
+#: addon\globalPlugins\visAware\__init__.py:1163
 #, python-brace-format
 msgid "Current engine: {engine_name}"
 msgstr "Поточний сервіс: {engine_name}"
 
 #. Translators: Describes a command to cycle through available recognition engines.
-#: addon\globalPlugins\visAware\__init__.py:1193
+#: addon\globalPlugins\visAware\__init__.py:1181
 msgid "Cycles through engines for the current mode"
 msgstr "Перемикає сервіси для поточного режиму"
 
@@ -1006,7 +1003,9 @@ msgid "{} returned an unsupported agent action: {}"
 msgstr "{} повернув непідтримувану дію помічника: {}"
 
 #. Translators: The description of the DeepSeek Agent engine.
-#: addon\globalPlugins\visAware\agent\deepseek.py:44
+#. Translators: The description of the DeepSeek image describer engine.
+#: addon\globalPlugins\visAware\agent\deepseek.py:45
+#: addon\globalPlugins\visAware\imageDescribers\deepseek.py:41
 msgid "DeepSeek"
 msgstr ""
 
@@ -1017,11 +1016,12 @@ msgstr ""
 #. Translators: The label for the text field to enter the Gemini API Key.
 #. Translators: The label for the text field to enter the Kimi API key.
 #. Translators: The label for the Ollama API key field.
+#. Translators: The label for the DeepSeek API key used by the image describer.
 #. Translators: The label for the text field to enter the Gemini API Key.
 #. Translators: The label for the text field to enter the Gemma API Key.
 #. Translators: The label for the text field to enter the Kimi API key.
 #. Translators: The label for the Ollama API key field.
-#: addon\globalPlugins\visAware\agent\deepseek.py:56
+#: addon\globalPlugins\visAware\agent\deepseek.py:57
 #: addon\globalPlugins\visAware\agent\engines\gemini.py:48
 #: addon\globalPlugins\visAware\agent\engines\kimi.py:66
 #: addon\globalPlugins\visAware\agent\engines\openai.py:56
@@ -1029,6 +1029,7 @@ msgstr ""
 #: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:112
 #: addon\globalPlugins\visAware\contentRecognizers\kimiOCR.py:126
 #: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:127
+#: addon\globalPlugins\visAware\imageDescribers\deepseek.py:61
 #: addon\globalPlugins\visAware\imageDescribers\gemini.py:72
 #: addon\globalPlugins\visAware\imageDescribers\gemma.py:123
 #: addon\globalPlugins\visAware\imageDescribers\kimi.py:86
@@ -1040,10 +1041,13 @@ msgstr "&Ключ API"
 #. Translators: The label for the Kimi-compatible base URL used by the Agent.
 #. Translators: The label for the OpenAI-compatible base URL used by the Agent.
 #. Translators: The label for the text field to enter the Kimi API base URL.
-#: addon\globalPlugins\visAware\agent\deepseek.py:61
+#. Translators: The label for the DeepSeek base URL used by the image describer.
+#. Translators: The label for the text field to enter the Kimi API base URL.
+#: addon\globalPlugins\visAware\agent\deepseek.py:62
 #: addon\globalPlugins\visAware\agent\engines\kimi.py:71
 #: addon\globalPlugins\visAware\agent\engines\openai.py:61
 #: addon\globalPlugins\visAware\contentRecognizers\kimiOCR.py:131
+#: addon\globalPlugins\visAware\imageDescribers\deepseek.py:66
 #: addon\globalPlugins\visAware\imageDescribers\kimi.py:91
 msgid "Base &URL"
 msgstr "Базова URL"
@@ -1056,11 +1060,12 @@ msgstr "Базова URL"
 #. Translators: The label for a setting to select the Kimi model.
 #. Translators: The label for a setting to select the Ollama model.
 #. Translators: The label for selecting a PaddleOCR model.
+#. Translators: The label for the DeepSeek model used by the image describer.
 #. Translators: The label for a setting to select the Gemini model.
 #. Translators: The label for a setting to select the Gemma model.
 #. Translators: The label for a setting to select the Kimi model.
 #. Translators: The label for a setting to select the Ollama model.
-#: addon\globalPlugins\visAware\agent\deepseek.py:67
+#: addon\globalPlugins\visAware\agent\deepseek.py:68
 #: addon\globalPlugins\visAware\agent\engines\gemini.py:53
 #: addon\globalPlugins\visAware\agent\engines\kimi.py:82
 #: addon\globalPlugins\visAware\agent\engines\openai.py:71
@@ -1068,6 +1073,7 @@ msgstr "Базова URL"
 #: addon\globalPlugins\visAware\contentRecognizers\kimiOCR.py:137
 #: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:137
 #: addon\globalPlugins\visAware\contentRecognizers\paddleOCR.py:437
+#: addon\globalPlugins\visAware\imageDescribers\deepseek.py:72
 #: addon\globalPlugins\visAware\imageDescribers\gemini.py:82
 #: addon\globalPlugins\visAware\imageDescribers\gemma.py:128
 #: addon\globalPlugins\visAware\imageDescribers\kimi.py:102
@@ -1075,7 +1081,7 @@ msgstr "Базова URL"
 msgid "&Model"
 msgstr "&Модель"
 
-#: addon\globalPlugins\visAware\agent\deepseek.py:128
+#: addon\globalPlugins\visAware\agent\deepseek.py:129
 #: addon\globalPlugins\visAware\agent\gemini.py:51
 #: addon\globalPlugins\visAware\agent\kimi.py:73
 #: addon\globalPlugins\visAware\agent\openai.py:48
@@ -1083,58 +1089,59 @@ msgid "API key is missing. Please configure it in the AI Agent settings."
 msgstr ""
 "Ключ API відсутній. Будь ласка, налаштуйте його в налаштуваннях ШІ помічника."
 
-#: addon\globalPlugins\visAware\agent\deepseek.py:231
+#: addon\globalPlugins\visAware\agent\deepseek.py:232
 #, fuzzy
 msgid "The current screenshot is too large for the DeepSeek request limit."
 msgstr "Поточний знімок екрана перевищує обмеження розміру запиту Kimi."
 
-#: addon\globalPlugins\visAware\agent\deepseek.py:237
+#: addon\globalPlugins\visAware\agent\deepseek.py:238
 #, fuzzy
 msgid "DeepSeek did not return exactly one agent tool call."
 msgstr "Kimi не повернув рівно одного виклику інструменту помічника."
 
-#: addon\globalPlugins\visAware\agent\deepseek.py:241
-#: addon\globalPlugins\visAware\agent\deepseek.py:254
+#: addon\globalPlugins\visAware\agent\deepseek.py:242
+#: addon\globalPlugins\visAware\agent\deepseek.py:255
 #, fuzzy
 msgid "DeepSeek returned malformed agent action data."
 msgstr "Gemini повернув некоректно сформовані дані про дії помічника."
 
-#: addon\globalPlugins\visAware\agent\deepseek.py:246
+#: addon\globalPlugins\visAware\agent\deepseek.py:247
 #, fuzzy
 msgid "DeepSeek returned a duplicate agent tool call ID."
 msgstr ""
 "Kimi повернув повторюваний ідентифікатор виклику інструменту помічника."
 
-#: addon\globalPlugins\visAware\agent\deepseek.py:252
+#: addon\globalPlugins\visAware\agent\deepseek.py:253
 #, fuzzy
 msgid "DeepSeek returned invalid agent action JSON."
 msgstr "Gemini повернув недійсний JSON дії помічника."
 
-#: addon\globalPlugins\visAware\agent\deepseek.py:271
+#: addon\globalPlugins\visAware\agent\deepseek.py:272
+#: addon\globalPlugins\visAware\imageDescribers\deepseek.py:261
 #, fuzzy, python-brace-format
 msgid "DeepSeek API error: {}"
 msgstr "Помилка API OpenAI: {}"
 
-#: addon\globalPlugins\visAware\agent\deepseek.py:274
+#: addon\globalPlugins\visAware\agent\deepseek.py:275
 msgid "DeepSeek agent response failed."
 msgstr ""
 
-#: addon\globalPlugins\visAware\agent\deepseek.py:279
+#: addon\globalPlugins\visAware\agent\deepseek.py:280
 #, fuzzy
 msgid "DeepSeek agent response was truncated at the token limit."
 msgstr ""
 "Відповідь помічника Kimi була обрізана через обмеження кількості токенів."
 
-#: addon\globalPlugins\visAware\agent\deepseek.py:281
+#: addon\globalPlugins\visAware\agent\deepseek.py:282
 msgid "DeepSeek agent response was blocked by content filtering."
 msgstr ""
 
-#: addon\globalPlugins\visAware\agent\deepseek.py:282
+#: addon\globalPlugins\visAware\agent\deepseek.py:283
 msgid "DeepSeek agent response was incomplete."
 msgstr ""
 
-#: addon\globalPlugins\visAware\agent\deepseek.py:284
-#: addon\globalPlugins\visAware\agent\deepseek.py:290
+#: addon\globalPlugins\visAware\agent\deepseek.py:285
+#: addon\globalPlugins\visAware\agent\deepseek.py:291
 #, fuzzy
 msgid "DeepSeek returned an invalid agent response."
 msgstr "Сервер повернув недійсну відповідь."
@@ -1355,6 +1362,7 @@ msgstr "Якість знімка екрана"
 
 #. Translators: An error message for an invalid server response.
 #: addon\globalPlugins\visAware\agent\vivo.py:106
+#: addon\globalPlugins\visAware\imageDescribers\deepseek.py:241
 #: addon\globalPlugins\visAware\imageDescribers\vivoBlueLLM.py:385
 msgid "Invalid response from server."
 msgstr "Недійсна відповідь від сервера."
@@ -1723,6 +1731,7 @@ msgstr "Контент заблоковано через налаштуванн�
 #. Translators: An error message for an empty but successful server response.
 #: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:293
 #: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:217
+#: addon\globalPlugins\visAware\imageDescribers\deepseek.py:237
 #: addon\globalPlugins\visAware\imageDescribers\gemini.py:345
 #: addon\globalPlugins\visAware\imageDescribers\gemma.py:455
 #: addon\globalPlugins\visAware\imageDescribers\kimi.py:426
@@ -1822,11 +1831,13 @@ msgid "&Enable streaming output"
 msgstr "&Увімкнути потоковий вивід"
 
 #. Translators: The label for a setting to customize the OCR prompt.
+#. Translators: The label for the DeepSeek prompt used by the image describer.
 #. Translators: The label for a setting to customize the prompt for the vision model.
 #. Translators: The label for a setting to customize the Kimi prompt.
 #. Translators: The label for a setting to customize the prompt for the model.
 #. Translators: The label for an engine setting to customize the prompt for the vision model.
 #: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:150
+#: addon\globalPlugins\visAware\imageDescribers\deepseek.py:79
 #: addon\globalPlugins\visAware\imageDescribers\gemini.py:96
 #: addon\globalPlugins\visAware\imageDescribers\gemma.py:142
 #: addon\globalPlugins\visAware\imageDescribers\kimi.py:116
@@ -1947,33 +1958,6 @@ msgid "API URL is missing. Please configure it in PaddleOCR settings."
 msgstr ""
 "URL API відсутній. Будь ласка, налаштуйте його в налаштуваннях PaddleOCR."
 
-#. Translators: An error shown when RapidOCR receives invalid image bytes.
-#: addon\globalPlugins\visAware\contentRecognizers\rapidOCR.py:150
-#, fuzzy
-msgid "RapidOCR received invalid image content."
-msgstr "PaddleOCR повернув недійсну відповідь."
-
-#. Translators: A low-level error reported by the bundled RapidOCR DLL.
-#: addon\globalPlugins\visAware\contentRecognizers\rapidOCR.py:157
-#, fuzzy, python-brace-format
-msgid "RapidOCR failed: {}"
-msgstr "Не вдалося виконати завдання PaddleOCR: {}"
-
-#. Translators: An error shown when neither RapidOCR table mode found a reliable table.
-#: addon\globalPlugins\visAware\contentRecognizers\rapidOCR.py:197
-msgid "No reliable table structure was detected."
-msgstr ""
-
-#. Translators: The name of the bundled offline RapidOCR text engine.
-#: addon\globalPlugins\visAware\contentRecognizers\rapidOCR.py:273
-msgid "RapidOCR Text (PP-OCRv6 Small)"
-msgstr ""
-
-#. Translators: The name of the bundled automatic RapidOCR table engine.
-#: addon\globalPlugins\visAware\contentRecognizers\rapidOCR.py:282
-msgid "RapidOCR Table (automatic)"
-msgstr ""
-
 #. Translators: The description of the Vivo OCR engine.
 #: addon\globalPlugins\visAware\contentRecognizers\vivoOCR.py:24
 msgid "Vivo OCR (NVDACN)"
@@ -2080,6 +2064,43 @@ msgstr "Не вдалося підключитися до сервера авт�
 msgid "Invalid response from the authentication server."
 msgstr "Недійсна відповідь від сервера автентифікації."
 
+#: addon\globalPlugins\visAware\imageDescribers\deepseek.py:138
+#: addon\globalPlugins\visAware\imageDescribers\deepseek.py:191
+#, fuzzy
+msgid ""
+"API key is missing. Please configure it in the DeepSeek engine settings."
+msgstr ""
+"Ключ API відсутній. Будь ласка, налаштуйте його в налаштуваннях сервісу "
+"Gemma."
+
+#. Translators: An error message for malformed Gemini response data.
+#. Translators: An error message for malformed Gemma response data.
+#: addon\globalPlugins\visAware\imageDescribers\deepseek.py:234
+#: addon\globalPlugins\visAware\imageDescribers\gemini.py:335
+#: addon\globalPlugins\visAware\imageDescribers\gemma.py:441
+#: addon\globalPlugins\visAware\imageDescribers\gemma.py:444
+msgid "Server returned an invalid response."
+msgstr "Сервер повернув недійсну відповідь."
+
+#: addon\globalPlugins\visAware\imageDescribers\deepseek.py:264
+#: addon\globalPlugins\visAware\imageDescribers\deepseek.py:267
+#: addon\globalPlugins\visAware\imageDescribers\deepseek.py:274
+#, fuzzy
+msgid "DeepSeek returned an invalid response."
+msgstr "Сервер повернув недійсну відповідь."
+
+#: addon\globalPlugins\visAware\imageDescribers\deepseek.py:270
+#, fuzzy
+msgid "DeepSeek response was truncated at the token limit."
+msgstr ""
+"Відповідь помічника Kimi була обрізана через обмеження кількості токенів."
+
+#: addon\globalPlugins\visAware\imageDescribers\deepseek.py:272
+#, fuzzy
+msgid "DeepSeek response was blocked by content filtering."
+msgstr ""
+"Відповідь помічника Kimi була обрізана через обмеження кількості токенів."
+
 #. Translators: The label for an engine setting to enable streaming output.
 #: addon\globalPlugins\visAware\imageDescribers\gemini.py:77
 #: addon\globalPlugins\visAware\imageDescribers\kimi.py:97
@@ -2094,14 +2115,6 @@ msgid "API key is missing. Please configure it in the Gemini engine settings."
 msgstr ""
 "Відсутній ключ API. Будь ласка, налаштуйте його в налаштуваннях сервісу "
 "Gemini."
-
-#. Translators: An error message for malformed Gemini response data.
-#. Translators: An error message for malformed Gemma response data.
-#: addon\globalPlugins\visAware\imageDescribers\gemini.py:335
-#: addon\globalPlugins\visAware\imageDescribers\gemma.py:441
-#: addon\globalPlugins\visAware\imageDescribers\gemma.py:444
-msgid "Server returned an invalid response."
-msgstr "Сервер повернув недійсну відповідь."
 
 #: addon\globalPlugins\visAware\imageDescribers\gemma.py:55
 msgid ""
@@ -2354,7 +2367,6 @@ msgstr ""
 msgid ""
 "### 0.8.1\n"
 "\n"
-"* Added bundled offline RapidOCR text and automatic table engines.\n"
 "* Added Kimi image description, follow-up questions, OCR with structured "
 "coordinates, and AI Agent support through the OpenAI-compatible Kimi API.\n"
 "* Improved image-description prompts across supported engines with localized "
