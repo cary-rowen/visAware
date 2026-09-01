@@ -164,10 +164,20 @@ vision-capable model, such as Gemma 4; Ollama OCR provides screen coordinates
 only when the model returns valid structured OCR data.
 
 Kimi engines default to the official Kimi Code OpenAI-compatible Base URL
-`https://api.kimi.com/coding/v1`. Enter an API key issued for that endpoint. To use
-the public Kimi API instead, set the base URL to `https://api.moonshot.ai/v1`
-and use a public API key. Kimi K3 is the default model; model and thinking
-options vary by endpoint and model family.
+`https://api.kimi.com/coding/v1`; enter a Kimi Code API key for that endpoint.
+For the Kimi Open Platform, use `https://api.moonshot.cn/v1` with a key from
+the [Kimi Open Platform](https://platform.kimi.com/console/api-keys). For the
+international platform, use `https://api.moonshot.ai/v1` with a key from the
+[international Kimi platform](https://platform.kimi.ai/console/api-keys). Do not
+mix keys and endpoints. Kimi K3 is the default model; model and thinking options
+vary by endpoint and model family.
+
+DeepSeek engines use the official OpenAI-compatible API. Set the Base URL to
+`https://api.deepseek.com`, create a key in the
+[DeepSeek API console](https://platform.deepseek.com/api_keys), and enter it in
+the engine settings. The default vision model is
+`deepseek-v4-flash-vision-exp`; it is used by both the image description and AI
+Agent engines.
 
 ## Included engines
 

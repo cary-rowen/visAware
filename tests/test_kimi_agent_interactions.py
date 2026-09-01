@@ -171,6 +171,7 @@ class KimiAgentInteractionsTestCase(unittest.TestCase):
 		for baseUrl, expectedUrl in (
 			("https://api.kimi.com/coding/v1", "https://api.kimi.com/coding/v1/chat/completions"),
 			("https://api.moonshot.ai/v1", "https://api.moonshot.ai/v1/chat/completions"),
+			("https://api.moonshot.cn/v1", "https://api.moonshot.cn/v1/chat/completions"),
 			(
 				"https://api.moonshot.ai/v1/chat/completions",
 				"https://api.moonshot.ai/v1/chat/completions",
@@ -191,17 +192,24 @@ class KimiAgentInteractionsTestCase(unittest.TestCase):
 			["kimi-k3", "kimi-k2.7-code", "kimi-k2.7-code-highspeed", "kimi-k2.6"],
 		)
 		self.assertEqual(modelsModule.getDefaultKimiModel("https://api.moonshot.ai/v1"), "kimi-k3")
+		self.assertEqual(
+			list(modelsModule.getKimiModelChoices("https://api.moonshot.cn/v1")),
+			["kimi-k3", "kimi-k2.7-code", "kimi-k2.7-code-highspeed", "kimi-k2.6"],
+		)
+		self.assertEqual(modelsModule.getDefaultKimiModel("https://api.moonshot.cn/v1"), "kimi-k3")
 
 	def test_official_model_list_only_returns_supported_models(self) -> None:
 		module = load_kimi_agent_module()
 		module.network.sendRequest = lambda *args, **kwargs: _FakeResponse(
-			{"data": [{"id": "text-only"}, {"id": "k3"}]},
+			{"data": [{"id": "text-only"}, {"id": "k3"}, {"id": "kimi-k3"}]},
 		)
 		client = module.KimiAgentClient(module.KimiAgentSettings(apiKey="secret"))
 
 		self.assertEqual(client.listModels(), ["k3"])
+		client.baseUrl = "https://api.moonshot.cn/v1"
+		self.assertEqual(client.listModels(), ["kimi-k3"])
 		client.baseUrl = "https://proxy.example/v1"
-		self.assertEqual(client.listModels(), ["k3", "text-only"])
+		self.assertEqual(client.listModels(), ["k3", "kimi-k3", "text-only"])
 
 	def test_k3_uses_chat_completions_and_preserves_tool_reasoning(self) -> None:
 		module = load_kimi_agent_module()

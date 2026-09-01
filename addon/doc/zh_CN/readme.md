@@ -97,7 +97,9 @@ PaddleOCR / PaddleOCR-VL 支持 AI Studio 托管任务 API、AI Studio 部署服
 
 对于 Ollama 引擎，可以填写完整 API URL，也可以填写主机和端口，例如 `localhost:11434`。默认 API 根地址为 `http://localhost:11434/api`。使用**获取模型**加载模型名称，然后选择模型。如果没有选择模型，将使用 Ollama 返回的第一个模型。可选的 API 密钥会作为 `Authorization: Bearer` 令牌发送。Ollama 引擎需要支持视觉能力的模型，例如 Gemma 4；仅当模型返回有效的结构化 OCR 数据时，Ollama OCR 才会提供屏幕坐标。
 
-Kimi 引擎默认使用 Kimi Code 的官方 OpenAI 兼容 Base URL `https://api.kimi.com/coding/v1`，请填写该端点签发的 API 密钥。如需使用公共 Kimi API，请将 Base URL 设置为 `https://api.moonshot.ai/v1`，并填写公共 API 密钥。默认模型为 Kimi K3；可用模型和思考选项会随端点及模型系列而异。
+Kimi 引擎默认使用 Kimi Code 的官方 OpenAI 兼容 Base URL `https://api.kimi.com/coding/v1`，请填写该端点的 Kimi Code API 密钥。使用 Kimi 开放平台时，请将 Base URL 设置为 `https://api.moonshot.cn/v1`，并填写在 [Kimi 开放平台](https://platform.kimi.com/console/api-keys) 创建的密钥；使用国际平台时，请设置为 `https://api.moonshot.ai/v1`，并填写在[国际 Kimi 平台](https://platform.kimi.ai/console/api-keys) 创建的密钥。请勿混用端点和密钥。默认模型为 Kimi K3；可用模型和思考选项会随端点及模型系列而异。
+
+DeepSeek 引擎使用官方 OpenAI 兼容 API。请将 Base URL 设置为 `https://api.deepseek.com`，在 [DeepSeek API 控制台](https://platform.deepseek.com/api_keys) 创建密钥并填写到引擎设置中。默认视觉模型为 `deepseek-v4-flash-vision-exp`，图像描述和 AI Agent 引擎均使用该模型。
 
 ## 内置引擎
 

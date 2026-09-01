@@ -248,6 +248,8 @@ class KimiOCRTestCase(unittest.TestCase):
 			list(engine.availableModels),
 			["kimi-k3", "kimi-k2.7-code", "kimi-k2.7-code-highspeed", "kimi-k2.6"],
 		)
+		engine.baseUrl = "https://api.moonshot.cn/v1"
+		self.assertEqual(engine.model, "kimi-k3")
 
 	def test_k3_preserves_max_reasoning_effort(self) -> None:
 		module = load_kimi_ocr_module()

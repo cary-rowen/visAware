@@ -13,7 +13,8 @@ import addonHandler
 addonHandler.initTranslation()
 
 # Kimi Code exposes this endpoint and the same OpenAI-compatible protocol as
-# the public Kimi API. Users can replace it with https://api.moonshot.ai/v1.
+# the public Kimi API. Public platform endpoints use api.moonshot.cn or
+# api.moonshot.ai, depending on the platform where the key was created.
 DEFAULT_KIMI_BASE_URL = "https://api.kimi.com/coding/v1"
 DEFAULT_KIMI_MODEL = "k3-256k"
 DEFAULT_KIMI_AGENT_MODEL = "k3-256k"
@@ -203,7 +204,7 @@ def _kimiApiHost(baseUrl: str) -> str:
 
 def isOfficialKimiBaseUrl(baseUrl: str) -> bool:
 	"""Returns whether a URL targets an official Kimi API host."""
-	return _kimiApiHost(baseUrl) in {"api.kimi.com", "api.moonshot.ai"}
+	return _kimiApiHost(baseUrl) in {"api.kimi.com", "api.moonshot.ai", "api.moonshot.cn"}
 
 
 def getKimiModelChoices(baseUrl: str = DEFAULT_KIMI_BASE_URL) -> OrderedDict[str, str]:
@@ -211,13 +212,13 @@ def getKimiModelChoices(baseUrl: str = DEFAULT_KIMI_BASE_URL) -> OrderedDict[str
 	host = _kimiApiHost(baseUrl)
 	if host == "api.kimi.com":
 		return _KIMI_CODE_MODEL_CHOICES.copy()
-	if host == "api.moonshot.ai":
+	if host in {"api.moonshot.ai", "api.moonshot.cn"}:
 		return _KIMI_PUBLIC_MODEL_CHOICES.copy()
 	return _KIMI_CODE_MODEL_CHOICES | _KIMI_PUBLIC_MODEL_CHOICES
 
 
 def getDefaultKimiModel(baseUrl: str) -> str:
 	"""Returns a valid default model for an official Kimi endpoint."""
-	if _kimiApiHost(baseUrl) == "api.moonshot.ai":
+	if _kimiApiHost(baseUrl) in {"api.moonshot.ai", "api.moonshot.cn"}:
 		return DEFAULT_KIMI_PUBLIC_MODEL
 	return DEFAULT_KIMI_MODEL

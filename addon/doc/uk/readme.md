@@ -41,6 +41,7 @@ OCR та опис зображень можуть використовувати
 
 * Google Gemini
 * Google Gemma
+* DeepSeek
 * Система опису зображень Vivo (NVDACN)
 * VIVO BlueLLM Vision (NVDACN)
 * Ollama Vision
@@ -50,6 +51,7 @@ OCR та опис зображень можуть використовувати
 
 * Google Gemini
 * OpenAI
+* DeepSeek
 * Vivo BlueLM Vision (NVDACN)
 * Kimi
 
@@ -178,10 +180,17 @@ OCR та опис зображень можуть використовувати
 лише тоді, коли модель повертає дійсні структуровані дані OCR.
 
 Сервіси Kimi початково використовують офіційну сумісну з OpenAI базову URL-адресу Kimi Code
-`https://api.kimi.com/coding/v1`. Введіть ключ API, виданий для цієї кінцевої точки. Щоб натомість
-використовувати публічний API Kimi, установіть базову URL-адресу `https://api.moonshot.ai/v1`
-та використовуйте ключ публічного API. Початкова модель — Kimi K3; доступні моделі та параметри
+`https://api.kimi.com/coding/v1`; введіть ключ API Kimi Code для цієї кінцевої точки.
+Для платформи Kimi Open Platform використовуйте `https://api.moonshot.cn/v1` і ключ із
+[Kimi Open Platform](https://platform.kimi.com/console/api-keys). Для міжнародної платформи
+використовуйте `https://api.moonshot.ai/v1` і ключ із [міжнародної платформи Kimi](https://platform.kimi.ai/console/api-keys).
+Не змішуйте ключі та кінцеві точки. Початкова модель — Kimi K3; доступні моделі та параметри
 міркування залежать від кінцевої точки й сімейства моделей.
+
+Сервіси DeepSeek використовують офіційний сумісний з OpenAI API. Установіть базову URL-адресу
+`https://api.deepseek.com`, створіть ключ у [консолі API DeepSeek](https://platform.deepseek.com/api_keys)
+та введіть його в налаштуваннях сервісу. Початкова модель — `deepseek-v4-flash-vision-exp`;
+її використовують сервіси опису зображень і ШІ помічника.
 
 ## Дані
 
