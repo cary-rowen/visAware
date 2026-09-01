@@ -211,5 +211,10 @@ reportDeprecated = true
 # Can be enabled by generating type stubs for modules via pyright CLI
 reportMissingTypeStubs = false
 
+[dependency-groups]
+dev = [
+    "pytest==8.4.2",
+]
+
 # Bad rules
 # These are sorted alphabetically and should be enabled and moved to compliant rules section when resolved.
