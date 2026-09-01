@@ -42,6 +42,7 @@ addon_info = AddonInfo(
 * Improved automatic recognition reliability by serializing background work, keeping only the latest pending task, propagating cancellation through network and OCR requests, and using shorter request timeouts.
 * Improved browse-mode automatic recognition for web graphics by recognizing current and lazy-loaded image URLs and falling back to screenshots when URLs are unavailable.
 * Improved automatic recognition result handling to ignore results after the active recognition target changes.
+* Enabled screen recognition and AI Agent screenshots through NVDA's original capture path while Screen Curtain or the built-in Magnifier is active on supported systems.
 
 ### 0.8.1
 
@@ -64,7 +65,7 @@ addon_info = AddonInfo(
 	# Minimum NVDA version supported (e.g. "2019.3.0", minor version is optional)
 	addon_minimumNVDAVersion="2026.1.0",
 	# Last NVDA version supported/tested (e.g. "2024.4.0", ideally more recent than minimum version)
-	addon_lastTestedNVDAVersion="2026.1.0",
+	addon_lastTestedNVDAVersion="2026.3.0",
 	# Add-on update channel (default is None, denoting stable releases,
 	# and for development releases, use "dev".)
 	# Do not change unless you know what you are doing!

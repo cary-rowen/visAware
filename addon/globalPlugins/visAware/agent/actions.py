@@ -172,20 +172,47 @@ def _captureScreenOnMainThread(window: BoundWindow, quality: int = JPEG_QUALITY)
 		f"title={window.title!r}, screenBounds={bbox}, foregroundBounds="
 		f"({window.left}, {window.top}, {window.width}, {window.height}), quality={quality}",
 	)
+	from contentRecog import RecogImageInfo
+
+	from .._screenCapture import (
+		ScreenCaptureError,
+		captureNvdaPixels,
+		hasNvdaCapture,
+		imageFromNvdaPixels,
+		isScreenCurtainCaptureSupported,
+	)
+
 	try:
-		bitmap = wx.Bitmap(screenWidth, screenHeight)
-		memoryDC = wx.MemoryDC(bitmap)
-		memoryDC.Blit(0, 0, screenWidth, screenHeight, wx.ScreenDC(), screenLeft, screenTop)
-		memoryDC.SelectObject(wx.NullBitmap)
-		image = bitmap.ConvertToImage()
-		image.SetOption("quality", quality)
-		buffer = io.BytesIO()
-		image.SaveFile(buffer, wx.BITMAP_TYPE_JPEG)
+		imageInfo = None
+		pixels = None
+		if hasNvdaCapture():
+			imageInfo = RecogImageInfo(screenLeft, screenTop, screenWidth, screenHeight, 1)
+			pixels = captureNvdaPixels(imageInfo)
+		elif not isScreenCurtainCaptureSupported():
+			raise ScreenCaptureError("Screen Curtain capture is unavailable in this NVDA version.")
+		if pixels is None:
+			bitmap = wx.Bitmap(screenWidth, screenHeight)
+			memoryDC = wx.MemoryDC(bitmap)
+			memoryDC.Blit(0, 0, screenWidth, screenHeight, wx.ScreenDC(), screenLeft, screenTop)
+			memoryDC.SelectObject(wx.NullBitmap)
+			image = bitmap.ConvertToImage()
+			image.SetOption("quality", quality)
+			buffer = io.BytesIO()
+			image.SaveFile(buffer, wx.BITMAP_TYPE_JPEG)
+		else:
+			assert imageInfo is not None
+			image = imageFromNvdaPixels(pixels, imageInfo)
+			buffer = io.BytesIO()
+			image.save(buffer, "JPEG", quality=quality, optimize=True)
+	except ScreenCaptureError as e:
+		raise ActionExecutionError(
+			_("Please disable screen curtain before starting the AI Agent."),
+		) from e
 	except Exception as e:
 		log.error("Agent screenshot failed", exc_info=True)
 		raise ActionExecutionError(_("Failed to capture the foreground window.")) from e
-	imageWidth = image.GetWidth()
-	imageHeight = image.GetHeight()
+	imageWidth = image.GetWidth() if pixels is None else image.width
+	imageHeight = image.GetHeight() if pixels is None else image.height
 	rawImage = buffer.getvalue()
 	return Screenshot(
 		imageBase64=base64.b64encode(rawImage).decode("ascii"),

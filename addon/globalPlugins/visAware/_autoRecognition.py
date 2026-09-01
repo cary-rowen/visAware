@@ -1086,10 +1086,29 @@ class AutoRecognitionController:
 		try:
 			if not self._isCurrent(token, key):
 				return
+			from ._screenCapture import (
+				ScreenCaptureError,
+				captureNvdaPixels,
+				hasNvdaCapture,
+				imageFromNvdaPixels,
+				isScreenCurtainCaptureSupported,
+			)
+
 			left, top, width, height = location
 			isDebug = _verboseDebugLogging()
 			captureStartedAt = time.perf_counter() if isDebug else 0
-			image = ImageGrab.grab(bbox=(left, top, left + width, top + height))
+			imageInfo = None
+			pixels = None
+			if hasNvdaCapture():
+				imageInfo = RecogImageInfo(left, top, width, height, 1)
+				pixels = captureNvdaPixels(imageInfo)
+			elif not isScreenCurtainCaptureSupported():
+				raise ScreenCaptureError("Screen Curtain capture is unavailable in this NVDA version.")
+			if pixels is None:
+				image = ImageGrab.grab(bbox=(left, top, left + width, top + height))
+			else:
+				assert imageInfo is not None
+				image = imageFromNvdaPixels(pixels, imageInfo)
 			if isDebug:
 				_debug(
 					f"object screenshot captured: size={image.width}x{image.height}, "

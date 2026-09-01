@@ -133,7 +133,12 @@ Each AI Agent step sends the selected service a full-screen screenshot, which
 can include content from other windows. Avoid running the AI Agent while
 sensitive information is visible on the screen.
 
-The AI Agent cannot start while Screen Curtain is enabled.
+On supported systems with NVDA 2026.3 or later, the AI Agent can capture the
+original screen while Screen Curtain or NVDA's built-in Magnifier is active.
+When Screen Curtain is active, the Agent can therefore send the hidden screen
+content to the selected service and perform actions without a visible display.
+The Agent cannot start with Screen Curtain when Windows Graphics Capture is
+unavailable.
 
 ## Settings
 
@@ -256,8 +261,11 @@ full-screen screenshot to the selected service; the screenshot can include
 other windows. Review the service's data policy and avoid sending sensitive
 content.
 
-Manual recognition from a source other than the clipboard requires Screen
-Curtain to be disabled. The NVDACN password is protected with Windows DPAPI.
+On supported systems with NVDA 2026.3 or later, manual and automatic screen
+recognition can capture the original screen while Screen Curtain or NVDA's
+built-in Magnifier is active. When Windows Graphics Capture is unavailable,
+Screen Curtain must be disabled for screen recognition. The NVDACN password is
+protected with Windows DPAPI.
 Other saved API keys are stored unencrypted in the NVDA configuration. Be
 mindful of data security before creating or sharing a portable copy of NVDA.
 

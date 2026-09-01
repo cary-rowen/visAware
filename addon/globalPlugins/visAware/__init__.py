@@ -37,6 +37,11 @@ from .agent.settings import AgentHandler, AgentPanel
 from .agent.session import AgentSession
 from .exceptions import CancellationError, AuthenticationError, NetworkError, ApiError
 from . import recogHistory
+from ._screenCapture import (
+	captureNvdaPixels,
+	imageFromNvdaPixels,
+	isScreenCurtainCaptureSupported,
+)
 from .conversation import ConversationContext, makeConversationContext
 from .markdownRenderer import showMarkdownBrowseableMessage
 from .recogHandler import (
@@ -528,7 +533,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			return
 		if self._agentPromptDialogActive:
 			return
-		if self._isScreenCurtainRunning():
+		if self._isScreenCurtainRunning() and not isScreenCurtainCaptureSupported():
 			# Translators: A message shown when trying to use the AI agent with screen curtain enabled.
 			ui.message(_("Please disable screen curtain before starting the AI Agent."))
 			return
@@ -670,13 +675,17 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			ui.message(notVisibleMsg)
 			return None
 		try:
-			bbox = (
-				imageInfo.screenLeft,
-				imageInfo.screenTop,
-				imageInfo.screenLeft + imageInfo.screenWidth,
-				imageInfo.screenTop + imageInfo.screenHeight,
-			)
-			recognizeImage = ImageGrab.grab(bbox=bbox)
+			pixels = captureNvdaPixels(imageInfo)
+			if pixels is None:
+				bbox = (
+					imageInfo.screenLeft,
+					imageInfo.screenTop,
+					imageInfo.screenLeft + imageInfo.screenWidth,
+					imageInfo.screenTop + imageInfo.screenHeight,
+				)
+				recognizeImage = ImageGrab.grab(bbox=bbox)
+			else:
+				recognizeImage = imageFromNvdaPixels(pixels, imageInfo)
 		except Exception:
 			log.error(f"Failed to grab image from object: {targetObject.name}", exc_info=True)
 			# Translators: A message shown when screen capture fails.
@@ -1123,7 +1132,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				ui.message(_("No recognition engine is configured."))
 				self._activeEngine = None
 				return
-			if currentSource != "clipboardImage" and self._isScreenCurtainRunning():
+			if (
+				currentSource != "clipboardImage"
+				and self._isScreenCurtainRunning()
+				and not isScreenCurtainCaptureSupported()
+			):
 				# Translators: A message shown when trying to recognize with screen curtain enabled.
 				ui.message(_("Please disable screen curtain before recognition."))
 				self._activeEngine = None

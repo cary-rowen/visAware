@@ -5,6 +5,7 @@
 * Improved automatic recognition reliability by serializing background work, keeping only the latest pending task, propagating cancellation through network and OCR requests, and using shorter request timeouts.
 * Improved browse-mode automatic recognition for web graphics by recognizing current and lazy-loaded image URLs and falling back to screenshots when URLs are unavailable.
 * Improved automatic recognition result handling to ignore results after the active recognition target changes.
+* Enabled screen recognition and AI Agent screenshots through NVDA's original capture path while Screen Curtain or the built-in Magnifier is active on supported systems.
 
 ### 0.8.1
 

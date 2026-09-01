@@ -243,6 +243,40 @@ class AutoRecognitionP0TestCase(unittest.TestCase):
 		self.assertIsNotNone(key)
 		self.assertIn("screenshotTarget:", key)
 
+	def test_oldNvdaUsesImageGrabForNegativeCoordinates(self) -> None:
+		module = self.module
+		captureCalls = []
+
+		class _Image:
+			mode = "RGB"
+			width = 30
+			height = 40
+
+			def tobytes(self):
+				return b"pixels"
+
+		image = _Image()
+		module.ImageGrab.grab = lambda **kwargs: (captureCalls.append(kwargs), image)[1]
+		screenCaptureModule = types.ModuleType("addon.globalPlugins.visAware._screenCapture")
+		screenCaptureModule.ScreenCaptureError = RuntimeError
+		screenCaptureModule.hasNvdaCapture = lambda: False
+		screenCaptureModule.isScreenCurtainCaptureSupported = lambda: True
+		screenCaptureModule.captureNvdaPixels = lambda _imageInfo: self.fail(
+			"Old NVDA should not construct RecogImageInfo for the fallback path.",
+		)
+		screenCaptureModule.imageFromNvdaPixels = lambda *_args: self.fail(
+			"Old NVDA should use ImageGrab for the fallback path.",
+		)
+		sys.modules[screenCaptureModule.__name__] = screenCaptureModule
+
+		controller = module.AutoRecognitionController()
+		controller._token = 1
+		controller._activeKey = "key"
+		controller._captureAndDescribe(1, "key", (-10, 20, 30, 40), 0, None, None)
+
+		self.assertEqual(captureCalls, [{"bbox": (-10, 20, 20, 60)}])
+		controller.terminate()
+
 	def test_worker_keeps_only_latest_queued_task(self) -> None:
 		controller = self.module.AutoRecognitionController()
 		firstStarted = Event()
