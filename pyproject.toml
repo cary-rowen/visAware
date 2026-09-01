@@ -7,7 +7,7 @@ name = "visAware"
 dynamic = ["version"]
 description = "Visual Recognition add-on with OCR and AI image description."
 maintainers = [
-	{name = "cary-rowen", email = "manchen_0528@outlook.com"},
+	{name = "cary-rowen", email = "cary-rowen@outlook.com"},
 ]
 requires-python = ">=3.13,<3.14"
 classifiers = [

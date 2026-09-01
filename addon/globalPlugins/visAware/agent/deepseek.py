@@ -1,4 +1,4 @@
-# Copyright (C) 2026 Cary-rowen <manchen_0528@outlook.com>
+# Copyright (C) 2026 Cary-rowen <cary-rowen@outlook.com>
 # This file is covered by the GNU General Public License.
 # See the file COPYING for more details.
 
@@ -98,7 +98,7 @@ class AgentEngine(BaseAgentEngine):
 
 	@property
 	def availableModels(self) -> dict:
-		return self.generateStringSettings(getDeepSeekVisionModelChoices(self.baseUrl))
+		return self.generateStringSettings(getDeepSeekVisionModelChoices())
 
 	@classmethod
 	def check(cls) -> bool:

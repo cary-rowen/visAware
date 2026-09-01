@@ -1,3 +1,11 @@
+### 0.9.0
+
+* Added DeepSeek image description and AI Agent engines, with configurable API endpoints and vision models.
+* Added a command to cycle automatic recognition between off, image description, and OCR; it has no default gesture.
+* Improved automatic recognition reliability by serializing background work, keeping only the latest pending task, propagating cancellation through network and OCR requests, and using shorter request timeouts.
+* Improved browse-mode automatic recognition for web graphics by recognizing current and lazy-loaded image URLs and falling back to screenshots when URLs are unavailable.
+* Improved automatic recognition result handling to ignore results after the active recognition target changes.
+
 ### 0.8.1
 
 * Added Kimi image description, follow-up questions, OCR with structured coordinates, and AI Agent support through the OpenAI-compatible Kimi API.

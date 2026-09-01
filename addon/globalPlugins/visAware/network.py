@@ -1,4 +1,4 @@
-# Copyright (C) 2025 Cary-rowen <manchen_0528@outlook.com>
+# Copyright (C) 2025 Cary-rowen <cary-rowen@outlook.com>
 # This file is covered by the GNU General Public License.
 # See the file COPYING for more details.
 
@@ -108,21 +108,6 @@ def retryOnNetworkError(
 	return decorator
 
 
-def _getProxies(proxyType: str | None = None, proxyAddress: str | None = None) -> dict[str, str]:
-	"""
-	Builds a proxies dictionary based on the add-on's configuration.
-
-	:param proxyType: The type of proxy (e.g., "http").
-	:param proxyAddress: The address of the proxy server.
-	:returns: A dictionary suitable for the `requests` library.
-	"""
-	proxies: dict[str, str] = {}
-	# This uses the new config section name you provided.
-	if proxyType == "http" and proxyAddress:
-		proxies = {"http": proxyAddress, "https": proxyAddress}
-	return proxies
-
-
 def _handleHttpError(e: requests.exceptions.HTTPError) -> NoReturn:
 	"""
 	Centralized handler for HTTPError exceptions.
@@ -221,8 +206,6 @@ def sendRequest(method: str, url: str, **kwargs: Any) -> requests.Response:
 	kwargs.pop("cancelCheck", None)
 	if "timeout" not in kwargs:
 		kwargs["timeout"] = 100
-	# if "proxies" not in kwargs:
-	# kwargs["proxies"] = _getProxies()
 
 	try:
 		response = requests.request(method=method, url=url, **kwargs)
@@ -257,8 +240,6 @@ def sendStreamingRequest(method: str, url: str, **kwargs: Any) -> Iterator[bytes
 
 	if "timeout" not in kwargs:
 		kwargs["timeout"] = 100
-	if "proxies" not in kwargs:
-		kwargs["proxies"] = _getProxies()
 
 	kwargs["stream"] = True
 

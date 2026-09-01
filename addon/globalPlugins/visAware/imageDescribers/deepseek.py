@@ -1,4 +1,4 @@
-# Copyright (C) 2026 Cary-rowen <manchen_0528@outlook.com>
+# Copyright (C) 2026 Cary-rowen <cary-rowen@outlook.com>
 # This file is covered by the GNU General Public License.
 # See the file COPYING for more details.
 
@@ -98,7 +98,7 @@ class CustomContentRecognizer(BaseDescriber):
 	@baseUrl.setter
 	def baseUrl(self, value: str) -> None:
 		self._baseUrl = value.strip().rstrip("/") or DEFAULT_DEEPSEEK_BASE_URL
-		if self.model not in getDeepSeekVisionModelChoices(self._baseUrl):
+		if self.model not in getDeepSeekVisionModelChoices():
 			self._model = DEFAULT_DEEPSEEK_VISION_MODEL
 
 	@property
@@ -120,7 +120,7 @@ class CustomContentRecognizer(BaseDescriber):
 
 	@property
 	def availableModels(self) -> dict:
-		return self.generateStringSettings(getDeepSeekVisionModelChoices(self.baseUrl))
+		return self.generateStringSettings(getDeepSeekVisionModelChoices())
 
 	@classmethod
 	def check(cls) -> bool:

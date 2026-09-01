@@ -1,4 +1,4 @@
-# Copyright (C) 2026 Cary-rowen <manchen_0528@outlook.com>
+# Copyright (C) 2026 Cary-rowen <cary-rowen@outlook.com>
 # This file is covered by the GNU General Public License.
 # See the file COPYING for more details.
 
@@ -38,16 +38,9 @@ def buildDeepSeekChatCompletionsUrl(baseUrl: str) -> str:
 	return f"{baseUrl}/chat/completions"
 
 
-def getDeepSeekVisionModelChoices(baseUrl: str = DEFAULT_DEEPSEEK_BASE_URL) -> OrderedDict[str, str]:
+def getDeepSeekVisionModelChoices() -> OrderedDict[str, str]:
 	"""Returns supported DeepSeek vision model presets."""
-	del baseUrl
 	return _DEEPSEEK_VISION_MODEL_CHOICES.copy()
-
-
-def getDefaultDeepSeekVisionModel(baseUrl: str = DEFAULT_DEEPSEEK_BASE_URL) -> str:
-	"""Returns the default DeepSeek vision model."""
-	del baseUrl
-	return DEFAULT_DEEPSEEK_VISION_MODEL
 
 
 def redactDeepSeekImageUrlsForLog(value: Any, keyName: str = "") -> Any:

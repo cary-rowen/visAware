@@ -1,4 +1,4 @@
-# Copyright (C) 2025 Cary-rowen <manchen_0528@outlook.com>
+# Copyright (C) 2025 Cary-rowen <cary-rowen@outlook.com>
 # This file is covered by the GNU General Public License.
 # See the file COPYING for more details.
 
