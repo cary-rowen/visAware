@@ -195,7 +195,8 @@ class DeepSeekImageDescriberTestCase(unittest.TestCase):
 		requests_seen.clear()
 
 		request = engine._buildRequestParams(
-			b"encoded-image", module.RecognitionRequest(prompt="Describe it.")
+			b"encoded-image",
+			module.RecognitionRequest(prompt="Describe it."),
 		)
 
 		self.assertEqual(request["url"], "https://api.deepseek.com/chat/completions")
@@ -231,7 +232,7 @@ class DeepSeekImageDescriberTestCase(unittest.TestCase):
 
 		self.assertEqual(
 			engine.processApiResult(
-				b'{"choices":[{"finish_reason":"stop","message":{"role":"assistant","content":""}}]}'
+				b'{"choices":[{"finish_reason":"stop","message":{"role":"assistant","content":""}}]}',
 			),
 			"Server returned a successful but empty response.",
 		)
@@ -254,7 +255,8 @@ class DeepSeekImageDescriberTestCase(unittest.TestCase):
 		engine = module.CustomContentRecognizer()
 
 		self.assertEqual(
-			engine.processApiResult(b"<html>bad gateway</html>"), "Invalid response from server."
+			engine.processApiResult(b"<html>bad gateway</html>"),
+			"Invalid response from server.",
 		)
 
 	def test_follow_up_rejects_blank_answer(self) -> None:
@@ -321,8 +323,8 @@ class DeepSeekImageDescriberTestCase(unittest.TestCase):
 						{
 							"finish_reason": "stop",
 							"message": {"role": "assistant", "content": "It is a blue chair."},
-						}
-					]
+						},
+					],
 				}
 
 		responseModule.sendRequest = lambda **kwargs: (
@@ -338,7 +340,8 @@ class DeepSeekImageDescriberTestCase(unittest.TestCase):
 		self.assertEqual(requests_seen[0]["json"]["messages"][1]["role"], "assistant")
 		self.assertEqual(requests_seen[0]["json"]["messages"][1]["content"], "A cat sits on a chair.")
 		self.assertEqual(
-			requests_seen[0]["json"]["messages"][-1]["content"], "What does the chair look like?"
+			requests_seen[0]["json"]["messages"][-1]["content"],
+			"What does the chair look like?",
 		)
 
 	def test_redacts_image_url_before_logging(self) -> None:
@@ -367,7 +370,7 @@ class DeepSeekImageDescriberTestCase(unittest.TestCase):
 
 		self.assertTrue(
 			redacted["json"]["messages"][0]["content"][0]["image_url"]["url"].startswith(
-				"<redacted data URL:"
+				"<redacted data URL:",
 			),
 		)
 

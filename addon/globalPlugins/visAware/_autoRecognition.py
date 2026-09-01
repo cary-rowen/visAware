@@ -988,7 +988,7 @@ class AutoRecognitionController:
 			self._queuedWorker = None
 		engineThread = getattr(self._activeEngine, "_recognitionThread", None)
 		hadTask = bool(
-			self._pendingKey or self._activeKey or queuedWorker or (engineThread and engineThread.is_alive())
+			self._pendingKey or self._activeKey or queuedWorker or (engineThread and engineThread.is_alive()),
 		)
 		self._cancelPendingStart()
 		self._token += 1

@@ -170,7 +170,8 @@ def _install_stubs() -> list[dict]:
 	sys.modules[settingsModule.__name__] = settingsModule
 
 	_load_module(
-		"addon.globalPlugins.visAware.agent.decision", "addon/globalPlugins/visAware/agent/decision.py"
+		"addon.globalPlugins.visAware.agent.decision",
+		"addon/globalPlugins/visAware/agent/decision.py",
 	)
 
 	_load_module(
@@ -246,7 +247,8 @@ class DeepSeekAgentTestCase(unittest.TestCase):
 		self.assertEqual(tool["type"], "function")
 		self.assertEqual(tool["name"], "agent_decision")
 		self.assertEqual(
-			tool["description"], "Return the next Windows desktop action for the local agent host."
+			tool["description"],
+			"Return the next Windows desktop action for the local agent host.",
 		)
 		self.assertEqual(tool["parameters"]["type"], "object")
 		self.assertEqual(tool["parameters"]["required"], ["status", "message", "action", "finished"])
