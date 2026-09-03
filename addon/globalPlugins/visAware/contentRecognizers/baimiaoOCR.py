@@ -144,7 +144,7 @@ class CustomContentRecognizer(BaseRecognizer):
 			cancellationChecker=lambda: self._checkCancelled(cancellationEvent),
 			requestTimeout=AUTO_RECOGNITION_REQUEST_TIMEOUT if request.isAutomaticRecognition else None,
 		)
-		apiResult = client.recognizeImage(imageContent)
+		apiResult = self._recognizeContent(client, imageContent)
 		self._checkCancelled(cancellationEvent)
 		historyEntry = (
 			recogHistory.createEntry(self, self.originalImage, apiResult) if self.originalImage else None
@@ -159,8 +159,18 @@ class CustomContentRecognizer(BaseRecognizer):
 		if lineResult:
 			return recogHistory.attachEntry(LinesWordsResult(lineResult, imageInfo), historyEntry)
 		textOnlyResult = SimpleTextResult(text)
-		textOnlyResult.forceVirtualDocument = True
+		if getattr(self, "forceBrowseableMessage", False):
+			textOnlyResult.forceBrowseableMessage = True
+		else:
+			textOnlyResult.forceVirtualDocument = True
 		return recogHistory.attachEntry(textOnlyResult, historyEntry)
+
+	def _recognizeContent(
+		self,
+		client: BaimiaoWebClient,
+		imageContent: bytes,
+	) -> dict[str, Any]:
+		return client.recognizeImage(imageContent)
 
 	def processApiResult(self, _result: bytes) -> str | bool:
 		"""Returns success because the Web client validates each response."""

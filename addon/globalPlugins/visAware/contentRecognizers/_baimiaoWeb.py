@@ -49,6 +49,8 @@ SESSION_FILE_NAME = "visAwareBaimiaoSession.dat"
 
 _ENGINE_PATTERN = re.compile(r"^[A-Za-z0-9_-]+$")
 _DEVICE_LIMIT_ERROR_CODE = 400401
+_FORMULA_MARKER_BEGIN = "ifly-latex-begin"
+_FORMULA_MARKER_END = "ifly-latex-end"
 _MAX_FRAGMENT_GAP_FACTOR = 2
 _sessionLock = RLock()
 _UPLOAD_SIGN_FIELDS = (
@@ -293,14 +295,27 @@ class BaimiaoWebClient:
 	def recognizeImage(self, imageContent: bytes) -> dict[str, Any]:
 		"""Uploads one PNG image and returns Baimiao's OCR response."""
 
+		return self._recognizeImageContent(imageContent, "image")
+
+	def recognizeFormula(self, imageContent: bytes) -> dict[str, Any]:
+		"""Uploads one PNG image and returns Baimiao's formula recognition response."""
+
+		return self._recognizeImageContent(imageContent, "latex")
+
+	def _recognizeImageContent(self, imageContent: bytes, recognitionType: str) -> dict[str, Any]:
+		"""Runs the shared Baimiao upload workflow for text or formula recognition."""
+
 		if not imageContent:
 			# Translators: An error when an empty image is passed to Baimiao.
 			raise ApiError(_("Invalid image content for Baimiao."))
 		self._refreshLogin()
+		permissionPayload = {"mode": "single", "version": "v2"}
+		if recognitionType == "latex":
+			permissionPayload["type"] = "latex"
 		permission = self._requestData(
 			"POST",
 			"/api/perm/single",
-			jsonPayload={"mode": "single", "version": "v2"},
+			jsonPayload=permissionPayload,
 			retry=False,
 		)
 		engine = permission.get("engine")
@@ -327,7 +342,7 @@ class BaimiaoWebClient:
 		imageHash = hashlib.sha1(f"data:image/png;base64,{imageBase64}".encode("utf-8")).hexdigest()
 		start = self._requestData(
 			"POST",
-			f"/api/ocr/image/{engine}",
+			f"/api/ocr/{recognitionType}/{engine}",
 			jsonPayload={
 				"batchId": "",
 				"total": 1,
@@ -341,7 +356,7 @@ class BaimiaoWebClient:
 		if not isinstance(jobStatusId, str) or not jobStatusId:
 			# Translators: An error when Baimiao does not start an OCR task.
 			raise ApiError(_("Baimiao did not start the OCR task."))
-		return self._waitForResult(engine, jobStatusId)
+		return self._waitForResult(engine, jobStatusId, recognitionType)
 
 	def _refreshLogin(self) -> None:
 		expectedToken = self.loginToken
@@ -375,7 +390,12 @@ class BaimiaoWebClient:
 			self.loginToken = loginToken
 			_replaceStoredLoginToken(self.deviceUuid, expectedToken, loginToken)
 
-	def _waitForResult(self, engine: str, jobStatusId: str) -> dict[str, Any]:
+	def _waitForResult(
+		self,
+		engine: str,
+		jobStatusId: str,
+		recognitionType: str = "image",
+	) -> dict[str, Any]:
 		deadline = time.monotonic() + MAX_POLL_SECONDS
 		pollInterval = POLL_INTERVAL_SECONDS
 		isFirstPoll = True
@@ -386,7 +406,7 @@ class BaimiaoWebClient:
 			isFirstPoll = False
 			data = self._requestData(
 				"GET",
-				f"/api/ocr/image/{engine}/status",
+				f"/api/ocr/{recognitionType}/{engine}/status",
 				params={"jobStatusId": jobStatusId},
 			)
 			isEnded = data.get("isEnded")
@@ -401,6 +421,8 @@ class BaimiaoWebClient:
 				raise ApiError(_("Baimiao returned an invalid OCR response."))
 			result = cast(dict[str, Any], result)
 			self._raiseTaskError(result)
+			if recognitionType == "latex":
+				return _normalizeFormulaResult(engine, result)
 			return _normalizeOcrResult(engine, result)
 		# Translators: An error when Baimiao does not finish an OCR task in time.
 		raise ApiError(_("Baimiao OCR timed out."))
@@ -580,6 +602,26 @@ def _normalizeOcrResult(engine: str, result: dict[str, Any]) -> dict[str, Any]:
 	raise _invalidOcrResponse()
 
 
+def _normalizeFormulaResult(engine: str, result: dict[str, Any]) -> dict[str, Any]:
+	providerResult: Any = result
+	if engine == "plus" and result.get("sid"):
+		providerResult = result.get("data")
+	elif engine == "xfs":
+		code = result.get("code")
+		if code not in (None, 0, "0"):
+			message = result.get("msg") or result.get("message") or _("Baimiao OCR task failed.")
+			raise ApiError(str(message), errorCode=code if isinstance(code, int) else None)
+		providerResult = result.get("data")
+	if not isinstance(providerResult, dict):
+		raise _invalidOcrResponse()
+	if not isinstance(providerResult.get("latex"), str) and not isinstance(
+		providerResult.get("region"),
+		list,
+	):
+		raise _invalidOcrResponse()
+	return cast(dict[str, Any], providerResult)
+
+
 def _normalizeYieldResult(result: dict[str, Any]) -> dict[str, Any]:
 	providerResult = result.get("Result")
 	if not isinstance(providerResult, dict) or not isinstance(providerResult.get("regions"), list):
@@ -655,6 +697,32 @@ def extractText(apiResult: dict[str, Any]) -> str:
 		return "\n".join(textInServiceOrder)
 	textLines = [" ".join(word["text"] for word in line) for line in lines]
 	return "\n".join(textLines)
+
+
+def extractFormulaMarkdown(apiResult: dict[str, Any]) -> str:
+	"""Converts a Baimiao formula response to the Markdown consumed by Vis Aware."""
+
+	latex = apiResult.get("latex")
+	if isinstance(latex, str) and latex.strip():
+		return f"${latex.strip()}$"
+	regions = apiResult.get("region")
+	if not isinstance(regions, list):
+		return ""
+	paragraphs: list[str] = []
+	for regionValue in regions:
+		if not isinstance(regionValue, dict) or regionValue.get("type") != "text":
+			continue
+		recognition = regionValue.get("recog")
+		if not isinstance(recognition, dict):
+			continue
+		content = recognition.get("content")
+		if not isinstance(content, str):
+			continue
+		content = content.replace(_FORMULA_MARKER_BEGIN, "$").replace(_FORMULA_MARKER_END, "$")
+		content = " ".join(content.split())
+		if content:
+			paragraphs.append(content)
+	return "\n\n".join(paragraphs)
 
 
 def toLineResult(apiResult: dict[str, Any]) -> list[list[dict[str, Any]]]:

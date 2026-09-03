@@ -192,6 +192,105 @@ class BaimiaoWebTestCase(unittest.TestCase):
 		expectedHash = hashlib.sha1(b"data:image/png;base64,aW1hZ2U=").hexdigest()
 		self.assertEqual(startPayload["hash"], expectedHash)
 
+	def testFormulaWorkflowUsesLatexPermissionAndEndpoints(self) -> None:
+		calls = []
+		responses = [
+			_Response({"code": 1, "data": {"token": "login-token", "user": {"id": 1}}}),
+			_Response({"code": 1, "data": {"engine": "plus", "token": "permission-token"}}),
+			_Response(
+				{
+					"code": 1,
+					"data": {
+						"result": {
+							"host": "https://oss.example.test",
+							"file_key": "file-key",
+							"policy": "policy",
+							"signature": "signature",
+							"x_oss_credential": "credential",
+							"x_oss_date": "date",
+							"security_token": "security-token",
+						},
+					},
+				},
+			),
+			_Response(),
+			_Response({"code": 1, "data": {"jobStatusId": "job-id"}}),
+			_Response(
+				{
+					"code": 1,
+					"data": {
+						"isEnded": True,
+						"ydResp": {
+							"code": 0,
+							"data": {"latex": r"x^2+y^2=z^2"},
+							"sid": "provider-id",
+						},
+					},
+				},
+			),
+		]
+
+		def sendRequest(*args, **kwargs):
+			calls.append((args, kwargs))
+			return responses.pop(0)
+
+		self.module.network.sendRequest = sendRequest
+		client = self.module.BaimiaoWebClient(
+			"6c40ae69-d09d-4a9a-8ff1-f86e0139a283",
+			"login-token",
+		)
+
+		result = client.recognizeFormula(b"image")
+
+		self.assertEqual(result, {"latex": r"x^2+y^2=z^2"})
+		self.assertEqual(
+			calls[1][1]["json"],
+			{"mode": "single", "type": "latex", "version": "v2"},
+		)
+		self.assertTrue(calls[4][0][1].endswith("/api/ocr/latex/plus"))
+		self.assertTrue(calls[5][0][1].endswith("/api/ocr/latex/plus/status"))
+
+	def testXfsFormulaResponseIsNormalizedAndErrorsArePreserved(self) -> None:
+		self.assertEqual(
+			self.module._normalizeFormulaResult(
+				"xfs",
+				{"code": 0, "data": {"latex": r"\frac{a}{b}"}},
+			),
+			{"latex": r"\frac{a}{b}"},
+		)
+
+		with self.assertRaises(_ApiError) as error:
+			self.module._normalizeFormulaResult(
+				"xfs",
+				{"code": 40304, "message": "invalid image"},
+			)
+
+		self.assertEqual(error.exception.errorCode, 40304)
+		self.assertEqual(str(error.exception), "invalid image")
+
+	def testFormulaResultsBecomeMarkdownWithTextPreserved(self) -> None:
+		self.assertEqual(
+			self.module.extractFormulaMarkdown({"latex": r"x^2+y^2=z^2"}),
+			r"$x^2+y^2=z^2$",
+		)
+		self.assertEqual(
+			self.module.extractFormulaMarkdown(
+				{
+					"region": [
+						{"type": "text", "recog": {"content": "求下式的值"}},
+						{
+							"type": "text",
+							"recog": {
+								"content": " ifly-latex-begin \\frac{a}{b} ifly-latex-end ",
+							},
+						},
+						{"type": "image", "recog": {"content": "ignored"}},
+					],
+				},
+			),
+			"求下式的值\n\n$ \\frac{a}{b} $",
+		)
+
 	def test_loginPersistsNoAccountOrPassword(self) -> None:
 		protectedValues = []
 		calls = []

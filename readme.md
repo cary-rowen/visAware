@@ -160,16 +160,18 @@ engine must remain enabled in each mode.
 For PaddleOCR / PaddleOCR-VL, the OCR settings support an AI Studio hosted task
 API, an AI Studio deployed service, or a self-hosted PaddleOCR service.
 
-For Baimiao OCR, select **Log in to Baimiao...** in the OCR engine settings,
-then enter the email address or mobile number and password for your Baimiao
-account. Vis Aware stores only a stable device UUID and the login token returned
-by Baimiao, protected with Windows DPAPI; it does not store the password. This
-engine uses `web.baimiaoapp.com` and its account entitlements, not the separate
-`pdf.baimiaoapp.com` Toolbox service. Baimiao may apply account-specific device
-limits, quotas, and feature availability. Logging out in Vis Aware deletes the
-login saved on this computer, but does not release the device login held by the
-Baimiao account. Use the Baimiao mobile app to sign out devices you no longer
-use.
+For Baimiao OCR or Baimiao Formula Recognition, select **Log in to Baimiao...**
+in the OCR engine settings, then enter the email address or mobile number and
+password for your Baimiao account. Both engines share the same login. Vis Aware
+stores only a stable device UUID and the login token returned by Baimiao,
+protected with Windows DPAPI; it does not store the password. Formula results
+include ordinary text and LaTeX, which Vis Aware converts to accessible MathML
+in browsable results. These engines use `web.baimiaoapp.com` and its account
+entitlements, not the separate `pdf.baimiaoapp.com` Toolbox service. Baimiao may
+apply account-specific device limits, quotas, and feature availability. Logging
+out in Vis Aware deletes the login saved on this computer, but does not release
+the device login held by the Baimiao account. Use the Baimiao mobile app to sign
+out devices you no longer use.
 
 For Ollama engines, enter a full API URL or a host and port such as
 `localhost:11434`. The default API root is `http://localhost:11434/api`. Use
@@ -201,6 +203,7 @@ OCR engines:
 
 * Apple Vision (OCR Server)
 * Baimiao OCR
+* Baimiao Formula Recognition
 * Baidu OCR
 * Google Gemini OCR
 * Vivo OCR (NVDACN)

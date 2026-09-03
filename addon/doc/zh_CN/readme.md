@@ -95,7 +95,7 @@ AI Agent 每一步都会向所选服务发送全屏截图，其中可能包含�
 
 PaddleOCR / PaddleOCR-VL 支持 AI Studio 托管任务 API、AI Studio 部署服务和自托管 PaddleOCR 服务。
 
-使用白描 OCR 时，请在 OCR 引擎设置中选择**登录白描...**，然后输入白描账号的电子邮箱或手机号及密码。Vis Aware 只保存稳定的设备 UUID 和白描返回的登录令牌，并使用 Windows DPAPI 加密保护；密码不会保存。此引擎使用 `web.baimiaoapp.com` 及其账号权益，不使用账号体系独立的 `pdf.baimiaoapp.com` Toolbox 服务。设备数限制、额度和可用功能由白描根据账号决定。在 Vis Aware 中退出登录会删除本机保存的登录信息，但不会释放白描账号中的设备登录状态；请在手机版白描中退出不再使用的设备。
+使用白描 OCR 或白描公式识别时，请在 OCR 引擎设置中选择**登录白描...**，然后输入白描账号的电子邮箱或手机号及密码。两个引擎共用同一登录状态。Vis Aware 只保存稳定的设备 UUID 和白描返回的登录令牌，并使用 Windows DPAPI 加密保护；密码不会保存。公式识别结果包含普通文本和 LaTeX，Vis Aware 会在可浏览结果中将 LaTeX 转换为可访问的 MathML。这些引擎使用 `web.baimiaoapp.com` 及其账号权益，不使用账号体系独立的 `pdf.baimiaoapp.com` Toolbox 服务。设备数限制、额度和可用功能由白描根据账号决定。在 Vis Aware 中退出登录会删除本机保存的登录信息，但不会释放白描账号中的设备登录状态；请在手机版白描中退出不再使用的设备。
 
 对于 Ollama 引擎，可以填写完整 API URL，也可以填写主机和端口，例如 `localhost:11434`。默认 API 根地址为 `http://localhost:11434/api`。使用**获取模型**加载模型名称，然后选择模型。如果没有选择模型，将使用 Ollama 返回的第一个模型。可选的 API 密钥会作为 `Authorization: Bearer` 令牌发送。Ollama 引擎需要支持视觉能力的模型，例如 Gemma 4；仅当模型返回有效的结构化 OCR 数据时，Ollama OCR 才会提供屏幕坐标。
 
@@ -109,6 +109,7 @@ OCR 引擎：
 
 * Apple Vision (OCR Server)
 * 白描 OCR
+* 白描公式识别
 * 百度 OCR
 * Google Gemini OCR
 * Vivo OCR（NVDACN）

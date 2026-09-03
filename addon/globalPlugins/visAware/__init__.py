@@ -484,7 +484,15 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			# Translators: Reported when the previous recognition result is blank.
 			ui.message(_("Previous recognition result is blank."))
 			return
-		self._showRecognitionResultDocument(resultObject)
+		if isinstance(resultObject, SimpleTextResult) and getattr(
+			resultObject,
+			"forceBrowseableMessage",
+			False,
+		):
+			# Translators: The title for the browsable message showing the recognition result.
+			showMarkdownBrowseableMessage(resultObject.text, title=_("Recognition result"))
+		else:
+			self._showRecognitionResultDocument(resultObject)
 
 	@script(
 		# Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
@@ -1021,14 +1029,17 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			if conf["copyToClipboard"]:
 				api.copyToClip(result.text, notify=True)
 			if isinstance(result, SimpleTextResult):
-				if getattr(result, "forceVirtualDocument", False):
+				forceVirtualDocument = getattr(result, "forceVirtualDocument", False)
+				if getattr(result, "forceBrowseableMessage", False) or (
+					conf["useBrowseableMessage"] and not forceVirtualDocument
+				):
+					# Translators: The title for the browsable message showing the recognition result.
+					showMarkdownBrowseableMessage(result.text, title=_("Recognition result"))
+				elif forceVirtualDocument:
 					self._showRecognitionResultDocument(
 						result,
 						autoSayAll=conf["autoSayAllOnResult"],
 					)
-				elif conf["useBrowseableMessage"]:
-					# Translators: The title for the browsable message showing the recognition result.
-					showMarkdownBrowseableMessage(result.text, title=_("Recognition result"))
 				else:
 					ui.message(result.text)
 			else:

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 'customOCR' '0.1.1-dev'\n"
 "Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
-"POT-Creation-Date: 2026-09-04 03:35+0800\n"
+"POT-Creation-Date: 2026-09-04 03:57+0800\n"
 "PO-Revision-Date: 2025-11-02 16:14+0800\n"
 "Last-Translator: Larry Wang <larry.wang.801@gmail.com>\n"
 "Language-Team: \n"
@@ -1677,6 +1677,11 @@ msgstr "图像尺寸错误"
 msgid "Image recognize error"
 msgstr "图像识别错误"
 
+#. Translators: The description of the Baimiao formula recognition engine.
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoFormula.py:23
+msgid "Baimiao Formula Recognition"
+msgstr "白描公式识别"
+
 #. Translators: The description of the Baimiao OCR engine.
 #: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:36
 msgid "Baimiao OCR"
@@ -1700,7 +1705,10 @@ msgid ""
 "Baimiao login saved on this computer, but does not automatically sign this "
 "device out of your Baimiao account. If you no longer use this device, sign "
 "it out in the Baimiao mobile app."
-msgstr "确定要退出 Vis Aware 中的白描登录吗？退出后将删除本机保存的白描登录信息，但不会自动解除白描账号中的设备登录状态。如不再使用此设备，请在手机版白描中退出该设备。"
+msgstr ""
+"确定要退出 Vis Aware 中的白描登录吗？退出后将删除本机保存的白描登录信息，但不"
+"会自动解除白描账号中的设备登录状态。如不再使用此设备，请在手机版白描中退出该"
+"设备。"
 
 #. Translators: The title of an error shown when Baimiao logout fails.
 #: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:109
@@ -1710,7 +1718,7 @@ msgstr "退出白描登录失败"
 #. Translators: An error when Baimiao receives invalid image content.
 #. Translators: An error when an empty image is passed to Baimiao.
 #: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:142
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:298
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:310
 msgid "Invalid image content for Baimiao."
 msgstr "提供给白描的图像内容无效。"
 
@@ -2012,7 +2020,7 @@ msgstr "取消(&C)"
 
 #. Translators: An error when a Baimiao login field is empty.
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoGui.py:72
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:267
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:269
 msgid "Enter your Baimiao account and password."
 msgstr "请输入白描账号和密码。"
 
@@ -2038,114 +2046,115 @@ msgid "Baimiao login failed with an unexpected error."
 msgstr "登录白描时发生意外错误。"
 
 #. Translators: An error when Baimiao returns invalid login information.
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:117
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:289
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:119
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:291
 msgid "Baimiao returned invalid login information."
 msgstr "白描返回了无效的登录信息。"
 
 #. Translators: An error when Baimiao login information cannot be stored securely.
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:124
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:127
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:130
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:143
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:126
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:129
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:132
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:145
 msgid "Could not save Baimiao login information securely."
 msgstr "无法安全保存白描登录信息。"
 
 #. Translators: An error when Baimiao Web has not been logged in.
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:246
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:248
 msgid "Please log in to Baimiao in the OCR engine settings."
 msgstr "请在 OCR 引擎设置中登录白描。"
 
 #. Translators: An error when Baimiao does not grant a usable OCR request.
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:315
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:330
 msgid "Baimiao did not provide valid OCR permission."
 msgstr "白描没有提供有效的 OCR 权限。"
 
 #. Translators: An error when Baimiao does not start an OCR task.
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:343
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:358
 msgid "Baimiao did not start the OCR task."
 msgstr "白描未能启动 OCR 任务。"
 
 #. Translators: An error when the stored Baimiao login is no longer valid.
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:364
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:373
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:379
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:388
 msgid "Baimiao login has expired. Please log in again."
 msgstr "白描登录已过期，请重新登录。"
 
 #. Translators: An error when Baimiao returns malformed task status data.
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:397
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:417
 msgid "Baimiao returned an invalid OCR task status."
 msgstr "白描返回了无效的 OCR 任务状态。"
 
 #. Translators: An error when a completed Baimiao task has no OCR result.
 #. Translators: An error when a completed Baimiao task has no usable OCR result.
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:401
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:616
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:421
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:660
 msgid "Baimiao returned an invalid OCR response."
 msgstr "白描返回了无效的 OCR 响应。"
 
 #. Translators: An error when Baimiao does not finish an OCR task in time.
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:406
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:428
 msgid "Baimiao OCR timed out."
 msgstr "白描 OCR 超时。"
 
 #. Translators: An error when Baimiao returns data that is not valid JSON.
 #. Translators: An error when Baimiao returns malformed API data.
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:437
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:440
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:472
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:459
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:462
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:496
 msgid "Baimiao returned an invalid API response."
 msgstr "白描返回了无效的 API 响应。"
 
 #. Translators: A Baimiao login error. {message} is returned by the service.
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:454
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:476
 #, python-brace-format
 msgid "Baimiao login failed: {message}"
 msgstr "登录白描失败：{message}"
 
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:460
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:483
 msgid ""
 "In the Baimiao mobile app, log out any devices you no longer use, then try "
 "again."
 msgstr "请在手机版白描中退出不再使用的设备，然后重试。"
 
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:466
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:490
 #, python-brace-format
 msgid "Baimiao API error: {message}"
 msgstr "白描 API 错误：{message}"
 
 #. Translators: A Baimiao error without a message. {code} is a service error code.
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:485
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:509
 #, python-brace-format
 msgid "Baimiao returned service error code {code}."
 msgstr "白描返回了服务错误代码 {code}。"
 
 #. Translators: A Baimiao error without a message. {code} is an API error code.
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:489
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:513
 #, python-brace-format
 msgid "Baimiao returned API error code {code}."
 msgstr "白描返回了 API 错误代码 {code}。"
 
 #. Translators: A Baimiao error response without a message or code.
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:491
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:515
 msgid "Baimiao returned an unknown API error."
 msgstr "白描返回了未知的 API 错误。"
 
 #. Translators: An error when a Baimiao OCR task reports a failure.
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:502
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:506
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:511
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:601
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:526
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:530
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:535
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:612
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:645
 msgid "Baimiao OCR task failed."
 msgstr "白描 OCR 任务失败。"
 
 #. Translators: An error when Baimiao returns an unsafe upload endpoint.
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:529
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:553
 msgid "Baimiao returned an invalid image upload endpoint."
 msgstr "白描返回了无效的图像上传地址。"
 
 #. Translators: An error when Baimiao returns an incomplete upload signature.
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:560
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:584
 msgid "Baimiao returned an invalid image upload signature."
 msgstr "白描返回了无效的图像上传签名。"
 
@@ -2235,10 +2244,9 @@ msgstr "认证服务器响应无效。"
 
 #: addon\globalPlugins\visAware\imageDescribers\deepseek.py:138
 #: addon\globalPlugins\visAware\imageDescribers\deepseek.py:191
-#, fuzzy
 msgid ""
 "API key is missing. Please configure it in the DeepSeek engine settings."
-msgstr "缺少 API 密钥。请在 Gemma 引擎设置中配置。"
+msgstr "缺少 API 密钥。请在 DeepSeek 引擎设置中配置。"
 
 #. Translators: An error message for malformed Gemini response data.
 #. Translators: An error message for malformed Gemma response data.
@@ -2510,6 +2518,9 @@ msgstr "为 NVDA 提供 OCR、AI 图像描述、自动识别和 AI 辅助计算�
 msgid ""
 "### 0.9.0\n"
 "\n"
+"* Added Baimiao OCR and formula recognition with shared account login, DPAPI-"
+"protected sessions, current OSS uploads, clickable text coordinates, and "
+"accessible MathML formula output.\n"
 "* Added DeepSeek image description and AI Agent engines, with configurable "
 "API endpoints and vision models.\n"
 "* Added a command to cycle automatic recognition between off, image "
@@ -2544,6 +2555,8 @@ msgid ""
 msgstr ""
 "### 0.9.0\n"
 "\n"
+"* 新增白描 OCR 和公式识别，共用账号登录，支持 DPAPI 加密会话、当前 OSS 上传流程、"
+"可点击的文本坐标以及可访问的 MathML 公式输出。\n"
 "* 新增 DeepSeek 图像描述和 AI Agent 引擎，并支持配置 API 地址和视觉模型。\n"
 "* 新增在关闭、图像描述和 OCR 之间循环切换自动识别模式的命令；该命令没有默认手"
 "势。\n"
@@ -2552,6 +2565,8 @@ msgstr ""
 "* 改进浏览模式下的网页图像自动识别，支持读取当前及延迟加载图像 URL，并在 URL "
 "不可用时回退到屏幕截图。\n"
 "* 改进自动识别结果处理，在当前识别目标变化后忽略过期结果。\n"
+"* 在支持的系统上，通过 NVDA 原始捕获路径获取屏幕识别和 AI Agent 截图，即使启用了"
+"黑屏或内置放大镜也可使用。\n"
 "\n"
 "### 0.8.1\n"
 "\n"

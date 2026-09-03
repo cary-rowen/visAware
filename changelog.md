@@ -1,6 +1,6 @@
 ### 0.9.0
 
-* Added Baimiao OCR with account login, DPAPI-protected sessions, current OSS uploads, and clickable text coordinates.
+* Added Baimiao OCR and formula recognition with shared account login, DPAPI-protected sessions, current OSS uploads, clickable text coordinates, and accessible MathML formula output.
 * Added DeepSeek image description and AI Agent engines, with configurable API endpoints and vision models.
 * Added a command to cycle automatic recognition between off, image description, and OCR; it has no default gesture.
 * Improved automatic recognition reliability by serializing background work, keeping only the latest pending task, propagating cancellation through network and OCR requests, and using shorter request timeouts.
