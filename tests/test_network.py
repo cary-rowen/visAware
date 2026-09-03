@@ -167,6 +167,21 @@ class NetworkRequestRetryTestCase(unittest.TestCase):
 		self.assertEqual(len(requestCalls), 1)
 		self.assertNotIn("cancelCheck", requestCalls[0])
 
+	def test_send_request_can_disable_retries(self) -> None:
+		requestCalls = []
+
+		def request(**kwargs):
+			requestCalls.append(kwargs)
+			raise requests.exceptions.ConnectionError("offline")
+
+		self.module.requests.request = request
+
+		with self.assertRaises(self.module.NetworkError) as error:
+			self.module.sendRequest("POST", "https://example.test", retry=False)
+
+		self.assertIn("Network connection failed.", str(error.exception))
+		self.assertEqual(len(requestCalls), 1)
+
 	def test_streaming_request_checks_cancellation_on_empty_lines(self) -> None:
 		class StreamingResponse(_FakeResponse):
 			def __enter__(self):

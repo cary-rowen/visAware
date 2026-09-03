@@ -53,6 +53,8 @@ def retryOnNetworkError(
 		@functools.wraps(func)
 		def wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
 			cancelCheck = kwargs.get("cancelCheck")
+			shouldRetry = kwargs.pop("retry", True)
+			maxAttempts = attempts if shouldRetry else 1
 
 			def checkCancelled() -> None:
 				if callable(cancelCheck):
@@ -60,14 +62,14 @@ def retryOnNetworkError(
 
 			currentDelay = delay
 			lastException: Exception | None = None
-			for attempt in range(attempts):
+			for attempt in range(maxAttempts):
 				checkCancelled()
 				try:
 					return func(*args, **kwargs)
 				except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) as e:
 					lastException = e
 					logMessagePrefix = (
-						f"Network error on attempt {attempt + 1}/{attempts} for {func.__name__}"
+						f"Network error on attempt {attempt + 1}/{maxAttempts} for {func.__name__}"
 					)
 				except requests.exceptions.HTTPError as e:
 					statusCode = e.response.status_code if e.response is not None else None
@@ -76,14 +78,17 @@ def retryOnNetworkError(
 					# Server errors (5xx) are generally temporary and worth retrying.
 					if statusCode is not None and (statusCode >= 500 or statusCode in retryableStatusCodes):
 						lastException = e
-						logMessagePrefix = f"Retryable HTTP {statusCode} on attempt {attempt + 1}/{attempts} for {func.__name__}"
+						logMessagePrefix = (
+							f"Retryable HTTP {statusCode} on attempt {attempt + 1}/{maxAttempts} "
+							f"for {func.__name__}"
+						)
 					else:
 						# For other HTTP errors (like 4xx client errors), don't retry.
 						raise e
 
-				if attempt + 1 >= attempts:
+				if attempt + 1 >= maxAttempts:
 					log.debugWarning(
-						f"{func.__name__} failed after {attempts} attempts.",
+						f"{func.__name__} failed after {maxAttempts} attempts.",
 						exc_info=lastException,
 					)
 					break
@@ -97,11 +102,14 @@ def retryOnNetworkError(
 			if isinstance(lastException, requests.exceptions.HTTPError):
 				_handleHttpError(lastException)
 			# Translators: An error message for persistent network connection failures.
-			raise NetworkError(
+			message = (
 				_(
 					"Network connection failed after multiple attempts. Please check your connection and try again.",
-				),
-			) from lastException
+				)
+				if maxAttempts > 1
+				else _("Network connection failed. Please check your connection and try again.")
+			)
+			raise NetworkError(message) from lastException
 
 		return wrapper
 
@@ -198,6 +206,7 @@ def sendRequest(method: str, url: str, **kwargs: Any) -> requests.Response:
 	:param method: The HTTP method (e.g., 'GET', 'POST').
 	:param url: The URL for the request.
 	:param kwargs: Other arguments passed to requests.request (e.g., headers, data, files, json).
+	:param retry: An optional keyword that disables automatic retries when false.
 	:raises NetworkError: For connection or timeout errors after multiple retries.
 	:raises AuthenticationError: For 401 or 403 HTTP errors.
 	:raises ApiError: For other non-retryable client or server HTTP errors.

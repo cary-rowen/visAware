@@ -95,6 +95,8 @@ AI Agent 每一步都会向所选服务发送全屏截图，其中可能包含�
 
 PaddleOCR / PaddleOCR-VL 支持 AI Studio 托管任务 API、AI Studio 部署服务和自托管 PaddleOCR 服务。
 
+使用白描 OCR 时，请在 OCR 引擎设置中选择**登录白描...**，然后输入白描账号的电子邮箱或手机号及密码。Vis Aware 只保存稳定的设备 UUID 和白描返回的登录令牌，并使用 Windows DPAPI 加密保护；密码不会保存。此引擎使用 `web.baimiaoapp.com` 及其账号权益，不使用账号体系独立的 `pdf.baimiaoapp.com` Toolbox 服务。设备数限制、额度和可用功能由白描根据账号决定。在 Vis Aware 中退出登录会删除本机保存的登录信息，但不会释放白描账号中的设备登录状态；请在手机版白描中退出不再使用的设备。
+
 对于 Ollama 引擎，可以填写完整 API URL，也可以填写主机和端口，例如 `localhost:11434`。默认 API 根地址为 `http://localhost:11434/api`。使用**获取模型**加载模型名称，然后选择模型。如果没有选择模型，将使用 Ollama 返回的第一个模型。可选的 API 密钥会作为 `Authorization: Bearer` 令牌发送。Ollama 引擎需要支持视觉能力的模型，例如 Gemma 4；仅当模型返回有效的结构化 OCR 数据时，Ollama OCR 才会提供屏幕坐标。
 
 Kimi 引擎默认使用 Kimi Code 的官方 OpenAI 兼容 Base URL `https://api.kimi.com/coding/v1`，请填写该端点的 Kimi Code API 密钥。使用 Kimi 开放平台时，请将 Base URL 设置为 `https://api.moonshot.cn/v1`，并填写在 [Kimi 开放平台](https://platform.kimi.com/console/api-keys) 创建的密钥；使用国际平台时，请设置为 `https://api.moonshot.ai/v1`，并填写在[国际 Kimi 平台](https://platform.kimi.ai/console/api-keys) 创建的密钥。请勿混用端点和密钥。默认模型为 Kimi K3；可用模型和思考选项会随端点及模型系列而异。
@@ -106,6 +108,7 @@ DeepSeek 引擎使用官方 OpenAI 兼容 API。请将 Base URL 设置为 `https
 OCR 引擎：
 
 * Apple Vision (OCR Server)
+* 白描 OCR
 * 百度 OCR
 * Google Gemini OCR
 * Vivo OCR（NVDACN）
@@ -158,7 +161,7 @@ Apple Vision (OCR Server) 是一个局域网 OCR 引擎。Vis Aware 会将所选
 
 识别会将所选图像以及适用时的提示词发送给所选引擎配置的服务。AI Agent 每一步都会向所选服务发送全屏截图，其中可能包含其他窗口的内容。请查阅相应服务的数据政策，并避免发送敏感内容。
 
-在支持的系统上，使用 NVDA 2026.3 或更高版本时，即使启用了黑屏或 NVDA 内置放大镜，手动和自动屏幕识别也可以捕获原始屏幕。Windows Graphics Capture 不可用时，屏幕识别必须关闭黑屏。NVDACN 密码使用 Windows DPAPI 保护；其他保存的 API 密钥会以明文形式存储在 NVDA 配置中，在创建或分享 NVDA 便携版之前请务必留意数据安全。
+在支持的系统上，使用 NVDA 2026.3 或更高版本时，即使启用了黑屏或 NVDA 内置放大镜，手动和自动屏幕识别也可以捕获原始屏幕。Windows Graphics Capture 不可用时，屏幕识别必须关闭黑屏。NVDACN 密码和白描 OCR 登录会话使用 Windows DPAPI 保护；其他保存的 API 密钥会以明文形式存储在 NVDA 配置中，在创建或分享 NVDA 便携版之前请务必留意数据安全。
 
 ## 许可
 

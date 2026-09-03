@@ -160,6 +160,17 @@ engine must remain enabled in each mode.
 For PaddleOCR / PaddleOCR-VL, the OCR settings support an AI Studio hosted task
 API, an AI Studio deployed service, or a self-hosted PaddleOCR service.
 
+For Baimiao OCR, select **Log in to Baimiao...** in the OCR engine settings,
+then enter the email address or mobile number and password for your Baimiao
+account. Vis Aware stores only a stable device UUID and the login token returned
+by Baimiao, protected with Windows DPAPI; it does not store the password. This
+engine uses `web.baimiaoapp.com` and its account entitlements, not the separate
+`pdf.baimiaoapp.com` Toolbox service. Baimiao may apply account-specific device
+limits, quotas, and feature availability. Logging out in Vis Aware deletes the
+login saved on this computer, but does not release the device login held by the
+Baimiao account. Use the Baimiao mobile app to sign out devices you no longer
+use.
+
 For Ollama engines, enter a full API URL or a host and port such as
 `localhost:11434`. The default API root is `http://localhost:11434/api`. Use
 **Fetch models** to load model names and then choose a model. If no model is
@@ -189,6 +200,7 @@ Agent engines.
 OCR engines:
 
 * Apple Vision (OCR Server)
+* Baimiao OCR
 * Baidu OCR
 * Google Gemini OCR
 * Vivo OCR (NVDACN)
@@ -264,8 +276,8 @@ content.
 On supported systems with NVDA 2026.3 or later, manual and automatic screen
 recognition can capture the original screen while Screen Curtain or NVDA's
 built-in Magnifier is active. When Windows Graphics Capture is unavailable,
-Screen Curtain must be disabled for screen recognition. The NVDACN password is
-protected with Windows DPAPI.
+Screen Curtain must be disabled for screen recognition. The NVDACN password and
+Baimiao OCR login session are protected with Windows DPAPI.
 Other saved API keys are stored unencrypted in the NVDA configuration. Be
 mindful of data security before creating or sharing a portable copy of NVDA.
 
