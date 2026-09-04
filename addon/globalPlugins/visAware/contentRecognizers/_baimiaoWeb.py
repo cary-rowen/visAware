@@ -94,7 +94,7 @@ def _getEncryptedSession() -> str:
 		return ""
 
 
-def _loadSession() -> dict[str, str] | None:
+def _loadSession() -> dict[str, Any] | None:
 	encrypted = _getEncryptedSession()
 	if not encrypted:
 		return None
@@ -110,16 +110,56 @@ def _loadSession() -> dict[str, str] | None:
 	loginToken = session.get("token")
 	if not _isUuid(deviceUuid) or not isinstance(loginToken, str):
 		return None
-	return {"uuid": cast(str, deviceUuid), "token": loginToken}
+	loadedSession: dict[str, Any] = {"uuid": cast(str, deviceUuid), "token": loginToken}
+	accountLabel = session.get("accountLabel")
+	if isinstance(accountLabel, str) and accountLabel:
+		loadedSession["accountLabel"] = accountLabel
+	vip = session.get("vip")
+	if isinstance(vip, int) and not isinstance(vip, bool) and 0 <= vip <= 3:
+		loadedSession["vip"] = vip
+	return loadedSession
 
 
-def _saveSession(deviceUuid: str, loginToken: str) -> None:
+def _getUserSummary(user: Any) -> dict[str, str | int]:
+	if not isinstance(user, dict):
+		return {}
+	accountLabel = ""
+	for fieldName in ("nickname", "mobile", "email"):
+		value = user.get(fieldName)
+		if not isinstance(value, str) or not (value := " ".join(value.split())):
+			continue
+		if fieldName == "mobile" and len(value) > 7:
+			value = f"{value[:3]}****{value[-4:]}"
+		elif fieldName == "email":
+			localPart, separator, domain = value.partition("@")
+			if separator and domain:
+				value = f"{localPart[:1]}***@{domain}"
+		accountLabel = value
+		break
+	if not accountLabel:
+		userId = user.get("id")
+		if isinstance(userId, (int, str)) and not isinstance(userId, bool):
+			userId = str(userId).strip()
+			if userId:
+				accountLabel = f"#{userId}"
+	summary: dict[str, str | int] = {}
+	if accountLabel:
+		summary["accountLabel"] = accountLabel
+	vip = user.get("vip")
+	if isinstance(vip, int) and not isinstance(vip, bool) and 0 <= vip <= 3:
+		summary["vip"] = vip
+	return summary
+
+
+def _saveSession(deviceUuid: str, loginToken: str, user: Any = None) -> None:
 	if not _isUuid(deviceUuid):
 		# Translators: An error when Baimiao returns invalid login information.
 		raise AuthenticationError(_("Baimiao returned invalid login information."))
+	session: dict[str, Any] = {"uuid": deviceUuid, "token": loginToken}
+	session.update(_getUserSummary(user))
 	try:
 		encrypted = protectString(
-			json.dumps({"uuid": deviceUuid, "token": loginToken}, separators=(",", ":")),
+			json.dumps(session, separators=(",", ":")),
 		)
 	except SecureStorageError as e:
 		# Translators: An error when Baimiao login information cannot be stored securely.
@@ -145,11 +185,21 @@ def _saveSession(deviceUuid: str, loginToken: str) -> None:
 		raise AuthenticationError(_("Could not save Baimiao login information securely.")) from e
 
 
-def _replaceStoredLoginToken(deviceUuid: str, expectedToken: str, loginToken: str) -> bool:
+def _replaceStoredLoginToken(
+	deviceUuid: str,
+	expectedToken: str,
+	loginToken: str,
+	user: Any = None,
+) -> bool:
 	with _sessionLock:
-		if _loadSession() != {"uuid": deviceUuid, "token": expectedToken}:
+		session = _loadSession()
+		if not session or session["uuid"] != deviceUuid or session["token"] != expectedToken:
 			return False
-		_saveSession(deviceUuid, loginToken)
+		updatedSession: dict[str, Any] = {"uuid": deviceUuid, "token": loginToken}
+		updatedSession.update(_getUserSummary(user))
+		if session == updatedSession:
+			return True
+		_saveSession(deviceUuid, loginToken, user)
 		return True
 
 
@@ -168,6 +218,15 @@ def hasStoredLogin() -> bool:
 
 	session = _loadSession()
 	return bool(session and session["token"])
+
+
+def getStoredAccountSummary() -> tuple[str, int | None] | None:
+	"""Returns cached account details without making a network request."""
+
+	session = _loadSession()
+	if not session or not session["token"]:
+		return None
+	return session.get("accountLabel", ""), session.get("vip")
 
 
 def clearStoredLogin() -> None:
@@ -290,7 +349,7 @@ class BaimiaoWebClient:
 			# Translators: An error when Baimiao returns invalid login information.
 			raise AuthenticationError(_("Baimiao returned invalid login information."))
 		client._checkCancelled()
-		_saveSession(deviceUuid, loginToken)
+		_saveSession(deviceUuid, loginToken, data.get("user"))
 
 	def recognizeImage(self, imageContent: bytes) -> dict[str, Any]:
 		"""Uploads one PNG image and returns Baimiao's OCR response."""
@@ -386,9 +445,16 @@ class BaimiaoWebClient:
 			_replaceStoredLoginToken(self.deviceUuid, expectedToken, "")
 			# Translators: An error when the stored Baimiao login is no longer valid.
 			raise AuthenticationError(_("Baimiao login has expired. Please log in again."))
-		if loginToken != self.loginToken:
-			self.loginToken = loginToken
-			_replaceStoredLoginToken(self.deviceUuid, expectedToken, loginToken)
+		tokenChanged = loginToken != expectedToken
+		self.loginToken = loginToken
+		if not tokenChanged and not shouldWriteToDisk():
+			return
+		try:
+			_replaceStoredLoginToken(self.deviceUuid, expectedToken, loginToken, user)
+		except AuthenticationError:
+			if tokenChanged:
+				raise
+			log.warning("Cached Baimiao account details could not be updated.", exc_info=True)
 
 	def _waitForResult(
 		self,

@@ -1687,10 +1687,47 @@ msgstr "白描公式识别"
 msgid "Baimiao OCR"
 msgstr "白描 OCR"
 
-#. Translators: The label for a button that logs out of Baimiao.
+#. Translators: A Baimiao account membership level.
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:70
+msgid "Regular user"
+msgstr "普通用户"
+
+#. Translators: A Baimiao account membership level.
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:72
+msgid "Regular member"
+msgstr "普通会员"
+
+#. Translators: A Baimiao account membership level.
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:74
+msgid "Gold member"
+msgstr "黄金会员"
+
+#. Translators: A Baimiao account membership level.
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:76
+msgid "Super member"
+msgstr "超级会员"
+
+#. Translators: The label for a button that logs out of Baimiao. {account} is a
+#. nickname, masked login, or user ID; {membership} is the account membership level.
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:81
+#, python-brace-format
+msgid "Log out of Baimiao ({account}, {membership})"
+msgstr "退出白描（{account}，{membership}）"
+
+#. Translators: The label for a button that logs out of Baimiao. {account} is a
+#. nickname, masked login, or user ID.
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:88
+#, python-brace-format
+msgid "Log out of Baimiao ({account})"
+msgstr "退出白描（{account}）"
+
+#. Translators: The label for a button that logs out of Baimiao when account details are unavailable.
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:90
+msgid "Log out of Baimiao (logged in)"
+msgstr "退出白描（已登录）"
+
 #. Translators: The title of a confirmation dialog shown before logging out of Baimiao.
-#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:66
-#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:97
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:121
 msgid "Log out of Baimiao"
 msgstr "退出白描登录"
 

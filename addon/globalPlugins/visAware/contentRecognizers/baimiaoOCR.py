@@ -20,6 +20,7 @@ from ._baimiaoGui import BaimiaoLoginDialog
 from ._baimiaoWeb import (
 	BaimiaoWebClient,
 	extractText,
+	getStoredAccountSummary,
 	hasStoredLogin,
 	logoutStoredLoginAsync,
 	toLineResult,
@@ -61,9 +62,33 @@ class CustomContentRecognizer(BaseRecognizer):
 
 	@property
 	def _accountActionLabel(self) -> str:
-		if hasStoredLogin():
-			# Translators: The label for a button that logs out of Baimiao.
-			return _("Log out of Baimiao")
+		accountSummary = getStoredAccountSummary()
+		if accountSummary:
+			accountLabel, vip = accountSummary
+			accountLabel = accountLabel.replace("&", "&&")
+			membership = {
+				# Translators: A Baimiao account membership level.
+				0: _("Regular user"),
+				# Translators: A Baimiao account membership level.
+				1: _("Regular member"),
+				# Translators: A Baimiao account membership level.
+				2: _("Gold member"),
+				# Translators: A Baimiao account membership level.
+				3: _("Super member"),
+			}.get(vip)
+			if accountLabel and membership:
+				# Translators: The label for a button that logs out of Baimiao. {account} is a
+				# nickname, masked login, or user ID; {membership} is the account membership level.
+				return _("Log out of Baimiao ({account}, {membership})").format(
+					account=accountLabel,
+					membership=membership,
+				)
+			if accountLabel:
+				# Translators: The label for a button that logs out of Baimiao. {account} is a
+				# nickname, masked login, or user ID.
+				return _("Log out of Baimiao ({account})").format(account=accountLabel)
+			# Translators: The label for a button that logs out of Baimiao when account details are unavailable.
+			return _("Log out of Baimiao (logged in)")
 		# Translators: The label for a button that opens Baimiao login.
 		return _("Log in to Baimiao...")
 

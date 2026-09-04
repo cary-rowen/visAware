@@ -341,6 +341,54 @@ class BaimiaoWebTestCase(unittest.TestCase):
 		self.assertEqual(cancelChecks, 3)
 		self.assertEqual(self.module._loadSession()["token"], "")
 
+	def testAccountSummaryIsCachedFromExistingAuthenticationRequests(self) -> None:
+		calls = []
+		responses = iter(
+			(
+				_Response(
+					{
+						"code": 1,
+						"data": {
+							"token": "login-token",
+							"user": {"nickname": "", "mobile": "13812345678", "id": 1, "vip": 2},
+						},
+					},
+				),
+				_Response(
+					{
+						"code": 1,
+						"data": {
+							"token": "refreshed-token",
+							"user": {"nickname": "Updated name", "mobile": "13812345678", "id": 1, "vip": 3},
+						},
+					},
+				),
+			),
+		)
+
+		def sendRequest(*args, **kwargs):
+			calls.append((args, kwargs))
+			return next(responses)
+
+		self.module.network.sendRequest = sendRequest
+		self.module.BaimiaoWebClient.login("13812345678", "secret-password")
+		self.assertEqual(self.module.getStoredAccountSummary(), ("138****5678", 2))
+
+		client = self.module.BaimiaoWebClient.fromStoredLogin()
+		client._refreshLogin()
+
+		self.assertEqual(self.module.getStoredAccountSummary(), ("Updated name", 3))
+		self.assertEqual(len(calls), 2)
+		storedSession = (Path(self.sessionDirectory.name) / self.module.SESSION_FILE_NAME).read_text(
+			encoding="ascii",
+		)
+		self.assertNotIn("13812345678", storedSession)
+		self.assertNotIn("secret-password", storedSession)
+		self.assertEqual(self.module._getUserSummary({"id": 42, "vip": 1}), {"accountLabel": "#42", "vip": 1})
+		self.module.clearStoredLogin()
+		self.assertIsNone(self.module.getStoredAccountSummary())
+		self.assertNotIn("accountLabel", self.module._loadSession())
+
 	def testLegacyConfigSessionIsReadUntilIndependentSessionIsSaved(self) -> None:
 		deviceUuid = "6c40ae69-d09d-4a9a-8ff1-f86e0139a283"
 		legacySession = json.dumps({"uuid": deviceUuid, "token": "legacy-token"})
@@ -540,6 +588,31 @@ class BaimiaoWebTestCase(unittest.TestCase):
 		self.assertNotIsInstance(error.exception, _AuthenticationError)
 		self.assertEqual(client.loginToken, "login-token")
 		self.assertEqual(self.module._loadSession()["token"], "login-token")
+
+	def testUnchangedLoginWorksWhenSessionCannotBeWritten(self) -> None:
+		deviceUuid = "6c40ae69-d09d-4a9a-8ff1-f86e0139a283"
+		self.module._saveSession(deviceUuid, "login-token")
+		self.module.shouldWriteToDisk = lambda: False
+		self.module.network.sendRequest = lambda *args, **kwargs: _Response(
+			{
+				"code": 1,
+				"data": {
+					"token": "login-token",
+					"user": {"nickname": "Current user", "id": 1, "vip": 2},
+				},
+			},
+		)
+		client = self.module.BaimiaoWebClient(deviceUuid, "login-token")
+
+		client._refreshLogin()
+
+		self.assertEqual(client.loginToken, "login-token")
+		self.assertEqual(self.module._loadSession(), {"uuid": deviceUuid, "token": "login-token"})
+		self.module.shouldWriteToDisk = lambda: True
+		self.module._saveSession = lambda *_args, **_kwargs: (_ for _ in ()).throw(
+			_AuthenticationError("read only"),
+		)
+		client._refreshLogin()
 
 	def testAnonymousSuccessResponseClearsStoredSession(self) -> None:
 		self.module._saveSession("6c40ae69-d09d-4a9a-8ff1-f86e0139a283", "login-token")

@@ -163,8 +163,9 @@ API, an AI Studio deployed service, or a self-hosted PaddleOCR service.
 For Baimiao OCR or Baimiao Formula Recognition, select **Log in to Baimiao...**
 in the OCR engine settings, then enter the email address or mobile number and
 password for your Baimiao account. Both engines share the same login. Vis Aware
-stores only a stable device UUID and the login token returned by Baimiao,
-protected with Windows DPAPI; it does not store the password. Formula results
+stores a stable device UUID, the login token returned by Baimiao, and a display
+name or masked login and membership level for the settings button, protected
+with Windows DPAPI; it does not store the password. Formula results
 include ordinary text and LaTeX, which Vis Aware converts to accessible MathML
 in browsable results. These engines use `web.baimiaoapp.com` and its account
 entitlements, not the separate `pdf.baimiaoapp.com` Toolbox service. Baimiao may
