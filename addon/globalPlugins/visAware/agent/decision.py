@@ -206,7 +206,7 @@ def parseAgentDecision(data: dict[str, Any], providerName: str) -> AgentDecision
 	status = str(data.get("status") or "")
 	message = str(data.get("message") or "")
 	actionName = str(data.get("action") or "none")
-	finished = bool(data.get("finished", False))
+	finished = _normalizeBoolean(data.get("finished", False), False, providerName)
 	if status not in {"action", "finish", "ask_user"}:
 		raise ApiError(_("{} returned an unknown agent status.").format(providerName))
 	if status == "finish":
@@ -225,10 +225,13 @@ def parseAgentDecision(data: dict[str, Any], providerName: str) -> AgentDecision
 	}
 	_normalizeCoordinateArguments(arguments)
 	_normalizeScalarArguments(arguments, ("delta_x", "delta_y"))
+	for name, default in (("press_enter", False), ("clear_before_typing", True)):
+		if name in arguments:
+			arguments[name] = _normalizeBoolean(arguments[name], default, providerName)
 	if normalizedActionName == "type_text_at":
 		text = str(arguments.get("text") or "")
 		hasTrailingNewline = text.endswith(("\r", "\n"))
-		arguments["press_enter"] = bool(arguments.get("press_enter", False)) or hasTrailingNewline
+		arguments["press_enter"] = arguments.get("press_enter", False) or hasTrailingNewline
 		if text.endswith("\r\n"):
 			text = text[:-2]
 		elif hasTrailingNewline:
@@ -244,6 +247,21 @@ def parseAgentDecision(data: dict[str, Any], providerName: str) -> AgentDecision
 		),
 		finishAfterAction=finished,
 	)
+
+
+def _normalizeBoolean(value: Any, default: bool, providerName: str) -> bool:
+	if value is None:
+		return default
+	if isinstance(value, bool):
+		return value
+	if isinstance(value, str):
+		normalized = value.strip().lower()
+		if normalized == "true":
+			return True
+		if normalized == "false":
+			return False
+	# Do not use Python truthiness for provider data: strings such as "false" are truthy.
+	raise ApiError(_("{} returned malformed agent action data.").format(providerName))
 
 
 def _normalizeCoordinateArguments(arguments: dict[str, Any]) -> None:
