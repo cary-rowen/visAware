@@ -1,6 +1,6 @@
 # Copyright (C) 2025-2026 Cary-rowen <cary-rowen@outlook.com>
-# This file is covered by the GNU General Public License.
-# See the file COPYING for more details.
+# This file is covered by the GNU General Public License version 2.
+# See the file COPYING.txt for more details.
 
 """Protect and unprotect secrets with the Windows Data Protection API."""
 
@@ -49,6 +49,7 @@ class _DpapiBindings:
 	LocalFree: Any
 
 	def __init__(self) -> None:
+		"""Load DPAPI functions and declare their ctypes signatures."""
 		super().__init__()
 		try:
 			crypt32 = ctypes.WinDLL("crypt32", use_last_error=True)
@@ -89,6 +90,7 @@ _bindings: _DpapiBindings | None = None
 
 
 def _getBindings() -> _DpapiBindings:
+	"""Return the lazily initialized DPAPI bindings."""
 	global _bindings
 	if _bindings is None:
 		_bindings = _DpapiBindings()
@@ -96,6 +98,7 @@ def _getBindings() -> _DpapiBindings:
 
 
 def _formatLastError() -> str:
+	"""Return the most recent Windows error as readable text."""
 	errorCode = ctypes.get_last_error()
 	if not errorCode:
 		return "unknown error"
@@ -103,10 +106,12 @@ def _formatLastError() -> str:
 
 
 def _raiseLastError(functionName: str) -> None:
+	"""Raise a secure-storage error for a failed Windows function."""
 	raise SecureStorageError(f"{functionName} failed: {_formatLastError()}")
 
 
 def _bytesToBlob(data: bytes) -> tuple[_DATA_BLOB, Any]:
+	"""Wrap bytes in a DATA_BLOB while retaining its backing buffer."""
 	if len(data) > _MAX_DWORD:
 		raise ValueError("DATA_BLOB input is too large.")
 	buffer = ctypes.create_string_buffer(data, len(data))
@@ -114,12 +119,14 @@ def _bytesToBlob(data: bytes) -> tuple[_DATA_BLOB, Any]:
 
 
 def _blobToBytes(blob: _DATA_BLOB) -> bytes:
+	"""Copy the contents of a DATA_BLOB into Python bytes."""
 	if not blob.pbData or blob.cbData == 0:
 		return b""
 	return ctypes.string_at(blob.pbData, blob.cbData)
 
 
 def _freeBlob(blob: _DATA_BLOB) -> None:
+	"""Release a DATA_BLOB allocated by Windows."""
 	if not blob.pbData:
 		return
 	_getBindings().LocalFree(ctypes.cast(blob.pbData, wintypes.HLOCAL))
@@ -134,7 +141,7 @@ def protectData(
 	flags: int = CRYPTPROTECT_UI_FORBIDDEN,
 ) -> bytes:
 	"""
-	Protects binary data with Windows DPAPI for the current user.
+	Protect binary data with Windows DPAPI for the current user.
 
 	:param data: Data to protect.
 	:param description: Optional description stored with the protected data.
@@ -179,7 +186,7 @@ def unprotectData(
 	flags: int = CRYPTPROTECT_UI_FORBIDDEN,
 ) -> bytes:
 	"""
-	Unprotects binary data protected with Windows DPAPI.
+	Unprotect binary data protected with Windows DPAPI.
 
 	:param protectedData: Protected data returned by ``protectData``.
 	:param optionalEntropy: Optional entropy that was used for protection.
@@ -224,7 +231,7 @@ def protectString(
 	flags: int = CRYPTPROTECT_UI_FORBIDDEN,
 ) -> str:
 	"""
-	Protects a UTF-8 string and returns Base64 encoded DPAPI data.
+	Protect a UTF-8 string and return Base64 encoded DPAPI data.
 
 	:param plainText: Text to protect.
 	:param description: Optional description stored with the protected data.
@@ -250,7 +257,7 @@ def unprotectString(
 	flags: int = CRYPTPROTECT_UI_FORBIDDEN,
 ) -> str:
 	"""
-	Unprotects a Base64 encoded DPAPI string.
+	Unprotect a Base64 encoded DPAPI string.
 
 	:param protectedText: Base64 encoded protected data.
 	:param optionalEntropy: Optional entropy that was used for protection.
