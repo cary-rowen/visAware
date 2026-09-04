@@ -160,19 +160,28 @@ engine must remain enabled in each mode.
 For PaddleOCR / PaddleOCR-VL, the OCR settings support an AI Studio hosted task
 API, an AI Studio deployed service, or a self-hosted PaddleOCR service.
 
-For Baimiao OCR or Baimiao Formula Recognition, select **Log in to Baimiao...**
-in the OCR engine settings, then enter the email address or mobile number and
-password for your Baimiao account. Both engines share the same login. Vis Aware
-stores a stable device UUID, the login token returned by Baimiao, and a display
-name or masked login and membership level for the settings button, protected
-with Windows DPAPI; it does not store the password. Formula results
-include ordinary text and LaTeX, which Vis Aware converts to accessible MathML
-in browsable results. These engines use `web.baimiaoapp.com` and its account
-entitlements, not the separate `pdf.baimiaoapp.com` Toolbox service. Baimiao may
-apply account-specific device limits, quotas, and feature availability. Logging
-out in Vis Aware deletes the login saved on this computer, but does not release
-the device login held by the Baimiao account. Use the Baimiao mobile app to sign
-out devices you no longer use.
+For [Baimiao OCR](https://baimiaoapp.com) or Baimiao Formula Recognition, select
+**Log in to Baimiao...**
+in the OCR settings and enter your Baimiao email address or mobile number and
+password. Both engines share a login session.
+
+Vis Aware stores a fixed identifier for this device, along with the display name
+or masked login identifier and membership level shown on the settings button.
+These values are protected with Windows DPAPI; the password is never stored.
+Formula Recognition returns both text and formulas. In browsable results,
+formulas are presented in a format that works well with screen readers.
+
+Both engines use the [Baimiao web version](https://web.baimiaoapp.com/). Device
+limits, quotas, and available features are determined by Baimiao and may vary by
+account.
+Logging out in Vis Aware clears the login stored on this computer, but does not
+guarantee that the device is signed out of the Baimiao account. Sign out devices
+you no longer use in the Baimiao mobile app.
+
+This integration uses a non-public Baimiao web interface. The interface may
+change or become unavailable without notice. Use it at your own risk; Vis Aware
+is not responsible for account restrictions, service changes, data loss, or any
+other consequences arising from its use. Follow Baimiao's applicable terms.
 
 For Ollama engines, enter a full API URL or a host and port such as
 `localhost:11434`. The default API root is `http://localhost:11434/api`. Use
@@ -281,7 +290,7 @@ On supported systems with NVDA 2026.3 or later, manual and automatic screen
 recognition can capture the original screen while Screen Curtain or NVDA's
 built-in Magnifier is active. When Windows Graphics Capture is unavailable,
 Screen Curtain must be disabled for screen recognition. The NVDACN password and
-Baimiao OCR login session are protected with Windows DPAPI.
+Baimiao login session are protected with Windows DPAPI.
 Other saved API keys are stored unencrypted in the NVDA configuration. Be
 mindful of data security before creating or sharing a portable copy of NVDA.
 
