@@ -63,6 +63,7 @@ def _install_module_stubs() -> None:
 	wxModule = sys.modules["wx"]
 	wxModule.BoxSizer = type("BoxSizer", (), {})
 	wxModule.CommandEvent = type("CommandEvent", (), {})
+	wxModule.NOT_FOUND = -1
 
 	for moduleName in (
 		"addon",
@@ -292,6 +293,31 @@ class RequestLogRedactionTestCase(unittest.TestCase):
 		)
 
 		self.assertEqual(workerThreads, [current_thread()])
+
+
+class AutoRecognitionSettingsTestCase(unittest.TestCase):
+	def setUp(self) -> None:
+		self.module = load_recog_handler_module()
+
+	def test_unavailable_configured_auto_recognition_engine_stays_selected(self) -> None:
+		class _ConfigSection(dict):
+			def __getitem__(self, key: str, checkValidity: bool = True):
+				return super().__getitem__(key)
+
+		self.module.config.conf = {
+			"visAwareGeneral": _ConfigSection(
+				autoRecognitionEngine="imageDescriber:missingImageEngine",
+			),
+		}
+		self.module.ImageDescriberHandler.getEngineList = classmethod(
+			lambda _cls: [("vivoImageDescriber", "Vivo image describer")],
+		)
+
+		_typeChoices, engineChoices, _typeSelection, engineSelection = (
+			self.module.getAutoRecognitionTypeAndEngineChoices()
+		)
+
+		self.assertEqual(engineChoices[engineSelection][0], "missingImageEngine")
 
 
 if __name__ == "__main__":

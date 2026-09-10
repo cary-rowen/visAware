@@ -1191,7 +1191,11 @@ def getAutoRecognitionTypeAndEngineChoices() -> Tuple[List[Tuple[str, str]], Lis
 	try:
 		engineSelection = engineValues.index(engineName)
 	except ValueError:
-		engineSelection = 0 if engineChoices else wx.NOT_FOUND
+		if engineName and engineChoices:
+			engineChoices.append((engineName, engineName))
+			engineSelection = len(engineChoices) - 1
+		else:
+			engineSelection = 0 if engineChoices else wx.NOT_FOUND
 	return autoRecognitionTypes, engineChoices, typeSelection, engineSelection
 
 
