@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 'customOCR' '0.1.1-dev'\n"
 "Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
-"POT-Creation-Date: 2026-09-04 03:57+0800\n"
-"PO-Revision-Date: 2025-11-02 16:14+0800\n"
+"POT-Creation-Date: 2026-09-12 20:37+0800\n"
+"PO-Revision-Date: 2026-09-13 01:23+0800\n"
 "Last-Translator: Larry Wang <larry.wang.801@gmail.com>\n"
 "Language-Team: \n"
 "Language: zh_CN\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.8\n"
+"X-Generator: Poedit 3.9\n"
 
 #. Translators: The title of the engine-specific settings panel.
 #: addon\globalPlugins\visAware\abstractEngine.py:520
@@ -206,7 +206,7 @@ msgstr "上一次识别结果为空。"
 #. Translators: The display name for the DeepSeek vision model preset.
 #: addon\globalPlugins\visAware\deepseekModels.py:20
 msgid "DeepSeek V4 Flash Vision"
-msgstr ""
+msgstr "DeepSeek V4 Flash Vision"
 
 #. Translators: The display name for a Gemini model preset.
 #: addon\globalPlugins\visAware\geminiModels.py:26
@@ -494,7 +494,7 @@ msgstr "无法准备图像对象。"
 #: addon\globalPlugins\visAware\recogHandler.py:632
 #: addon\globalPlugins\visAware\recogHandler.py:658
 #: addon\globalPlugins\visAware\recogHandler.py:693
-#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:155
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:180
 #: addon\globalPlugins\visAware\contentRecognizers\paddleOCR.py:735
 #: addon\globalPlugins\visAware\contentRecognizers\paddleOCR.py:743
 msgid "Recognition result is blank."
@@ -550,23 +550,23 @@ msgid "Current OCR engine"
 msgstr "当前 OCR 引擎"
 
 #. Translators: The title of the automatic recognition settings panel for the add-on.
-#: addon\globalPlugins\visAware\recogHandler.py:1202
+#: addon\globalPlugins\visAware\recogHandler.py:1206
 msgid "Automatic recognition"
 msgstr "自动识别"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1220
+#: addon\globalPlugins\visAware\recogHandler.py:1224
 msgid "Automatic recognition &type:"
 msgstr "自动识别类型(&T)："
 
-#: addon\globalPlugins\visAware\recogHandler.py:1228
+#: addon\globalPlugins\visAware\recogHandler.py:1232
 msgid "Automatic recognition &engine:"
 msgstr "自动识别引擎(&E)："
 
-#: addon\globalPlugins\visAware\recogHandler.py:1237
+#: addon\globalPlugins\visAware\recogHandler.py:1241
 msgid "Automatic recognition &prompt:"
 msgstr "自动识别提示词(&P)："
 
-#: addon\globalPlugins\visAware\recogHandler.py:1252
+#: addon\globalPlugins\visAware\recogHandler.py:1256
 msgid "Automatic recognition &model:"
 msgstr "自动识别模型(&M)："
 
@@ -574,7 +574,7 @@ msgstr "自动识别模型(&M)："
 #. Translators: The label for the button that fetches Kimi model names.
 #. Translators: The label for the button that fetches OpenAI model names.
 #. Translators: The label for the button that fetches Ollama model names.
-#: addon\globalPlugins\visAware\recogHandler.py:1260
+#: addon\globalPlugins\visAware\recogHandler.py:1264
 #: addon\globalPlugins\visAware\agent\engines\kimi.py:77
 #: addon\globalPlugins\visAware\agent\engines\openai.py:66
 #: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:132
@@ -582,66 +582,66 @@ msgstr "自动识别模型(&M)："
 msgid "&Fetch models"
 msgstr "获取模型(&F)"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1270
+#: addon\globalPlugins\visAware\recogHandler.py:1274
 msgid "Prefer screenshots for &web images"
 msgstr "优先截取网页图像(&W)"
 
 #. Translators: A choice meaning automatic recognition should use the engine's regular model setting.
-#: addon\globalPlugins\visAware\recogHandler.py:1348
+#: addon\globalPlugins\visAware\recogHandler.py:1352
 msgid "Use the model selected in engine settings"
 msgstr "使用引擎设置中选择的模型"
 
 #. Translators: The title of the general settings panel for the add-on.
-#: addon\globalPlugins\visAware\recogHandler.py:1443
+#: addon\globalPlugins\visAware\recogHandler.py:1447
 msgid "General"
 msgstr "常规"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1455
+#: addon\globalPlugins\visAware\recogHandler.py:1459
 msgid "Copy recognition result to the &clipboard"
 msgstr "将识别结果复制到剪贴板(&C)"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1460
+#: addon\globalPlugins\visAware\recogHandler.py:1464
 msgid "Show text results in a &browsable message"
 msgstr "在浏览模式下显示文本结果(&B)"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1465
+#: addon\globalPlugins\visAware\recogHandler.py:1469
 msgid "Automatically &read recognition result documents"
 msgstr "自动朗读识别结果文档(&R)"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1470
+#: addon\globalPlugins\visAware\recogHandler.py:1474
 msgid "&Enable more verbose logging for debug purposes"
 msgstr "启用更详细的日志记录方便调试(&E)"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1477
+#: addon\globalPlugins\visAware\recogHandler.py:1481
 msgid "Recognition &sources included when cycling:"
 msgstr "循环切换时包含的识别来源(&S)："
 
-#: addon\globalPlugins\visAware\recogHandler.py:1494
+#: addon\globalPlugins\visAware\recogHandler.py:1498
 msgid "Vis Aware &mode:"
 msgstr "Vis Aware 模式(&M)："
 
 #. Translators: The label for a group box for NVDACN account settings.
-#: addon\globalPlugins\visAware\recogHandler.py:1504
+#: addon\globalPlugins\visAware\recogHandler.py:1508
 msgid "NVDACN account (for supported engines like Vivo OCR)"
 msgstr "NVDACN 账户（适用于 Vivo OCR 等支持的引擎）"
 
 #. Translators: The label for the username text control in the NVDACN settings.
-#: addon\globalPlugins\visAware\recogHandler.py:1511
+#: addon\globalPlugins\visAware\recogHandler.py:1515
 msgid "Username:"
 msgstr "用户名："
 
 #. Translators: The label for the password text control in the NVDACN settings.
-#: addon\globalPlugins\visAware\recogHandler.py:1520
+#: addon\globalPlugins\visAware\recogHandler.py:1524
 msgid "Password:"
 msgstr "密码："
 
 #. Translators: Shown when no recognition source is available for the cycle source command.
-#: addon\globalPlugins\visAware\recogHandler.py:1571
+#: addon\globalPlugins\visAware\recogHandler.py:1575
 msgid "At least one recognition source must be selected."
 msgstr "至少需要选择一个识别来源。"
 
 #. Translators: The setting name used in the validation error for the recognition source checklist.
-#: addon\globalPlugins\visAware\recogHandler.py:1573
+#: addon\globalPlugins\visAware\recogHandler.py:1577
 msgid "Recognition sources included when cycling"
 msgstr "循环切换时包含的识别来源"
 
@@ -761,71 +761,77 @@ msgstr "没有上一次识别结果"
 msgid "Previous recognition result is blank."
 msgstr "上一次识别结果为空。"
 
+#. Translators: The title for the browsable message showing the recognition result.
+#: addon\globalPlugins\visAware\__init__.py:493
+#: addon\globalPlugins\visAware\__init__.py:1037
+msgid "Recognition result"
+msgstr "识别结果"
+
 #. Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:491
+#: addon\globalPlugins\visAware\__init__.py:499
 msgid "Asks a follow-up question about the previous image description"
 msgstr "对上一次图像描述进行追问"
 
 #. Translators: Reported when there is no previous recognition result to ask about.
-#: addon\globalPlugins\visAware\__init__.py:499
+#: addon\globalPlugins\visAware\__init__.py:507
 msgid "There is no previous recognition result to ask about."
 msgstr "没有可追问的上一次识别结果。"
 
 #. Translators: Reported when the follow-up question dialog cannot be opened.
-#: addon\globalPlugins\visAware\__init__.py:515
+#: addon\globalPlugins\visAware\__init__.py:523
 msgid "Could not open the follow-up question dialog."
 msgstr "无法打开追问对话框。"
 
 #. Translators: A message shown when trying to use the AI agent with screen curtain enabled.
-#: addon\globalPlugins\visAware\__init__.py:538
+#: addon\globalPlugins\visAware\__init__.py:546
 #: addon\globalPlugins\visAware\agent\actions.py:209
 msgid "Please disable screen curtain before starting the AI Agent."
 msgstr "请在启动 AI Agent 之前关闭黑屏。"
 
 #. Translators: Prompt shown when starting the AI agent.
-#: addon\globalPlugins\visAware\__init__.py:556
+#: addon\globalPlugins\visAware\__init__.py:564
 msgid "What should the AI Agent do?"
 msgstr "希望 AI Agent 做什么？"
 
 #. Translators: Title for the AI agent command dialog.
-#: addon\globalPlugins\visAware\__init__.py:558
-#: addon\globalPlugins\visAware\__init__.py:614
+#: addon\globalPlugins\visAware\__init__.py:566
+#: addon\globalPlugins\visAware\__init__.py:622
 msgid "Vis Aware Agent"
 msgstr "Vis Aware Agent"
 
 #. Translators: Reported when the AI agent is being stopped by the user.
-#: addon\globalPlugins\visAware\__init__.py:590
+#: addon\globalPlugins\visAware\__init__.py:598
 msgid "Agent is stopping."
 msgstr "Agent 正在停止。"
 
 #. Translators: Reported when content recognition (e.g. OCR) is attempted, but the content is not visible.
-#: addon\globalPlugins\visAware\__init__.py:660
+#: addon\globalPlugins\visAware\__init__.py:668
 msgid "Content is not visible"
 msgstr "内容不可见"
 
 #. Translators: A message shown when screen capture fails.
-#: addon\globalPlugins\visAware\__init__.py:692
+#: addon\globalPlugins\visAware\__init__.py:700
 msgid "Failed to capture screen image."
 msgstr "无法捕获屏幕图像。"
 
 #. Translators: Reported when a recognition task is cancelled by the user.
-#: addon\globalPlugins\visAware\__init__.py:708
-#: addon\globalPlugins\visAware\__init__.py:725
-#: addon\globalPlugins\visAware\__init__.py:995
+#: addon\globalPlugins\visAware\__init__.py:716
+#: addon\globalPlugins\visAware\__init__.py:733
+#: addon\globalPlugins\visAware\__init__.py:1003
 msgid "Recognition cancelled"
 msgstr "识别已取消"
 
 #. Translators: Describes the command to cancel an ongoing recognition task.
-#: addon\globalPlugins\visAware\__init__.py:736
+#: addon\globalPlugins\visAware\__init__.py:744
 msgid "Cancels the current recognition"
 msgstr "取消当前识别"
 
 #. Translators: Reported when the cancel command is used but no recognition is in progress.
-#: addon\globalPlugins\visAware\__init__.py:743
+#: addon\globalPlugins\visAware\__init__.py:751
 msgid "No recognition is in progress."
 msgstr "当前没有正在进行的识别。"
 
-#: addon\globalPlugins\visAware\__init__.py:769
+#: addon\globalPlugins\visAware\__init__.py:777
 msgid ""
 "Performs recognition using the current settings. In OCR and image "
 "description modes, press once for a recognition result document. Press twice "
@@ -837,104 +843,99 @@ msgstr ""
 "识别结果。在 AI Agent 模式下启动或终止 Agent"
 
 #. Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:796
+#: addon\globalPlugins\visAware\__init__.py:804
 msgid "Cycles through recognition modes"
 msgstr "循环切换识别模式"
 
 #. Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:806
+#: addon\globalPlugins\visAware\__init__.py:814
 msgid ""
 "Cycles through automatic recognition modes: off, image description, and OCR"
 msgstr "循环切换自动识别模式：关闭、图像描述和 OCR"
 
 #. Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:822
+#: addon\globalPlugins\visAware\__init__.py:830
 msgid "Cycles through recognition sources"
 msgstr "循环切换识别来源"
 
 #. Translators: Reported when recognition source cycling is requested while AI Agent mode is active.
-#: addon\globalPlugins\visAware\__init__.py:830
+#: addon\globalPlugins\visAware\__init__.py:838
 msgid "Changing recognition source is not supported in AI Agent mode."
 msgstr "AI Agent 模式下不支持切换识别来源。"
 
 #. Translators: Reported when attempting to recognize a clipboard image, but no image is found.
-#: addon\globalPlugins\visAware\__init__.py:914
+#: addon\globalPlugins\visAware\__init__.py:922
 msgid "No image in clipboard"
 msgstr "剪贴板中没有图像"
 
 #. Translators: An error message for authentication failures. The placeholder is the specific error.
-#: addon\globalPlugins\visAware\__init__.py:999
+#: addon\globalPlugins\visAware\__init__.py:1007
 #, python-brace-format
 msgid "Authentication failed: {}"
 msgstr "身份验证失败：{}"
 
 #. Translators: An error message for network issues. The placeholder is the specific error.
-#: addon\globalPlugins\visAware\__init__.py:1002
+#: addon\globalPlugins\visAware\__init__.py:1010
 #, python-brace-format
 msgid "Network error: {}"
 msgstr "网络错误：{}"
 
 #. Translators: A generic error message for recognition failures from the API.
-#: addon\globalPlugins\visAware\__init__.py:1005
+#: addon\globalPlugins\visAware\__init__.py:1013
 #, python-brace-format
 msgid "Recognition failed: {}"
 msgstr "识别失败：{}"
 
 #. Translators: A message for an unexpected error during recognition.
-#: addon\globalPlugins\visAware\__init__.py:1009
+#: addon\globalPlugins\visAware\__init__.py:1017
 msgid "Recognition failed with an unexpected error."
 msgstr "识别失败，发生意外错误。"
 
 #. Translators: An error message for an unknown result type.
-#: addon\globalPlugins\visAware\__init__.py:1015
-#: addon\globalPlugins\visAware\__init__.py:1078
+#: addon\globalPlugins\visAware\__init__.py:1023
+#: addon\globalPlugins\visAware\__init__.py:1089
 msgid "Recognition returned an unknown result type."
 msgstr "识别返回了未知的结果类型。"
 
-#. Translators: The title for the browsable message showing the recognition result.
-#: addon\globalPlugins\visAware\__init__.py:1031
-msgid "Recognition result"
-msgstr "识别结果"
-
 #. Translators: Reported after partial streaming output when the service stopped before completing.
-#: addon\globalPlugins\visAware\__init__.py:1063
+#: addon\globalPlugins\visAware\__init__.py:1074
 msgid "Recognition was interrupted. The result may be incomplete."
 msgstr "识别过程中断，结果可能不完整。"
 
 #. Translators: A message indicating that no recognition engine is configured.
-#: addon\globalPlugins\visAware\__init__.py:1132
+#: addon\globalPlugins\visAware\__init__.py:1143
 msgid "No recognition engine is configured."
 msgstr "未配置识别引擎。"
 
 #. Translators: A message shown when trying to recognize with screen curtain enabled.
-#: addon\globalPlugins\visAware\__init__.py:1141
+#: addon\globalPlugins\visAware\__init__.py:1152
 msgid "Please disable screen curtain before recognition."
 msgstr "请在识别之前关闭黑屏。"
 
 #. Translators: Reporting when content recognition (e.g. OCR) begins.
-#: addon\globalPlugins\visAware\__init__.py:1162
+#: addon\globalPlugins\visAware\__init__.py:1173
 msgid "Recognizing"
 msgstr "正在识别"
 
-#: addon\globalPlugins\visAware\__init__.py:1175
+#: addon\globalPlugins\visAware\__init__.py:1186
 msgid ""
 "An error occurred before starting recognition. Please check your settings "
 "and try again."
 msgstr "识别开始前发生错误。请检查设置后重试。"
 
 #. Translators: Reported when there are no alternative engines to switch to.
-#: addon\globalPlugins\visAware\__init__.py:1190
+#: addon\globalPlugins\visAware\__init__.py:1201
 msgid "No other engines to switch to."
 msgstr "没有其他可切换的引擎。"
 
 #. Translators: Reports the name of the only available engine.
-#: addon\globalPlugins\visAware\__init__.py:1195
+#: addon\globalPlugins\visAware\__init__.py:1206
 #, python-brace-format
 msgid "Current engine: {engine_name}"
 msgstr "当前引擎：{engine_name}"
 
 #. Translators: Describes a command to cycle through available recognition engines.
-#: addon\globalPlugins\visAware\__init__.py:1213
+#: addon\globalPlugins\visAware\__init__.py:1224
 msgid "Cycles through engines for the current mode"
 msgstr "循环切换当前模式的引擎"
 
@@ -993,12 +994,18 @@ msgstr "{} 未返回 Agent 动作。"
 msgid "{} returned an unsupported agent action: {}"
 msgstr "{} 返回了不支持的 Agent 动作：{}"
 
+#. Do not use Python truthiness for provider data: strings such as "false" are truthy.
+#: addon\globalPlugins\visAware\agent\decision.py:264
+#, python-brace-format
+msgid "{} returned malformed agent action data."
+msgstr "{} 返回的 Agent 动作数据格式错误。"
+
 #. Translators: The description of the DeepSeek Agent engine.
 #. Translators: The description of the DeepSeek image describer engine.
 #: addon\globalPlugins\visAware\agent\deepseek.py:45
 #: addon\globalPlugins\visAware\imageDescribers\deepseek.py:41
 msgid "DeepSeek"
-msgstr ""
+msgstr "DeepSeek"
 
 #. Translators: The label for the DeepSeek API key used by the Agent.
 #. Translators: The label for the Gemini API key used by the Agent.
@@ -1080,59 +1087,51 @@ msgid "API key is missing. Please configure it in the AI Agent settings."
 msgstr "缺少 API 密钥。请在 AI Agent 设置中配置。"
 
 #: addon\globalPlugins\visAware\agent\deepseek.py:232
-#, fuzzy
 msgid "The current screenshot is too large for the DeepSeek request limit."
-msgstr "当前屏幕截图超过 Kimi 的请求大小限制。"
+msgstr "当前屏幕截图超过 DeepSeek 的请求大小限制。"
 
 #: addon\globalPlugins\visAware\agent\deepseek.py:238
-#, fuzzy
 msgid "DeepSeek did not return exactly one agent tool call."
-msgstr "Kimi 返回的 Agent 工具调用数量不是一个。"
+msgstr "DeepSeek 返回的 Agent 工具调用数量不是一个。"
 
 #: addon\globalPlugins\visAware\agent\deepseek.py:242
 #: addon\globalPlugins\visAware\agent\deepseek.py:255
-#, fuzzy
 msgid "DeepSeek returned malformed agent action data."
-msgstr "Gemini 返回了格式错误的 Agent 动作数据。"
+msgstr "DeepSeek 返回了格式错误的 Agent 动作数据。"
 
 #: addon\globalPlugins\visAware\agent\deepseek.py:247
-#, fuzzy
 msgid "DeepSeek returned a duplicate agent tool call ID."
-msgstr "Kimi 返回了重复的 Agent 工具调用 ID。"
+msgstr "DeepSeek 返回了重复的 Agent 工具调用 ID。"
 
 #: addon\globalPlugins\visAware\agent\deepseek.py:253
-#, fuzzy
 msgid "DeepSeek returned invalid agent action JSON."
-msgstr "Gemini 返回了无效的 Agent 动作 JSON。"
+msgstr "DeepSeek 返回了无效的 Agent 动作 JSON。"
 
 #: addon\globalPlugins\visAware\agent\deepseek.py:272
 #: addon\globalPlugins\visAware\imageDescribers\deepseek.py:261
-#, fuzzy, python-brace-format
 msgid "DeepSeek API error: {}"
-msgstr "OpenAI API 错误：{}"
+msgstr "DeepSeek API 错误：{}"
 
 #: addon\globalPlugins\visAware\agent\deepseek.py:275
 msgid "DeepSeek agent response failed."
-msgstr ""
+msgstr "DeepSeek Agent 响应失败。"
 
 #: addon\globalPlugins\visAware\agent\deepseek.py:280
-#, fuzzy
 msgid "DeepSeek agent response was truncated at the token limit."
-msgstr "Kimi Agent 响应因达到 token 上限而被截断。"
+msgstr "DeepSeek Agent 响应因达到 token 上限而被截断。"
 
 #: addon\globalPlugins\visAware\agent\deepseek.py:282
 msgid "DeepSeek agent response was blocked by content filtering."
-msgstr ""
+msgstr "DeepSeek Agent 响应因内容过滤而被阻止。"
 
 #: addon\globalPlugins\visAware\agent\deepseek.py:283
 msgid "DeepSeek agent response was incomplete."
-msgstr ""
+msgstr "DeepSeek Agent 响应不完整。"
 
 #: addon\globalPlugins\visAware\agent\deepseek.py:285
 #: addon\globalPlugins\visAware\agent\deepseek.py:291
-#, fuzzy
 msgid "DeepSeek returned an invalid agent response."
-msgstr "服务器返回的响应无效。"
+msgstr "DeepSeek 返回的 Agent 响应无效。"
 
 #. Translators: An error message returned from the Gemini API.
 #: addon\globalPlugins\visAware\agent\gemini.py:289
@@ -1395,7 +1394,7 @@ msgstr "Vivo 返回了无效的 Agent 动作 JSON。"
 #: addon\globalPlugins\visAware\agent\engines\gemini.py:31
 #: addon\globalPlugins\visAware\imageDescribers\gemini.py:42
 msgid "Google Gemini"
-msgstr ""
+msgstr "Google Gemini"
 
 #. Translators: The label for the Gemini media resolution used by the Agent.
 #. Translators: The label for a setting to control image detail sent to Gemini.
@@ -1683,60 +1682,55 @@ msgid "Baimiao Formula Recognition"
 msgstr "白描公式识别"
 
 #. Translators: The description of the Baimiao OCR engine.
-#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:36
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:37
 msgid "Baimiao OCR"
 msgstr "白描 OCR"
 
 #. Translators: A Baimiao account membership level.
-#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:70
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:71
 msgid "Regular user"
 msgstr "普通用户"
 
 #. Translators: A Baimiao account membership level.
-#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:72
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:73
 msgid "Regular member"
 msgstr "普通会员"
 
 #. Translators: A Baimiao account membership level.
-#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:74
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:75
 msgid "Gold member"
 msgstr "黄金会员"
 
 #. Translators: A Baimiao account membership level.
-#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:76
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:77
 msgid "Super member"
 msgstr "超级会员"
 
 #. Translators: The label for a button that logs out of Baimiao. {account} is a
 #. nickname, masked login, or user ID; {membership} is the account membership level.
-#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:81
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:82
 #, python-brace-format
 msgid "Log out of Baimiao ({account}, {membership})"
 msgstr "退出白描（{account}，{membership}）"
 
 #. Translators: The label for a button that logs out of Baimiao. {account} is a
 #. nickname, masked login, or user ID.
-#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:88
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:89
 #, python-brace-format
 msgid "Log out of Baimiao ({account})"
 msgstr "退出白描（{account}）"
 
 #. Translators: The label for a button that logs out of Baimiao when account details are unavailable.
-#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:90
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:91
 msgid "Log out of Baimiao (logged in)"
 msgstr "退出白描（已登录）"
 
-#. Translators: The title of a confirmation dialog shown before logging out of Baimiao.
-#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:121
-msgid "Log out of Baimiao"
-msgstr "退出白描登录"
-
 #. Translators: The label for a button that opens Baimiao login.
-#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:68
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:93
 msgid "Log in to Baimiao..."
 msgstr "登录白描(&L)..."
 
-#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:91
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:116
 msgid ""
 "Are you sure you want to log out of Baimiao in Vis Aware? This deletes the "
 "Baimiao login saved on this computer, but does not automatically sign this "
@@ -1747,22 +1741,27 @@ msgstr ""
 "会自动解除白描账号中的设备登录状态。如不再使用此设备，请在手机版白描中退出该"
 "设备。"
 
+#. Translators: The title of a confirmation dialog shown before logging out of Baimiao.
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:122
+msgid "Log out of Baimiao"
+msgstr "退出白描登录"
+
 #. Translators: The title of an error shown when Baimiao logout fails.
-#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:109
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:134
 msgid "Baimiao Logout Failed"
 msgstr "退出白描登录失败"
 
 #. Translators: An error when Baimiao receives invalid image content.
 #. Translators: An error when an empty image is passed to Baimiao.
-#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:142
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:310
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:167
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:369
 msgid "Invalid image content for Baimiao."
 msgstr "提供给白描的图像内容无效。"
 
 #. Translators: The description of the Gemini OCR engine.
 #: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:91
 msgid "Google Gemini OCR"
-msgstr ""
+msgstr "Google Gemini OCR"
 
 #: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:178
 msgid ""
@@ -2057,7 +2056,7 @@ msgstr "取消(&C)"
 
 #. Translators: An error when a Baimiao login field is empty.
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoGui.py:72
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:269
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:328
 msgid "Enter your Baimiao account and password."
 msgstr "请输入白描账号和密码。"
 
@@ -2083,115 +2082,115 @@ msgid "Baimiao login failed with an unexpected error."
 msgstr "登录白描时发生意外错误。"
 
 #. Translators: An error when Baimiao returns invalid login information.
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:119
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:291
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:157
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:350
 msgid "Baimiao returned invalid login information."
 msgstr "白描返回了无效的登录信息。"
 
 #. Translators: An error when Baimiao login information cannot be stored securely.
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:126
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:129
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:132
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:145
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:166
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:169
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:172
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:185
 msgid "Could not save Baimiao login information securely."
 msgstr "无法安全保存白描登录信息。"
 
 #. Translators: An error when Baimiao Web has not been logged in.
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:248
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:307
 msgid "Please log in to Baimiao in the OCR engine settings."
 msgstr "请在 OCR 引擎设置中登录白描。"
 
 #. Translators: An error when Baimiao does not grant a usable OCR request.
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:330
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:389
 msgid "Baimiao did not provide valid OCR permission."
 msgstr "白描没有提供有效的 OCR 权限。"
 
 #. Translators: An error when Baimiao does not start an OCR task.
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:358
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:417
 msgid "Baimiao did not start the OCR task."
 msgstr "白描未能启动 OCR 任务。"
 
 #. Translators: An error when the stored Baimiao login is no longer valid.
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:379
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:388
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:438
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:447
 msgid "Baimiao login has expired. Please log in again."
 msgstr "白描登录已过期，请重新登录。"
 
 #. Translators: An error when Baimiao returns malformed task status data.
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:417
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:483
 msgid "Baimiao returned an invalid OCR task status."
 msgstr "白描返回了无效的 OCR 任务状态。"
 
 #. Translators: An error when a completed Baimiao task has no OCR result.
 #. Translators: An error when a completed Baimiao task has no usable OCR result.
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:421
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:660
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:487
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:726
 msgid "Baimiao returned an invalid OCR response."
 msgstr "白描返回了无效的 OCR 响应。"
 
 #. Translators: An error when Baimiao does not finish an OCR task in time.
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:428
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:494
 msgid "Baimiao OCR timed out."
 msgstr "白描 OCR 超时。"
 
 #. Translators: An error when Baimiao returns data that is not valid JSON.
 #. Translators: An error when Baimiao returns malformed API data.
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:459
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:462
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:496
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:525
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:528
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:562
 msgid "Baimiao returned an invalid API response."
 msgstr "白描返回了无效的 API 响应。"
 
 #. Translators: A Baimiao login error. {message} is returned by the service.
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:476
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:542
 #, python-brace-format
 msgid "Baimiao login failed: {message}"
 msgstr "登录白描失败：{message}"
 
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:483
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:549
 msgid ""
 "In the Baimiao mobile app, log out any devices you no longer use, then try "
 "again."
 msgstr "请在手机版白描中退出不再使用的设备，然后重试。"
 
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:490
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:556
 #, python-brace-format
 msgid "Baimiao API error: {message}"
 msgstr "白描 API 错误：{message}"
 
 #. Translators: A Baimiao error without a message. {code} is a service error code.
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:509
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:575
 #, python-brace-format
 msgid "Baimiao returned service error code {code}."
 msgstr "白描返回了服务错误代码 {code}。"
 
 #. Translators: A Baimiao error without a message. {code} is an API error code.
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:513
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:579
 #, python-brace-format
 msgid "Baimiao returned API error code {code}."
 msgstr "白描返回了 API 错误代码 {code}。"
 
 #. Translators: A Baimiao error response without a message or code.
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:515
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:581
 msgid "Baimiao returned an unknown API error."
 msgstr "白描返回了未知的 API 错误。"
 
 #. Translators: An error when a Baimiao OCR task reports a failure.
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:526
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:530
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:535
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:612
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:645
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:592
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:596
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:601
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:678
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:711
 msgid "Baimiao OCR task failed."
 msgstr "白描 OCR 任务失败。"
 
 #. Translators: An error when Baimiao returns an unsafe upload endpoint.
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:553
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:619
 msgid "Baimiao returned an invalid image upload endpoint."
 msgstr "白描返回了无效的图像上传地址。"
 
 #. Translators: An error when Baimiao returns an incomplete upload signature.
-#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:584
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:650
 msgid "Baimiao returned an invalid image upload signature."
 msgstr "白描返回了无效的图像上传签名。"
 
@@ -2297,19 +2296,16 @@ msgstr "服务器返回的响应无效。"
 #: addon\globalPlugins\visAware\imageDescribers\deepseek.py:264
 #: addon\globalPlugins\visAware\imageDescribers\deepseek.py:267
 #: addon\globalPlugins\visAware\imageDescribers\deepseek.py:274
-#, fuzzy
 msgid "DeepSeek returned an invalid response."
-msgstr "服务器返回的响应无效。"
+msgstr "DeepSeek 返回的响应无效。"
 
 #: addon\globalPlugins\visAware\imageDescribers\deepseek.py:270
-#, fuzzy
 msgid "DeepSeek response was truncated at the token limit."
-msgstr "Kimi Agent 响应因达到 token 上限而被截断。"
+msgstr "DeepSeek 响应因达到 token 上限而被截断。"
 
 #: addon\globalPlugins\visAware\imageDescribers\deepseek.py:272
-#, fuzzy
 msgid "DeepSeek response was blocked by content filtering."
-msgstr "Kimi Agent 响应因达到 token 上限而被截断。"
+msgstr "DeepSeek 响应因内容过滤而被阻止。"
 
 #. Translators: The label for an engine setting to enable streaming output.
 #: addon\globalPlugins\visAware\imageDescribers\gemini.py:77
@@ -2551,13 +2547,21 @@ msgid ""
 msgstr "为 NVDA 提供 OCR、AI 图像描述、自动识别和 AI 辅助计算机控制的插件。"
 
 #: buildVars.py:38
-#, fuzzy
 msgid ""
+"### 0.9.5\n"
+"\n"
+"* Added Baimiao OCR and formula recognition, including shared account login, "
+"protected sessions, clickable text coordinates, and accessible MathML "
+"formula output.\n"
+"* Added screen capture through NVDA's Windows Graphics Capture path, "
+"allowing screen recognition and AI Agent screenshots while Screen Curtain or "
+"the built-in Magnifier is active on supported systems.\n"
+"* Improved Baimiao account settings and documentation.\n"
+"* Improved automatic recognition settings so the selected engine is "
+"preserved correctly.\n"
+"\n"
 "### 0.9.0\n"
 "\n"
-"* Added Baimiao OCR and formula recognition with shared account login, DPAPI-"
-"protected sessions, current OSS uploads, clickable text coordinates, and "
-"accessible MathML formula output.\n"
 "* Added DeepSeek image description and AI Agent engines, with configurable "
 "API endpoints and vision models.\n"
 "* Added a command to cycle automatic recognition between off, image "
@@ -2570,9 +2574,6 @@ msgid ""
 "are unavailable.\n"
 "* Improved automatic recognition result handling to ignore results after the "
 "active recognition target changes.\n"
-"* Enabled screen recognition and AI Agent screenshots through NVDA's "
-"original capture path while Screen Curtain or the built-in Magnifier is "
-"active on supported systems.\n"
 "\n"
 "### 0.8.1\n"
 "\n"
@@ -2589,11 +2590,17 @@ msgid ""
 "* Removed model and model-provider names from the follow-up dialog.\n"
 "* Added Copy and Close buttons to browsable recognition and follow-up result "
 "dialogs."
-msgstr ""
+msgstr "### 0.9.5\n"
+"\n"
+"* 新增白描 OCR 和公式识别，包括共用账号登录、受保护的会话、可点击的文本坐标以及可访问的 MathML 公式输出。\n"
+"* 新增通过 NVDA Windows Graphics Capture 路径进行屏幕捕获，在支持的系统上启用黑屏或内置放大镜时仍可进行屏幕识别和 AI Agent 截图。\n"
+"* 改进白描账号设置和文档。\n"
+"* 改进自动识别设置，正确保留所选引擎。\n"
+"\n"
 "### 0.9.0\n"
 "\n"
-"* 新增白描 OCR 和公式识别，共用账号登录，支持 DPAPI 加密会话、当前 OSS 上传流程、"
-"可点击的文本坐标以及可访问的 MathML 公式输出。\n"
+"* 新增白描 OCR 和公式识别，共用账号登录，支持 DPAPI 加密会话、当前 OSS 上传流"
+"程、可点击的文本坐标以及可访问的 MathML 公式输出。\n"
 "* 新增 DeepSeek 图像描述和 AI Agent 引擎，并支持配置 API 地址和视觉模型。\n"
 "* 新增在关闭、图像描述和 OCR 之间循环切换自动识别模式的命令；该命令没有默认手"
 "势。\n"
@@ -2602,8 +2609,8 @@ msgstr ""
 "* 改进浏览模式下的网页图像自动识别，支持读取当前及延迟加载图像 URL，并在 URL "
 "不可用时回退到屏幕截图。\n"
 "* 改进自动识别结果处理，在当前识别目标变化后忽略过期结果。\n"
-"* 在支持的系统上，通过 NVDA 原始捕获路径获取屏幕识别和 AI Agent 截图，即使启用了"
-"黑屏或内置放大镜也可使用。\n"
+"* 在支持的系统上，通过 NVDA 原始捕获路径获取屏幕识别和 AI Agent 截图，即使启"
+"用了黑屏或内置放大镜也可使用。\n"
 "\n"
 "### 0.8.1\n"
 "\n"
