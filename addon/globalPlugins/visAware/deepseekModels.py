@@ -12,12 +12,12 @@ import addonHandler
 addonHandler.initTranslation()
 
 DEFAULT_DEEPSEEK_BASE_URL = "https://api.deepseek.com"
-DEFAULT_DEEPSEEK_VISION_MODEL = "deepseek-v4-flash-vision-exp"
+DEFAULT_DEEPSEEK_VISION_MODEL = "deepseek-flash"
 
 _DEEPSEEK_VISION_MODEL_CHOICES = OrderedDict(
 	{
-		# Translators: The display name for the DeepSeek vision model preset.
-		"deepseek-v4-flash-vision-exp": _("DeepSeek V4 Flash Vision"),
+		# Translators: The display name for the current DeepSeek vision model.
+		"deepseek-flash": _("DeepSeek Flash Vision"),
 	},
 )
 

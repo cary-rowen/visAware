@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
-"POT-Creation-Date: 2026-09-01 08:15+0800\n"
+"POT-Creation-Date: 2026-09-13 02:42+0800\n"
 "PO-Revision-Date: 2026-07-29 12:04+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -209,78 +209,102 @@ msgstr "Попередній результат розпізнавання не�
 msgid "The previous recognition result is blank."
 msgstr "Попередній результат розпізнавання порожній."
 
-#. Translators: The display name for the DeepSeek vision model preset.
+#. Translators: The display name for the current DeepSeek vision model.
 #: addon\globalPlugins\visAware\deepseekModels.py:20
-msgid "DeepSeek V4 Flash Vision"
+msgid "DeepSeek Flash Vision"
 msgstr ""
 
 #. Translators: The display name for a Gemini model preset.
 #: addon\globalPlugins\visAware\geminiModels.py:26
+#, fuzzy
+msgid "Gemini 3.8 Flash (latest)"
+msgstr "Gemini Flash Latest"
+
+#. Translators: The display name for a Gemini model preset.
+#: addon\globalPlugins\visAware\geminiModels.py:28
+#, fuzzy
+msgid "Gemini 3.7 Flash"
+msgstr "Gemini 3.5 Flash"
+
+#. Translators: The display name for a Gemini model preset.
+#: addon\globalPlugins\visAware\geminiModels.py:30
 msgid "Gemini 3.6 Flash (recommended)"
 msgstr "Gemini 3.6 Flash (рекомендовано)"
 
 #. Translators: The display name for a Gemini model preset.
-#: addon\globalPlugins\visAware\geminiModels.py:28
+#: addon\globalPlugins\visAware\geminiModels.py:32
 msgid "Gemini 3.5 Flash-Lite (fast, lower cost)"
 msgstr "Gemini 3.5 Flash-Lite (швидше, дешевше)"
 
 #. Translators: The display name for a Gemini model preset.
-#: addon\globalPlugins\visAware\geminiModels.py:30
+#: addon\globalPlugins\visAware\geminiModels.py:34
 msgid "Gemini 3.5 Flash"
 msgstr "Gemini 3.5 Flash"
 
 #. Translators: The display name for a Gemini model preset.
-#: addon\globalPlugins\visAware\geminiModels.py:32
+#: addon\globalPlugins\visAware\geminiModels.py:36
 msgid "Gemini Flash Latest"
 msgstr "Gemini Flash Latest"
 
 #. Translators: The display name for a Gemini model preset.
-#: addon\globalPlugins\visAware\geminiModels.py:34
+#: addon\globalPlugins\visAware\geminiModels.py:38
 msgid "Gemini 3.1 Pro Preview (higher reasoning, slower)"
 msgstr "Gemini 3.1 Pro Preview (глибші міркування, повільніше"
 
 #. Translators: The display name for a Gemini model preset.
-#: addon\globalPlugins\visAware\geminiModels.py:36
+#: addon\globalPlugins\visAware\geminiModels.py:40
 msgid "Gemini Pro Latest (higher reasoning)"
 msgstr "Gemini Pro Latest (покращене міркування)"
 
 #. Translators: The display name for a Gemini model preset.
-#: addon\globalPlugins\visAware\geminiModels.py:38
+#: addon\globalPlugins\visAware\geminiModels.py:42
 msgid "Gemini 3 Flash Preview (agentic preview)"
 msgstr "Gemini 3 Flash Preview (попередня версія з підтримкою помічника)"
 
 #. Translators: The display name for a Gemini model preset.
-#: addon\globalPlugins\visAware\geminiModels.py:40
+#: addon\globalPlugins\visAware\geminiModels.py:44
 msgid "Gemini 3.1 Flash-Lite (fast, lower cost)"
 msgstr "Gemini 3.1 Flash-Lite (швидше, дешевше)"
 
 #. Translators: The display name for a Gemini model preset.
-#: addon\globalPlugins\visAware\geminiModels.py:42
+#: addon\globalPlugins\visAware\geminiModels.py:46
 msgid "Gemini Flash-Lite Latest (fast, lower cost)"
 msgstr "Gemini Flash-Lite Latest (швидше, дешевше)"
 
 #. Translators: The display name for a Gemini model preset.
-#: addon\globalPlugins\visAware\geminiModels.py:44
+#: addon\globalPlugins\visAware\geminiModels.py:48
 msgid "Gemini 2.5 Flash-Lite (stable low cost)"
 msgstr "Gemini 2.5 Flash-Lite (стабільна, недорога версія)"
 
+#. Translators: The display name for a Gemini model preset.
+#: addon\globalPlugins\visAware\geminiModels.py:50
+#, fuzzy
+msgid "Gemini 2.5 Flash (stable)"
+msgstr "Gemini 2.5 Flash-Lite (стабільна, недорога версія)"
+
+#. Translators: The display name for a Gemini model preset.
+#: addon\globalPlugins\visAware\geminiModels.py:52
+#, fuzzy
+msgid "Gemini 2.5 Pro (stable, higher reasoning)"
+msgstr "Gemini Pro Latest (покращене міркування)"
+
 #. Translators: The display name for Gemini's default media resolution.
-#: addon\globalPlugins\visAware\geminiModels.py:58
+#: addon\globalPlugins\visAware\geminiModels.py:66
 msgid "Automatic (model default)"
 msgstr "Автоматично (початкова модель)"
 
 #. Translators: The display name for high Gemini media resolution.
-#: addon\globalPlugins\visAware\geminiModels.py:60
+#: addon\globalPlugins\visAware\geminiModels.py:68
 msgid "High (best detail, slower)"
 msgstr "Висока (найкраща деталізація, повільніше)"
 
 #. Translators: The display name for medium Gemini media resolution.
-#: addon\globalPlugins\visAware\geminiModels.py:62
+#: addon\globalPlugins\visAware\geminiModels.py:70
 msgid "Medium (balanced)"
 msgstr "Середня (збалансовано)"
 
 #. Translators: The display name for low Gemini media resolution.
-#: addon\globalPlugins\visAware\geminiModels.py:64
+#: addon\globalPlugins\visAware\geminiModels.py:72
 msgid "Low (faster, less detail)"
 msgstr "Низька (швидше, менша деталізація)"
 
@@ -347,78 +371,78 @@ msgstr "Потокова відповідь Kimi містила неочікув
 
 #. Translators: A choice that disables Kimi model reasoning.
 #. Translators: A choice that disables reasoning for a Kimi K2.x model.
-#: addon\globalPlugins\visAware\kimiModels.py:25
-#: addon\globalPlugins\visAware\kimiModels.py:47
+#: addon\globalPlugins\visAware\kimiModels.py:26
+#: addon\globalPlugins\visAware\kimiModels.py:48
 msgid "Disabled"
 msgstr "Вимкнено"
 
 #. Translators: A low Kimi model reasoning effort.
 #. Translators: A low Kimi K3 reasoning effort.
-#: addon\globalPlugins\visAware\kimiModels.py:27
-#: addon\globalPlugins\visAware\kimiModels.py:37
+#: addon\globalPlugins\visAware\kimiModels.py:28
+#: addon\globalPlugins\visAware\kimiModels.py:38
 msgid "Low"
 msgstr "Низький"
 
 #. Translators: A high Kimi model reasoning effort.
 #. Translators: A high Kimi K3 reasoning effort.
-#: addon\globalPlugins\visAware\kimiModels.py:29
-#: addon\globalPlugins\visAware\kimiModels.py:39
+#: addon\globalPlugins\visAware\kimiModels.py:30
+#: addon\globalPlugins\visAware\kimiModels.py:40
 msgid "High"
 msgstr "Високий"
 
 #. Translators: The maximum Kimi model reasoning effort.
 #. Translators: The maximum Kimi K3 reasoning effort.
-#: addon\globalPlugins\visAware\kimiModels.py:31
-#: addon\globalPlugins\visAware\kimiModels.py:41
+#: addon\globalPlugins\visAware\kimiModels.py:32
+#: addon\globalPlugins\visAware\kimiModels.py:42
 msgid "Maximum"
 msgstr "Максимальний"
 
 #. Translators: A choice that enables reasoning for a Kimi K2.x model.
-#: addon\globalPlugins\visAware\kimiModels.py:49
+#: addon\globalPlugins\visAware\kimiModels.py:50
 msgid "Enabled"
 msgstr "Увімкнено"
 
 #. Translators: The display name for a Kimi model preset.
-#: addon\globalPlugins\visAware\kimiModels.py:177
+#: addon\globalPlugins\visAware\kimiModels.py:178
 msgid "Kimi K3 (256K context)"
 msgstr "Kimi K3 (контекст 256K)"
 
 #. Translators: The display name for a Kimi model preset.
-#: addon\globalPlugins\visAware\kimiModels.py:179
+#: addon\globalPlugins\visAware\kimiModels.py:180
 msgid "Kimi K3 (1M context)"
 msgstr "Kimi K3 (контекст 1M)"
 
 #. Translators: The display name for a Kimi model preset.
-#: addon\globalPlugins\visAware\kimiModels.py:181
+#: addon\globalPlugins\visAware\kimiModels.py:182
 msgid "Kimi K2.7 Code"
 msgstr "Kimi K2.7 Code"
 
 #. Translators: The display name for a Kimi model preset.
-#: addon\globalPlugins\visAware\kimiModels.py:183
+#: addon\globalPlugins\visAware\kimiModels.py:184
 msgid "Kimi K2.7 Code (high speed)"
 msgstr "Kimi K2.7 Code (висока швидкість)"
 
 #. Translators: The display name for a Kimi model preset.
-#: addon\globalPlugins\visAware\kimiModels.py:189
+#: addon\globalPlugins\visAware\kimiModels.py:190
 msgid "Kimi K3 (public API)"
 msgstr "Kimi K3 (публічний API)"
 
 #. Translators: The display name for a Kimi model preset.
-#: addon\globalPlugins\visAware\kimiModels.py:191
+#: addon\globalPlugins\visAware\kimiModels.py:192
 msgid "Kimi K2.7 Code (public API)"
 msgstr "Kimi K2.7 Code (публічний API)"
 
 #. Translators: The display name for a Kimi model preset.
-#: addon\globalPlugins\visAware\kimiModels.py:193
+#: addon\globalPlugins\visAware\kimiModels.py:194
 msgid "Kimi K2.7 Code (public API high speed)"
 msgstr "Kimi K2.7 Code (публічний API, висока швидкість)"
 
 #. Translators: The display name for a Kimi model preset.
-#: addon\globalPlugins\visAware\kimiModels.py:195
+#: addon\globalPlugins\visAware\kimiModels.py:196
 msgid "Kimi K2.6 (public API)"
 msgstr "Kimi K2.6 (публічний API)"
 
-#: addon\globalPlugins\visAware\network.py:102
+#: addon\globalPlugins\visAware\network.py:107
 msgid ""
 "Network connection failed after multiple attempts. Please check your "
 "connection and try again."
@@ -426,13 +450,18 @@ msgstr ""
 "Не вдалося підключитися до мережі після кількох спроб. Перевірте підключення "
 "та повторіть спробу."
 
-#: addon\globalPlugins\visAware\network.py:142
+#: addon\globalPlugins\visAware\network.py:110
+#: addon\globalPlugins\visAware\network.py:297
+msgid "Network connection failed. Please check your connection and try again."
+msgstr "Помилка мережевого з’єднання. Перевірте з’єднання та повторіть спробу."
+
+#: addon\globalPlugins\visAware\network.py:135
 msgid "Authentication failed. Please check your API key or credentials."
 msgstr ""
 "Помилка автентифікації. Будь ласка, перевірте свій ключ API або облікові "
 "дані."
 
-#: addon\globalPlugins\visAware\network.py:151
+#: addon\globalPlugins\visAware\network.py:144
 #, python-brace-format
 msgid ""
 "Service is temporarily unavailable or rate limited: {code} {reason}. Please "
@@ -442,18 +471,14 @@ msgstr ""
 "ласка, спробуйте пізніше."
 
 #. Translators: Used when an HTTP error response does not include a response body.
-#: addon\globalPlugins\visAware\network.py:159
+#: addon\globalPlugins\visAware\network.py:152
 msgid "No additional details were provided."
 msgstr "Жодних додаткових подробиць надано не було."
 
-#: addon\globalPlugins\visAware\network.py:162
+#: addon\globalPlugins\visAware\network.py:155
 #, python-brace-format
 msgid "Service returned an error: {code} {reason}. Details: {details}"
 msgstr "Сервіс повернув помилку: {code} {reason}. Деталі: {details}"
-
-#: addon\globalPlugins\visAware\network.py:307
-msgid "Network connection failed. Please check your connection and try again."
-msgstr "Помилка мережевого з’єднання. Перевірте з’єднання та повторіть спробу."
 
 #. Translators: The title of the OCR engine settings panel.
 #. Translators: A choice meaning automatic recognition should use OCR engines.
@@ -505,6 +530,7 @@ msgstr "Не вдалося підготувати об'єкт зображен�
 #: addon\globalPlugins\visAware\recogHandler.py:632
 #: addon\globalPlugins\visAware\recogHandler.py:658
 #: addon\globalPlugins\visAware\recogHandler.py:693
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:180
 #: addon\globalPlugins\visAware\contentRecognizers\paddleOCR.py:735
 #: addon\globalPlugins\visAware\contentRecognizers\paddleOCR.py:743
 msgid "Recognition result is blank."
@@ -560,23 +586,23 @@ msgid "Current OCR engine"
 msgstr "Поточний сервіс OCR"
 
 #. Translators: The title of the automatic recognition settings panel for the add-on.
-#: addon\globalPlugins\visAware\recogHandler.py:1202
+#: addon\globalPlugins\visAware\recogHandler.py:1206
 msgid "Automatic recognition"
 msgstr "Автоматичне розпізнавання"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1220
+#: addon\globalPlugins\visAware\recogHandler.py:1224
 msgid "Automatic recognition &type:"
 msgstr "Тип &автоматичного розпізнавання:"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1228
+#: addon\globalPlugins\visAware\recogHandler.py:1232
 msgid "Automatic recognition &engine:"
 msgstr "Сервіс автоматичного &розпізнавання:"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1237
+#: addon\globalPlugins\visAware\recogHandler.py:1241
 msgid "Automatic recognition &prompt:"
 msgstr "Підказка для &автоматичного розпізнавання:"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1252
+#: addon\globalPlugins\visAware\recogHandler.py:1256
 msgid "Automatic recognition &model:"
 msgstr "Модель автоматичного &розпізнавання:"
 
@@ -584,7 +610,7 @@ msgstr "Модель автоматичного &розпізнавання:"
 #. Translators: The label for the button that fetches Kimi model names.
 #. Translators: The label for the button that fetches OpenAI model names.
 #. Translators: The label for the button that fetches Ollama model names.
-#: addon\globalPlugins\visAware\recogHandler.py:1260
+#: addon\globalPlugins\visAware\recogHandler.py:1264
 #: addon\globalPlugins\visAware\agent\engines\kimi.py:77
 #: addon\globalPlugins\visAware\agent\engines\openai.py:66
 #: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:132
@@ -592,66 +618,66 @@ msgstr "Модель автоматичного &розпізнавання:"
 msgid "&Fetch models"
 msgstr "&Отримати моделі"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1270
+#: addon\globalPlugins\visAware\recogHandler.py:1274
 msgid "Prefer screenshots for &web images"
 msgstr "Для об'єктів &веб зображень Надавати перевагу знімкам екрана"
 
 #. Translators: A choice meaning automatic recognition should use the engine's regular model setting.
-#: addon\globalPlugins\visAware\recogHandler.py:1348
+#: addon\globalPlugins\visAware\recogHandler.py:1352
 msgid "Use the model selected in engine settings"
 msgstr "Використовувати модель, вибрану в налаштуваннях сервісу"
 
 #. Translators: The title of the general settings panel for the add-on.
-#: addon\globalPlugins\visAware\recogHandler.py:1443
+#: addon\globalPlugins\visAware\recogHandler.py:1447
 msgid "General"
 msgstr "Загальне"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1455
+#: addon\globalPlugins\visAware\recogHandler.py:1459
 msgid "Copy recognition result to the &clipboard"
 msgstr "&Копіювати результат розпізнавання в буфер обміну"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1460
+#: addon\globalPlugins\visAware\recogHandler.py:1464
 msgid "Show text results in a &browsable message"
 msgstr "Показувати текстові результати в &повідомленні з можливістю перегляду"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1465
+#: addon\globalPlugins\visAware\recogHandler.py:1469
 msgid "Automatically &read recognition result documents"
 msgstr "Автоматично &зчитувати документи з результатами розпізнавання"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1470
+#: addon\globalPlugins\visAware\recogHandler.py:1474
 msgid "&Enable more verbose logging for debug purposes"
 msgstr "&Увімкнути детальне ведення журналу для налагодження"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1477
+#: addon\globalPlugins\visAware\recogHandler.py:1481
 msgid "Recognition &sources included when cycling:"
 msgstr "&Джерела розпізнавання, включені під час циклічного перемикання:"
 
-#: addon\globalPlugins\visAware\recogHandler.py:1494
+#: addon\globalPlugins\visAware\recogHandler.py:1498
 msgid "Vis Aware &mode:"
 msgstr "&Режим Vis Aware:"
 
 #. Translators: The label for a group box for NVDACN account settings.
-#: addon\globalPlugins\visAware\recogHandler.py:1504
+#: addon\globalPlugins\visAware\recogHandler.py:1508
 msgid "NVDACN account (for supported engines like Vivo OCR)"
 msgstr "Обліковий запис NVDACN (для підтримуваних сервісів, таких як Vivo OCR)"
 
 #. Translators: The label for the username text control in the NVDACN settings.
-#: addon\globalPlugins\visAware\recogHandler.py:1511
+#: addon\globalPlugins\visAware\recogHandler.py:1515
 msgid "Username:"
 msgstr "Ім'я користувача:"
 
 #. Translators: The label for the password text control in the NVDACN settings.
-#: addon\globalPlugins\visAware\recogHandler.py:1520
+#: addon\globalPlugins\visAware\recogHandler.py:1524
 msgid "Password:"
 msgstr "Пароль:"
 
 #. Translators: Shown when no recognition source is available for the cycle source command.
-#: addon\globalPlugins\visAware\recogHandler.py:1571
+#: addon\globalPlugins\visAware\recogHandler.py:1575
 msgid "At least one recognition source must be selected."
 msgstr "Потрібно вибрати принаймні одне джерело розпізнавання."
 
 #. Translators: The setting name used in the validation error for the recognition source checklist.
-#: addon\globalPlugins\visAware\recogHandler.py:1573
+#: addon\globalPlugins\visAware\recogHandler.py:1577
 msgid "Recognition sources included when cycling"
 msgstr "Джерела розпізнавання, включені під час циклічного перемикання"
 
@@ -718,124 +744,131 @@ msgstr ""
 #. Add-on summary/title, usually the user visible name of the add-on
 #. Translators: Summary/title for this add-on
 #. to be shown on installation and add-on information found in add-on store
-#: addon\globalPlugins\visAware\__init__.py:69 buildVars.py:27
+#: addon\globalPlugins\visAware\__init__.py:74 buildVars.py:27
 msgid "Vis Aware"
 msgstr "Vis Aware"
 
 #. Translators: The title of the settings dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:142
+#: addon\globalPlugins\visAware\__init__.py:147
 msgid "Vis Aware Settings"
 msgstr "Налаштування Vis Aware"
 
 #. Translators: The label for the menu item to open the Vis Aware settings dialog.
-#: addon\globalPlugins\visAware\__init__.py:207
+#: addon\globalPlugins\visAware\__init__.py:212
 msgid "&Vis Aware settings..."
 msgstr "&Налаштування Vis Aware..."
 
 #. Translators: The help text for the menu item to open the Vis Aware settings dialog.
-#: addon\globalPlugins\visAware\__init__.py:209
+#: addon\globalPlugins\visAware\__init__.py:214
 msgid "Vis Aware settings"
 msgstr "Налаштування Vis Aware"
 
 #. Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:371
+#: addon\globalPlugins\visAware\__init__.py:376
 msgid "Describes the content of the current navigator object"
 msgstr "Описати вміст поточного об’єкта навігатора"
 
 #. Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:385
+#: addon\globalPlugins\visAware\__init__.py:390
 msgid "Describes images on the clipboard"
 msgstr "Описати зображення в буфері обміну"
 
 #. Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:403
+#: addon\globalPlugins\visAware\__init__.py:408
 msgid "Recognizes the content of the current navigator object using OCR"
 msgstr "Розпізнає вміст поточного об’єкта навігатора за допомогою OCR"
 
 #. Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:417
+#: addon\globalPlugins\visAware\__init__.py:422
 msgid "Recognizes text in images on the clipboard using OCR"
 msgstr "Розпізнає текст на зображенні у буфері обміну за допомогою OCR"
 
 #. Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:467
+#: addon\globalPlugins\visAware\__init__.py:472
 msgid "Shows the previous recognition result"
 msgstr "Показати попередній результат розпізнавання"
 
 #. Translators: Reported when there is no previous recognition result to show.
-#: addon\globalPlugins\visAware\__init__.py:475
+#: addon\globalPlugins\visAware\__init__.py:480
 msgid "No previous recognition result"
 msgstr "Немає попереднього результату розпізнавання"
 
 #. Translators: Reported when the previous recognition result is blank.
-#: addon\globalPlugins\visAware\__init__.py:480
+#: addon\globalPlugins\visAware\__init__.py:485
 msgid "Previous recognition result is blank."
 msgstr "Попередній результат розпізнавання порожній."
 
+#. Translators: The title for the browsable message showing the recognition result.
+#: addon\globalPlugins\visAware\__init__.py:493
+#: addon\globalPlugins\visAware\__init__.py:1037
+msgid "Recognition result"
+msgstr "Результат розпізнавання"
+
 #. Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:486
+#: addon\globalPlugins\visAware\__init__.py:499
 msgid "Asks a follow-up question about the previous image description"
 msgstr "Задати додаткове питання щодо попереднього опису зображення"
 
 #. Translators: Reported when there is no previous recognition result to ask about.
-#: addon\globalPlugins\visAware\__init__.py:494
+#: addon\globalPlugins\visAware\__init__.py:507
 msgid "There is no previous recognition result to ask about."
 msgstr "Для питання немає попереднього результату розпізнавання."
 
 #. Translators: Reported when the follow-up question dialog cannot be opened.
-#: addon\globalPlugins\visAware\__init__.py:510
+#: addon\globalPlugins\visAware\__init__.py:523
 msgid "Could not open the follow-up question dialog."
 msgstr "Не вдалося відкрити діалог з додатковим питанням."
 
 #. Translators: A message shown when trying to use the AI agent with screen curtain enabled.
-#: addon\globalPlugins\visAware\__init__.py:533
+#: addon\globalPlugins\visAware\__init__.py:546
+#: addon\globalPlugins\visAware\agent\actions.py:209
 msgid "Please disable screen curtain before starting the AI Agent."
 msgstr "Будь ласка, вимкніть екранну завісу перед запуском помічника."
 
 #. Translators: Prompt shown when starting the AI agent.
-#: addon\globalPlugins\visAware\__init__.py:551
+#: addon\globalPlugins\visAware\__init__.py:564
 msgid "What should the AI Agent do?"
 msgstr "Що повинен зробити помічник?"
 
 #. Translators: Title for the AI agent command dialog.
-#: addon\globalPlugins\visAware\__init__.py:553
-#: addon\globalPlugins\visAware\__init__.py:609
+#: addon\globalPlugins\visAware\__init__.py:566
+#: addon\globalPlugins\visAware\__init__.py:622
 msgid "Vis Aware Agent"
 msgstr "Помічник Vis Aware"
 
 #. Translators: Reported when the AI agent is being stopped by the user.
-#: addon\globalPlugins\visAware\__init__.py:585
+#: addon\globalPlugins\visAware\__init__.py:598
 msgid "Agent is stopping."
 msgstr "Помічник завершує роботу."
 
 #. Translators: Reported when content recognition (e.g. OCR) is attempted, but the content is not visible.
-#: addon\globalPlugins\visAware\__init__.py:655
+#: addon\globalPlugins\visAware\__init__.py:668
 msgid "Content is not visible"
 msgstr "Вміст не видно"
 
 #. Translators: A message shown when screen capture fails.
-#: addon\globalPlugins\visAware\__init__.py:683
+#: addon\globalPlugins\visAware\__init__.py:700
 msgid "Failed to capture screen image."
 msgstr "Не вдалося зробити знімок екрана."
 
 #. Translators: Reported when a recognition task is cancelled by the user.
-#: addon\globalPlugins\visAware\__init__.py:699
 #: addon\globalPlugins\visAware\__init__.py:716
-#: addon\globalPlugins\visAware\__init__.py:986
+#: addon\globalPlugins\visAware\__init__.py:733
+#: addon\globalPlugins\visAware\__init__.py:1003
 msgid "Recognition cancelled"
 msgstr "Розпізнавання скасовано"
 
 #. Translators: Describes the command to cancel an ongoing recognition task.
-#: addon\globalPlugins\visAware\__init__.py:727
+#: addon\globalPlugins\visAware\__init__.py:744
 msgid "Cancels the current recognition"
 msgstr "Скасувати поточне розпізнавання"
 
 #. Translators: Reported when the cancel command is used but no recognition is in progress.
-#: addon\globalPlugins\visAware\__init__.py:734
+#: addon\globalPlugins\visAware\__init__.py:751
 msgid "No recognition is in progress."
 msgstr "Розпізнавання не виконується."
 
-#: addon\globalPlugins\visAware\__init__.py:760
+#: addon\globalPlugins\visAware\__init__.py:777
 msgid ""
 "Performs recognition using the current settings. In OCR and image "
 "description modes, press once for a recognition result document. Press twice "
@@ -850,86 +883,81 @@ msgstr ""
 "помічника"
 
 #. Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:787
+#: addon\globalPlugins\visAware\__init__.py:804
 msgid "Cycles through recognition modes"
 msgstr "Перемикає режими розпізнавання"
 
 #. Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:797
+#: addon\globalPlugins\visAware\__init__.py:814
 msgid ""
 "Cycles through automatic recognition modes: off, image description, and OCR"
 msgstr ""
 
 #. Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:813
+#: addon\globalPlugins\visAware\__init__.py:830
 msgid "Cycles through recognition sources"
 msgstr "Перемикає джерела розпізнавання"
 
 #. Translators: Reported when recognition source cycling is requested while AI Agent mode is active.
-#: addon\globalPlugins\visAware\__init__.py:821
+#: addon\globalPlugins\visAware\__init__.py:838
 msgid "Changing recognition source is not supported in AI Agent mode."
 msgstr "Зміна джерела розпізнавання не підтримується в режимі помічника."
 
 #. Translators: Reported when attempting to recognize a clipboard image, but no image is found.
-#: addon\globalPlugins\visAware\__init__.py:905
+#: addon\globalPlugins\visAware\__init__.py:922
 msgid "No image in clipboard"
 msgstr "У буфері обміну немає зображення"
 
 #. Translators: An error message for authentication failures. The placeholder is the specific error.
-#: addon\globalPlugins\visAware\__init__.py:990
+#: addon\globalPlugins\visAware\__init__.py:1007
 #, python-brace-format
 msgid "Authentication failed: {}"
 msgstr "Помилка автентифікації: {}"
 
 #. Translators: An error message for network issues. The placeholder is the specific error.
-#: addon\globalPlugins\visAware\__init__.py:993
+#: addon\globalPlugins\visAware\__init__.py:1010
 #, python-brace-format
 msgid "Network error: {}"
 msgstr "Помилка мережі: {}"
 
 #. Translators: A generic error message for recognition failures from the API.
-#: addon\globalPlugins\visAware\__init__.py:996
+#: addon\globalPlugins\visAware\__init__.py:1013
 #, python-brace-format
 msgid "Recognition failed: {}"
 msgstr "Помилка розпізнавання: {}"
 
 #. Translators: A message for an unexpected error during recognition.
-#: addon\globalPlugins\visAware\__init__.py:1000
+#: addon\globalPlugins\visAware\__init__.py:1017
 msgid "Recognition failed with an unexpected error."
 msgstr "Розпізнавання не вдалося через неочікувану помилку."
 
 #. Translators: An error message for an unknown result type.
-#: addon\globalPlugins\visAware\__init__.py:1006
-#: addon\globalPlugins\visAware\__init__.py:1069
+#: addon\globalPlugins\visAware\__init__.py:1023
+#: addon\globalPlugins\visAware\__init__.py:1089
 msgid "Recognition returned an unknown result type."
 msgstr "Розпізнавання повернуло невідомий тип результату."
 
-#. Translators: The title for the browsable message showing the recognition result.
-#: addon\globalPlugins\visAware\__init__.py:1022
-msgid "Recognition result"
-msgstr "Результат розпізнавання"
-
 #. Translators: Reported after partial streaming output when the service stopped before completing.
-#: addon\globalPlugins\visAware\__init__.py:1054
+#: addon\globalPlugins\visAware\__init__.py:1074
 msgid "Recognition was interrupted. The result may be incomplete."
 msgstr "Розпізнавання перервано. Результат може бути неповним."
 
 #. Translators: A message indicating that no recognition engine is configured.
-#: addon\globalPlugins\visAware\__init__.py:1123
+#: addon\globalPlugins\visAware\__init__.py:1143
 msgid "No recognition engine is configured."
 msgstr "Сервіс розпізнавання не налаштовано."
 
 #. Translators: A message shown when trying to recognize with screen curtain enabled.
-#: addon\globalPlugins\visAware\__init__.py:1128
+#: addon\globalPlugins\visAware\__init__.py:1152
 msgid "Please disable screen curtain before recognition."
 msgstr "Будь ласка, вимкніть екранну завісу перед розпізнаванням."
 
 #. Translators: Reporting when content recognition (e.g. OCR) begins.
-#: addon\globalPlugins\visAware\__init__.py:1149
+#: addon\globalPlugins\visAware\__init__.py:1173
 msgid "Recognizing"
 msgstr "Розпізнавання"
 
-#: addon\globalPlugins\visAware\__init__.py:1162
+#: addon\globalPlugins\visAware\__init__.py:1186
 msgid ""
 "An error occurred before starting recognition. Please check your settings "
 "and try again."
@@ -938,53 +966,53 @@ msgstr ""
 "повторіть спробу."
 
 #. Translators: Reported when there are no alternative engines to switch to.
-#: addon\globalPlugins\visAware\__init__.py:1177
+#: addon\globalPlugins\visAware\__init__.py:1201
 msgid "No other engines to switch to."
 msgstr "Немає інших сервісів для перемикання."
 
 #. Translators: Reports the name of the only available engine.
-#: addon\globalPlugins\visAware\__init__.py:1182
+#: addon\globalPlugins\visAware\__init__.py:1206
 #, python-brace-format
 msgid "Current engine: {engine_name}"
 msgstr "Поточний сервіс: {engine_name}"
 
 #. Translators: Describes a command to cycle through available recognition engines.
-#: addon\globalPlugins\visAware\__init__.py:1200
+#: addon\globalPlugins\visAware\__init__.py:1224
 msgid "Cycles through engines for the current mode"
 msgstr "Перемикає сервіси для поточного режиму"
 
-#: addon\globalPlugins\visAware\agent\actions.py:186
-#: addon\globalPlugins\visAware\agent\actions.py:218
-#: addon\globalPlugins\visAware\agent\actions.py:338
+#: addon\globalPlugins\visAware\agent\actions.py:213
+#: addon\globalPlugins\visAware\agent\actions.py:245
+#: addon\globalPlugins\visAware\agent\actions.py:365
 msgid "Failed to capture the foreground window."
 msgstr "Не вдалося захопити активне вікно."
 
-#: addon\globalPlugins\visAware\agent\actions.py:277
+#: addon\globalPlugins\visAware\agent\actions.py:304
 #, python-brace-format
 msgid "Unsupported agent action: {}"
 msgstr "Непідтримувана дія помічника: {}"
 
-#: addon\globalPlugins\visAware\agent\actions.py:359
-#: addon\globalPlugins\visAware\agent\actions.py:787
-#: addon\globalPlugins\visAware\agent\actions.py:793
+#: addon\globalPlugins\visAware\agent\actions.py:386
+#: addon\globalPlugins\visAware\agent\actions.py:814
+#: addon\globalPlugins\visAware\agent\actions.py:820
 msgid "Agent action is missing screen coordinates."
 msgstr "Для дії помічника відсутні екранні координати."
 
-#: addon\globalPlugins\visAware\agent\actions.py:652
+#: addon\globalPlugins\visAware\agent\actions.py:679
 msgid "Agent action is missing a key name."
 msgstr "Для дії помічника відсутня назва клавіші."
 
-#: addon\globalPlugins\visAware\agent\actions.py:656
-#: addon\globalPlugins\visAware\agent\actions.py:666
+#: addon\globalPlugins\visAware\agent\actions.py:683
+#: addon\globalPlugins\visAware\agent\actions.py:693
 #, python-brace-format
 msgid "Could not press key: {}"
 msgstr "Не вдалося натиснути клавішу: {}"
 
-#: addon\globalPlugins\visAware\agent\actions.py:662
+#: addon\globalPlugins\visAware\agent\actions.py:689
 msgid "Agent key down/up only supports a single key."
 msgstr "Функція «Натиснути/відпустити клавішу» підтримує лише одну клавішу."
 
-#: addon\globalPlugins\visAware\agent\actions.py:914
+#: addon\globalPlugins\visAware\agent\actions.py:941
 msgid "Agent action is missing a URL."
 msgstr "Для дії помічника Відсутня URL."
 
@@ -1007,6 +1035,12 @@ msgstr "{} не повернув дію помічника."
 #, python-brace-format
 msgid "{} returned an unsupported agent action: {}"
 msgstr "{} повернув непідтримувану дію помічника: {}"
+
+#. Do not use Python truthiness for provider data: strings such as "false" are truthy.
+#: addon\globalPlugins\visAware\agent\decision.py:264
+#, fuzzy, python-brace-format
+msgid "{} returned malformed agent action data."
+msgstr "Kimi повернув некоректно сформовані дані про дії помічника."
 
 #. Translators: The description of the DeepSeek Agent engine.
 #. Translators: The description of the DeepSeek image describer engine.
@@ -1698,6 +1732,87 @@ msgstr "Помилка розміру зображення"
 msgid "Image recognize error"
 msgstr "Помилка розпізнавання зображення"
 
+#. Translators: The description of the Baimiao formula recognition engine.
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoFormula.py:23
+msgid "Baimiao Formula Recognition"
+msgstr ""
+
+#. Translators: The description of the Baimiao OCR engine.
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:37
+#, fuzzy
+msgid "Baimiao OCR"
+msgstr "Baidu OCR"
+
+#. Translators: A Baimiao account membership level.
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:71
+msgid "Regular user"
+msgstr ""
+
+#. Translators: A Baimiao account membership level.
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:73
+msgid "Regular member"
+msgstr ""
+
+#. Translators: A Baimiao account membership level.
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:75
+msgid "Gold member"
+msgstr ""
+
+#. Translators: A Baimiao account membership level.
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:77
+msgid "Super member"
+msgstr ""
+
+#. Translators: The label for a button that logs out of Baimiao. {account} is a
+#. nickname, masked login, or user ID; {membership} is the account membership level.
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:82
+#, python-brace-format
+msgid "Log out of Baimiao ({account}, {membership})"
+msgstr ""
+
+#. Translators: The label for a button that logs out of Baimiao. {account} is a
+#. nickname, masked login, or user ID.
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:89
+#, python-brace-format
+msgid "Log out of Baimiao ({account})"
+msgstr ""
+
+#. Translators: The label for a button that logs out of Baimiao when account details are unavailable.
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:91
+msgid "Log out of Baimiao (logged in)"
+msgstr ""
+
+#. Translators: The label for a button that opens Baimiao login.
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:93
+msgid "Log in to Baimiao..."
+msgstr ""
+
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:116
+msgid ""
+"Are you sure you want to log out of Baimiao in Vis Aware? This deletes the "
+"Baimiao login saved on this computer, but does not automatically sign this "
+"device out of your Baimiao account. If you no longer use this device, sign "
+"it out in the Baimiao mobile app."
+msgstr ""
+
+#. Translators: The title of a confirmation dialog shown before logging out of Baimiao.
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:122
+msgid "Log out of Baimiao"
+msgstr ""
+
+#. Translators: The title of an error shown when Baimiao logout fails.
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:134
+msgid "Baimiao Logout Failed"
+msgstr ""
+
+#. Translators: An error when Baimiao receives invalid image content.
+#. Translators: An error when an empty image is passed to Baimiao.
+#: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:167
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:369
+#, fuzzy
+msgid "Invalid image content for Baimiao."
+msgstr "Не вдалося підготувати вміст зображення для завантаження."
+
 #. Translators: The description of the Gemini OCR engine.
 #: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:91
 msgid "Google Gemini OCR"
@@ -1983,6 +2098,183 @@ msgstr "Розширений (з можливістю розгортання)"
 #: addon\globalPlugins\visAware\contentRecognizers\vivoOCR.py:73
 msgid "Standard (faster)"
 msgstr "Стандартний (швидше)"
+
+#. Translators: The title of the Baimiao login dialog.
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoGui.py:28
+msgid "Log in to Baimiao"
+msgstr ""
+
+#. Translators: The label for a Baimiao email address or mobile number field.
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoGui.py:40
+msgid "&Email or mobile number"
+msgstr ""
+
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoGui.py:43
+#, fuzzy
+msgid "&Password"
+msgstr "Пароль:"
+
+#. Translators: The label for a button that submits Baimiao login information.
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoGui.py:50
+msgid "&Log in"
+msgstr ""
+
+#. Translators: The label for a button that cancels Baimiao login.
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoGui.py:52
+msgid "&Cancel"
+msgstr ""
+
+#. Translators: An error when a Baimiao login field is empty.
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoGui.py:72
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:328
+msgid "Enter your Baimiao account and password."
+msgstr ""
+
+#. Translators: The title of a Baimiao login error dialog.
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoGui.py:74
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoGui.py:137
+msgid "Baimiao Login Failed"
+msgstr ""
+
+#. Translators: A message shown when Baimiao login succeeds.
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoGui.py:115
+msgid "Logged in to Baimiao successfully."
+msgstr ""
+
+#. Translators: The title of a dialog shown when Baimiao login succeeds.
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoGui.py:117
+msgid "Baimiao Login Successful"
+msgstr ""
+
+#. Translators: An error when Baimiao login fails unexpectedly.
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoGui.py:130
+#, fuzzy
+msgid "Baimiao login failed with an unexpected error."
+msgstr "Виконання запиту завершилося невдачею через несподівану помилку."
+
+#. Translators: An error when Baimiao returns invalid login information.
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:157
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:350
+#, fuzzy
+msgid "Baimiao returned invalid login information."
+msgstr "Kimi повернув недійсний JSON дії помічника."
+
+#. Translators: An error when Baimiao login information cannot be stored securely.
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:166
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:169
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:172
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:185
+msgid "Could not save Baimiao login information securely."
+msgstr ""
+
+#. Translators: An error when Baimiao Web has not been logged in.
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:307
+#, fuzzy
+msgid "Please log in to Baimiao in the OCR engine settings."
+msgstr ""
+"Відсутній ключ API. Будь ласка, налаштуйте його в налаштуваннях сервісу Kimi "
+"OCR."
+
+#. Translators: An error when Baimiao does not grant a usable OCR request.
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:389
+msgid "Baimiao did not provide valid OCR permission."
+msgstr ""
+
+#. Translators: An error when Baimiao does not start an OCR task.
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:417
+msgid "Baimiao did not start the OCR task."
+msgstr ""
+
+#. Translators: An error when the stored Baimiao login is no longer valid.
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:438
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:447
+#, fuzzy
+msgid "Baimiao login has expired. Please log in again."
+msgstr "Термін дії токена закінчився, спробуйте ще раз."
+
+#. Translators: An error when Baimiao returns malformed task status data.
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:483
+#, fuzzy
+msgid "Baimiao returned an invalid OCR task status."
+msgstr "Kimi повернув недійсну відповідь."
+
+#. Translators: An error when a completed Baimiao task has no OCR result.
+#. Translators: An error when a completed Baimiao task has no usable OCR result.
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:487
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:726
+#, fuzzy
+msgid "Baimiao returned an invalid OCR response."
+msgstr "Kimi повернув недійсну відповідь."
+
+#. Translators: An error when Baimiao does not finish an OCR task in time.
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:494
+msgid "Baimiao OCR timed out."
+msgstr ""
+
+#. Translators: An error when Baimiao returns data that is not valid JSON.
+#. Translators: An error when Baimiao returns malformed API data.
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:525
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:528
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:562
+#, fuzzy
+msgid "Baimiao returned an invalid API response."
+msgstr "Kimi повернув недійсну відповідь."
+
+#. Translators: A Baimiao login error. {message} is returned by the service.
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:542
+#, python-brace-format
+msgid "Baimiao login failed: {message}"
+msgstr ""
+
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:549
+msgid ""
+"In the Baimiao mobile app, log out any devices you no longer use, then try "
+"again."
+msgstr ""
+
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:556
+#, fuzzy, python-brace-format
+msgid "Baimiao API error: {message}"
+msgstr "Помилка API Kimi: {}"
+
+#. Translators: A Baimiao error without a message. {code} is a service error code.
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:575
+#, python-brace-format
+msgid "Baimiao returned service error code {code}."
+msgstr ""
+
+#. Translators: A Baimiao error without a message. {code} is an API error code.
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:579
+#, fuzzy, python-brace-format
+msgid "Baimiao returned API error code {code}."
+msgstr "Невідомий код помилки: {code}"
+
+#. Translators: A Baimiao error response without a message or code.
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:581
+#, fuzzy
+msgid "Baimiao returned an unknown API error."
+msgstr "Розпізнавання повернуло невідомий тип результату."
+
+#. Translators: An error when a Baimiao OCR task reports a failure.
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:592
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:596
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:601
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:678
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:711
+msgid "Baimiao OCR task failed."
+msgstr ""
+
+#. Translators: An error when Baimiao returns an unsafe upload endpoint.
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:619
+#, fuzzy
+msgid "Baimiao returned an invalid image upload endpoint."
+msgstr "Ollama повернув недійсний список моделей."
+
+#. Translators: An error when Baimiao returns an incomplete upload signature.
+#: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:650
+#, fuzzy
+msgid "Baimiao returned an invalid image upload signature."
+msgstr "Kimi повернув недійсну відповідь."
 
 #. Translators: An error message when a PaddleOCR service type setting is invalid.
 #: addon\globalPlugins\visAware\contentRecognizers\_paddleOCRClient.py:78
@@ -2371,6 +2663,18 @@ msgstr ""
 #: buildVars.py:38
 #, fuzzy
 msgid ""
+"### 0.9.6\n"
+"\n"
+"* Updated the default DeepSeek vision model to `deepseek-flash` and added "
+"newer Gemini vision model presets.\n"
+"* Added Baimiao OCR and formula recognition, including shared account login, "
+"protected sessions, clickable text coordinates, and accessible MathML "
+"formula output.\n"
+"* Added OCR, image description, and AI Agent support in Screen Curtain mode "
+"on NVDA 2026.3 and later.\n"
+"* Improved automatic recognition settings so the selected engine is "
+"preserved correctly.\n"
+"\n"
 "### 0.9.0\n"
 "\n"
 "* Added DeepSeek image description and AI Agent engines, with configurable "

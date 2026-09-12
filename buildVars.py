@@ -31,15 +31,15 @@ addon_info = AddonInfo(
 		"""NVDA add-on for OCR, AI-powered image description, automatic recognition, and AI-assisted computer control.""",
 	),
 	# version
-	addon_version="0.9.5",
+	addon_version="0.9.6",
 	# Brief changelog for this version
 	# Translators: what's new content for the add-on version to be shown in the add-on store
 	addon_changelog=_(
-		"""### 0.9.5
+		"""### 0.9.6
 
+* Updated the default DeepSeek vision model to `deepseek-flash` and added newer Gemini vision model presets.
 * Added Baimiao OCR and formula recognition, including shared account login, protected sessions, clickable text coordinates, and accessible MathML formula output.
-* Added screen capture through NVDA's Windows Graphics Capture path, allowing screen recognition and AI Agent screenshots while Screen Curtain or the built-in Magnifier is active on supported systems.
-* Improved Baimiao account settings and documentation.
+* Added OCR, image description, and AI Agent support in Screen Curtain mode on NVDA 2026.3 and later.
 * Improved automatic recognition settings so the selected engine is preserved correctly.
 
 ### 0.9.0

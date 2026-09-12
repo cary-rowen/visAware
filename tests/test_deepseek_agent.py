@@ -413,9 +413,9 @@ class DeepSeekAgentTestCase(unittest.TestCase):
 		engine = module.AgentEngine()
 
 		self.assertNotIn("fetchModels", [setting.name for setting in engine.supportedSettings])
-		self.assertEqual(list(engine.availableModels), ["deepseek-v4-flash-vision-exp"])
+		self.assertEqual(list(engine.availableModels), ["deepseek-flash"])
 		engine.model = "deepseek-v4-pro"
-		self.assertEqual(engine.model, "deepseek-v4-flash-vision-exp")
+		self.assertEqual(engine.model, "deepseek-flash")
 
 
 if __name__ == "__main__":

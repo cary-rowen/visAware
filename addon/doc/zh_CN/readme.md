@@ -107,7 +107,7 @@ Vis Aware 会保存用于识别此设备的固定标识，以及设置按钮显�
 
 Kimi 引擎默认使用 Kimi Code 的官方 OpenAI 兼容 Base URL `https://api.kimi.com/coding/v1`，请填写该端点的 Kimi Code API 密钥。使用 Kimi 开放平台时，请将 Base URL 设置为 `https://api.moonshot.cn/v1`，并填写在 [Kimi 开放平台](https://platform.kimi.com/console/api-keys) 创建的密钥；使用国际平台时，请设置为 `https://api.moonshot.ai/v1`，并填写在[国际 Kimi 平台](https://platform.kimi.ai/console/api-keys) 创建的密钥。请勿混用端点和密钥。默认模型为 Kimi K3；可用模型和思考选项会随端点及模型系列而异。
 
-DeepSeek 引擎使用官方 OpenAI 兼容 API。请将 Base URL 设置为 `https://api.deepseek.com`，在 [DeepSeek API 控制台](https://platform.deepseek.com/api_keys) 创建密钥并填写到引擎设置中。默认视觉模型为 `deepseek-v4-flash-vision-exp`，图像描述和 AI Agent 引擎均使用该模型。
+DeepSeek 引擎使用官方 OpenAI 兼容 API。请将 Base URL 设置为 `https://api.deepseek.com`，在 [DeepSeek API 控制台](https://platform.deepseek.com/api_keys) 创建密钥并填写到引擎设置中。默认视觉模型为 `deepseek-flash`，图像描述和 AI Agent 引擎均使用该模型。
 
 ## 内置引擎
 

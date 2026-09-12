@@ -142,7 +142,7 @@ class GeminiAgentInteractionsTestCase(unittest.TestCase):
 		self.assertEqual(module.DEFAULT_GEMINI_MODEL, "gemini-3.6-flash")
 		self.assertEqual(
 			list(module.getGeminiModelChoices())[:2],
-			["gemini-3.6-flash", "gemini-3.5-flash-lite"],
+			["gemini-3.8-flash", "gemini-3.7-flash"],
 		)
 		self.assertEqual(
 			module.getGeminiLowLatencyThinkingConfig("gemini-3.6-flash"),

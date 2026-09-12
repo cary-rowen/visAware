@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 'customOCR' '0.1.1-dev'\n"
 "Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
-"POT-Creation-Date: 2026-09-12 20:37+0800\n"
+"POT-Creation-Date: 2026-09-13 02:42+0800\n"
 "PO-Revision-Date: 2026-09-13 01:23+0800\n"
 "Last-Translator: Larry Wang <larry.wang.801@gmail.com>\n"
 "Language-Team: \n"
@@ -203,78 +203,98 @@ msgstr "上一次识别结果无法转换为文本。"
 msgid "The previous recognition result is blank."
 msgstr "上一次识别结果为空。"
 
-#. Translators: The display name for the DeepSeek vision model preset.
+#. Translators: The display name for the current DeepSeek vision model.
 #: addon\globalPlugins\visAware\deepseekModels.py:20
-msgid "DeepSeek V4 Flash Vision"
-msgstr "DeepSeek V4 Flash Vision"
+msgid "DeepSeek Flash Vision"
+msgstr "DeepSeek Flash Vision"
 
 #. Translators: The display name for a Gemini model preset.
 #: addon\globalPlugins\visAware\geminiModels.py:26
+msgid "Gemini 3.8 Flash (latest)"
+msgstr "Gemini 3.8 Flash（最新）"
+
+#. Translators: The display name for a Gemini model preset.
+#: addon\globalPlugins\visAware\geminiModels.py:28
+msgid "Gemini 3.7 Flash"
+msgstr "Gemini 3.7 Flash"
+
+#. Translators: The display name for a Gemini model preset.
+#: addon\globalPlugins\visAware\geminiModels.py:30
 msgid "Gemini 3.6 Flash (recommended)"
 msgstr "Gemini 3.6 Flash（推荐）"
 
 #. Translators: The display name for a Gemini model preset.
-#: addon\globalPlugins\visAware\geminiModels.py:28
+#: addon\globalPlugins\visAware\geminiModels.py:32
 msgid "Gemini 3.5 Flash-Lite (fast, lower cost)"
 msgstr "Gemini 3.5 Flash-Lite（快速，成本更低）"
 
 #. Translators: The display name for a Gemini model preset.
-#: addon\globalPlugins\visAware\geminiModels.py:30
+#: addon\globalPlugins\visAware\geminiModels.py:34
 msgid "Gemini 3.5 Flash"
 msgstr "Gemini 3.5 Flash"
 
 #. Translators: The display name for a Gemini model preset.
-#: addon\globalPlugins\visAware\geminiModels.py:32
+#: addon\globalPlugins\visAware\geminiModels.py:36
 msgid "Gemini Flash Latest"
 msgstr "Gemini Flash 最新版"
 
 #. Translators: The display name for a Gemini model preset.
-#: addon\globalPlugins\visAware\geminiModels.py:34
+#: addon\globalPlugins\visAware\geminiModels.py:38
 msgid "Gemini 3.1 Pro Preview (higher reasoning, slower)"
 msgstr "Gemini 3.1 Pro Preview（推理更强，较慢）"
 
 #. Translators: The display name for a Gemini model preset.
-#: addon\globalPlugins\visAware\geminiModels.py:36
+#: addon\globalPlugins\visAware\geminiModels.py:40
 msgid "Gemini Pro Latest (higher reasoning)"
 msgstr "Gemini Pro 最新版（推理更强）"
 
 #. Translators: The display name for a Gemini model preset.
-#: addon\globalPlugins\visAware\geminiModels.py:38
+#: addon\globalPlugins\visAware\geminiModels.py:42
 msgid "Gemini 3 Flash Preview (agentic preview)"
 msgstr "Gemini 3 Flash Preview（Agent 预览）"
 
 #. Translators: The display name for a Gemini model preset.
-#: addon\globalPlugins\visAware\geminiModels.py:40
+#: addon\globalPlugins\visAware\geminiModels.py:44
 msgid "Gemini 3.1 Flash-Lite (fast, lower cost)"
 msgstr "Gemini 3.1 Flash-Lite（快速，成本更低）"
 
 #. Translators: The display name for a Gemini model preset.
-#: addon\globalPlugins\visAware\geminiModels.py:42
+#: addon\globalPlugins\visAware\geminiModels.py:46
 msgid "Gemini Flash-Lite Latest (fast, lower cost)"
 msgstr "Gemini Flash-Lite 最新版（快速，成本更低）"
 
 #. Translators: The display name for a Gemini model preset.
-#: addon\globalPlugins\visAware\geminiModels.py:44
+#: addon\globalPlugins\visAware\geminiModels.py:48
 msgid "Gemini 2.5 Flash-Lite (stable low cost)"
 msgstr "Gemini 2.5 Flash-Lite（稳定低成本）"
 
+#. Translators: The display name for a Gemini model preset.
+#: addon\globalPlugins\visAware\geminiModels.py:50
+msgid "Gemini 2.5 Flash (stable)"
+msgstr "Gemini 2.5 Flash（稳定版）"
+
+#. Translators: The display name for a Gemini model preset.
+#: addon\globalPlugins\visAware\geminiModels.py:52
+msgid "Gemini 2.5 Pro (stable, higher reasoning)"
+msgstr "Gemini 2.5 Pro（稳定版，推理能力更强）"
+
 #. Translators: The display name for Gemini's default media resolution.
-#: addon\globalPlugins\visAware\geminiModels.py:58
+#: addon\globalPlugins\visAware\geminiModels.py:66
 msgid "Automatic (model default)"
 msgstr "自动（模型默认）"
 
 #. Translators: The display name for high Gemini media resolution.
-#: addon\globalPlugins\visAware\geminiModels.py:60
+#: addon\globalPlugins\visAware\geminiModels.py:68
 msgid "High (best detail, slower)"
 msgstr "高（细节最丰富，速度较慢）"
 
 #. Translators: The display name for medium Gemini media resolution.
-#: addon\globalPlugins\visAware\geminiModels.py:62
+#: addon\globalPlugins\visAware\geminiModels.py:70
 msgid "Medium (balanced)"
 msgstr "中（均衡）"
 
 #. Translators: The display name for low Gemini media resolution.
-#: addon\globalPlugins\visAware\geminiModels.py:64
+#: addon\globalPlugins\visAware\geminiModels.py:72
 msgid "Low (faster, less detail)"
 msgstr "低（速度较快，细节较少）"
 
@@ -1109,6 +1129,7 @@ msgstr "DeepSeek 返回了无效的 Agent 动作 JSON。"
 
 #: addon\globalPlugins\visAware\agent\deepseek.py:272
 #: addon\globalPlugins\visAware\imageDescribers\deepseek.py:261
+#, python-brace-format
 msgid "DeepSeek API error: {}"
 msgstr "DeepSeek API 错误：{}"
 
@@ -2547,16 +2568,17 @@ msgid ""
 msgstr "为 NVDA 提供 OCR、AI 图像描述、自动识别和 AI 辅助计算机控制的插件。"
 
 #: buildVars.py:38
+#, fuzzy
 msgid ""
-"### 0.9.5\n"
+"### 0.9.6\n"
 "\n"
+"* Updated the default DeepSeek vision model to `deepseek-flash` and added "
+"newer Gemini vision model presets.\n"
 "* Added Baimiao OCR and formula recognition, including shared account login, "
 "protected sessions, clickable text coordinates, and accessible MathML "
 "formula output.\n"
-"* Added screen capture through NVDA's Windows Graphics Capture path, "
-"allowing screen recognition and AI Agent screenshots while Screen Curtain or "
-"the built-in Magnifier is active on supported systems.\n"
-"* Improved Baimiao account settings and documentation.\n"
+"* Added OCR, image description, and AI Agent support in Screen Curtain mode "
+"on NVDA 2026.3 and later.\n"
 "* Improved automatic recognition settings so the selected engine is "
 "preserved correctly.\n"
 "\n"
@@ -2590,17 +2612,18 @@ msgid ""
 "* Removed model and model-provider names from the follow-up dialog.\n"
 "* Added Copy and Close buttons to browsable recognition and follow-up result "
 "dialogs."
-msgstr "### 0.9.5\n"
+msgstr ""
+"### 0.9.6\n"
 "\n"
-"* 新增白描 OCR 和公式识别，包括共用账号登录、受保护的会话、可点击的文本坐标以及可访问的 MathML 公式输出。\n"
-"* 新增通过 NVDA Windows Graphics Capture 路径进行屏幕捕获，在支持的系统上启用黑屏或内置放大镜时仍可进行屏幕识别和 AI Agent 截图。\n"
-"* 改进白描账号设置和文档。\n"
+"* 更新默认 DeepSeek 视觉模型为 `deepseek-flash`，并新增较新的 Gemini 视觉模型"
+"预设。\n"
+"* 新增白描 OCR 和公式识别，包括共用账号登录、受保护的会话、可点击的文本坐标以"
+"及可访问的 MathML 公式输出。\n"
+"* 在 NVDA 2026.3 及更高版本中，黑屏模式支持 OCR、图像描述和 AI Agent。\n"
 "* 改进自动识别设置，正确保留所选引擎。\n"
 "\n"
 "### 0.9.0\n"
 "\n"
-"* 新增白描 OCR 和公式识别，共用账号登录，支持 DPAPI 加密会话、当前 OSS 上传流"
-"程、可点击的文本坐标以及可访问的 MathML 公式输出。\n"
 "* 新增 DeepSeek 图像描述和 AI Agent 引擎，并支持配置 API 地址和视觉模型。\n"
 "* 新增在关闭、图像描述和 OCR 之间循环切换自动识别模式的命令；该命令没有默认手"
 "势。\n"
@@ -2609,8 +2632,6 @@ msgstr "### 0.9.5\n"
 "* 改进浏览模式下的网页图像自动识别，支持读取当前及延迟加载图像 URL，并在 URL "
 "不可用时回退到屏幕截图。\n"
 "* 改进自动识别结果处理，在当前识别目标变化后忽略过期结果。\n"
-"* 在支持的系统上，通过 NVDA 原始捕获路径获取屏幕识别和 AI Agent 截图，即使启"
-"用了黑屏或内置放大镜也可使用。\n"
 "\n"
 "### 0.8.1\n"
 "\n"

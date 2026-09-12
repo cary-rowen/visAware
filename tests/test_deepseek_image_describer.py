@@ -202,7 +202,7 @@ class DeepSeekImageDescriberTestCase(unittest.TestCase):
 		self.assertEqual(request["url"], "https://api.deepseek.com/chat/completions")
 		self.assertEqual(request["headers"]["Authorization"], "Bearer secret")
 		self.assertEqual(request["timeout"], 60)
-		self.assertEqual(request["json"]["model"], "deepseek-v4-flash-vision-exp")
+		self.assertEqual(request["json"]["model"], "deepseek-flash")
 		self.assertEqual(request["json"]["thinking"], {"type": "disabled"})
 		self.assertEqual(request["json"]["max_tokens"], 2048)
 		self.assertEqual(request["json"]["messages"][0]["role"], "user")
@@ -379,9 +379,9 @@ class DeepSeekImageDescriberTestCase(unittest.TestCase):
 		module = sys.modules["addon.globalPlugins.visAware.imageDescribers.deepseek"]
 		engine = module.CustomContentRecognizer()
 
-		self.assertEqual(list(engine.availableModels), ["deepseek-v4-flash-vision-exp"])
+		self.assertEqual(list(engine.availableModels), ["deepseek-flash"])
 		engine.model = "deepseek-v4-pro"
-		self.assertEqual(engine.model, "deepseek-v4-flash-vision-exp")
+		self.assertEqual(engine.model, "deepseek-flash")
 
 
 if __name__ == "__main__":

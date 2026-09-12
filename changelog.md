@@ -1,8 +1,8 @@
-### 0.9.5
+### 0.9.6
 
+* Updated the default DeepSeek vision model to `deepseek-flash` and added newer Gemini vision model presets.
 * Added Baimiao OCR and formula recognition, including shared account login, protected sessions, clickable text coordinates, and accessible MathML formula output.
-* Added screen capture through NVDA's Windows Graphics Capture path, allowing screen recognition and AI Agent screenshots while Screen Curtain or the built-in Magnifier is active on supported systems.
-* Improved Baimiao account settings and documentation.
+* Added OCR, image description, and AI Agent support in Screen Curtain mode on NVDA 2026.3 and later.
 * Improved automatic recognition settings so the selected engine is preserved correctly.
 
 ### 0.9.0
