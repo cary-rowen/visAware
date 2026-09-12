@@ -546,7 +546,7 @@ class BaimiaoWebClient:
 						(
 							loginErrorMessage,
 							_(
-								"In the Baimiao mobile app, log out any devices you no longer use, then try again."
+								"In the Baimiao mobile app, log out any devices you no longer use, then try again.",
 							),
 						),
 					)

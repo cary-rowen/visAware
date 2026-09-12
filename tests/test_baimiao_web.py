@@ -178,7 +178,8 @@ class BaimiaoWebTestCase(unittest.TestCase):
 		self.assertEqual(result["words_result"][0]["words"], "text")
 		self.assertEqual(waits, [0.5])
 		self.assertEqual(
-			[call[0][0] for call in calls], ["POST", "POST", "GET", "POST", "POST", "GET", "GET"]
+			[call[0][0] for call in calls],
+			["POST", "POST", "GET", "POST", "POST", "GET", "GET"],
 		)
 		self.assertEqual(
 			[calls[index][1]["retry"] for index in range(len(calls))],
@@ -485,7 +486,8 @@ class BaimiaoWebTestCase(unittest.TestCase):
 		}
 
 		self.assertEqual(
-			self.module.extractText({"words_result": result["words_result"][:3]}), "\u4f60\u597d!"
+			self.module.extractText({"words_result": result["words_result"][:3]}),
+			"\u4f60\u597d!",
 		)
 		self.assertEqual(self.module.extractText(result), "\u4f60\u597d! hello world")
 		self.assertEqual(
@@ -657,7 +659,7 @@ class BaimiaoWebTestCase(unittest.TestCase):
 	def testHttpAuthenticationFailureClearsStoredSession(self) -> None:
 		self.module._saveSession("6c40ae69-d09d-4a9a-8ff1-f86e0139a283", "login-token")
 		self.module.network.sendRequest = lambda *args, **kwargs: (_ for _ in ()).throw(
-			_AuthenticationError("expired")
+			_AuthenticationError("expired"),
 		)
 		client = self.module.BaimiaoWebClient(
 			"6c40ae69-d09d-4a9a-8ff1-f86e0139a283",
@@ -678,7 +680,7 @@ class BaimiaoWebTestCase(unittest.TestCase):
 					"isEnded": True,
 					"ydResp": {"errorCode": 123, "errorMsg": "quota exceeded"},
 				},
-			}
+			},
 		)
 		client = self.module.BaimiaoWebClient(
 			"6c40ae69-d09d-4a9a-8ff1-f86e0139a283",
