@@ -131,6 +131,8 @@ class CustomContentRecognizer(BaseDescriber):
 	def model(self, value: str) -> None:
 		if value in self.availableModels:
 			self._model = value
+		else:
+			self._model = DEFAULT_GEMINI_MODEL
 
 	@property
 	def prompt(self) -> str:

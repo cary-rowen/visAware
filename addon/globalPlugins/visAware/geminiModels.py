@@ -13,6 +13,20 @@ addonHandler.initTranslation()
 DEFAULT_GEMINI_MODEL = "gemini-3.6-flash"
 DEFAULT_GEMINI_MEDIA_RESOLUTION = "MEDIA_RESOLUTION_HIGH"
 
+_GEMINI_3_THINKING_LEVELS = {
+	"gemini-3.8-flash": "low",
+	"gemini-3.7-flash": "low",
+	"gemini-3.6-flash": "medium",
+	"gemini-3.5-flash-lite": "minimal",
+	"gemini-3.5-flash": "minimal",
+	"gemini-flash-latest": "medium",
+	"gemini-3.1-pro-preview": "low",
+	"gemini-pro-latest": "low",
+	"gemini-3-flash-preview": "minimal",
+	"gemini-3.1-flash-lite": "minimal",
+	"gemini-flash-lite-latest": "minimal",
+}
+
 
 def getGeminiModelChoices() -> OrderedDict[str, str]:
 	"""
@@ -46,11 +60,26 @@ def getGeminiModelChoices() -> OrderedDict[str, str]:
 			"gemini-flash-lite-latest": _("Gemini Flash-Lite Latest (fast, lower cost)"),
 			# Translators: The display name for a Gemini model preset.
 			"gemini-2.5-flash-lite": _("Gemini 2.5 Flash-Lite (stable low cost)"),
-			# Translators: The display name for a Gemini model preset.
-			"gemini-2.5-flash": _("Gemini 2.5 Flash (stable)"),
-			# Translators: The display name for a Gemini model preset.
-			"gemini-2.5-pro": _("Gemini 2.5 Pro (stable, higher reasoning)"),
 		},
+	)
+
+
+def getGeminiAgentModelChoices() -> OrderedDict[str, str]:
+	modelChoices = getGeminiModelChoices()
+	return OrderedDict(
+		(model, modelChoices[model])
+		for model in (
+			"gemini-3.8-flash",
+			"gemini-3.7-flash",
+			"gemini-3.6-flash",
+			"gemini-3.5-flash-lite",
+			"gemini-3.5-flash",
+			"gemini-flash-latest",
+			"gemini-3-flash-preview",
+			"gemini-3.1-flash-lite",
+			"gemini-flash-lite-latest",
+			"gemini-2.5-flash-lite",
+		)
 	)
 
 
@@ -82,12 +111,14 @@ def getGeminiLowLatencyThinkingConfig(model: str) -> dict[str, int | str] | None
 	:returns: A Gemini thinkingConfig object, or None for models without a known low-latency setting.
 	"""
 	model = model.lower()
-	if model == "gemini-flash-latest" or model.startswith("gemini-3.6"):
-		return {"thinkingLevel": "medium"}
-	if model == "gemini-pro-latest" or model.startswith("gemini-3.1-pro") or model.startswith("gemini-3-pro"):
-		return {"thinkingLevel": "low"}
-	if model == "gemini-flash-lite-latest" or model.startswith("gemini-3"):
-		return {"thinkingLevel": "minimal"}
-	if model.startswith("gemini-2.5-flash"):
+	thinkingLevel = _GEMINI_3_THINKING_LEVELS.get(model)
+	if thinkingLevel:
+		return {"thinkingLevel": thinkingLevel}
+	if model == "gemini-2.5-flash-lite":
 		return {"thinkingBudget": 0}
 	return None
+
+
+def supportsGeminiPerImageResolution(model: str) -> bool:
+	# Per-image resolution is supported only by Gemini 3, unlike the global GenerateContent setting.
+	return model.lower() in _GEMINI_3_THINKING_LEVELS

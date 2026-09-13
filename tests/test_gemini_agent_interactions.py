@@ -86,10 +86,6 @@ def _install_module_stubs() -> None:
 	networkModule.sendRequest = lambda **kwargs: None
 	sys.modules["addon.globalPlugins.visAware.network"] = networkModule
 
-	geminiModelsModule = types.ModuleType("addon.globalPlugins.visAware.geminiModels")
-	geminiModelsModule.getGeminiLowLatencyThinkingConfig = lambda model: None
-	sys.modules["addon.globalPlugins.visAware.geminiModels"] = geminiModelsModule
-
 	actionsModule = types.ModuleType("addon.globalPlugins.visAware.agent.actions")
 	actionsModule.JPEG_QUALITY = 90
 	actionsModule.Screenshot = _Screenshot
@@ -108,7 +104,7 @@ def _install_module_stubs() -> None:
 
 
 def load_gemini_module():
-	_install_module_stubs()
+	load_gemini_models_module()
 	modulePath = (
 		Path(__file__).resolve().parents[1] / "addon" / "globalPlugins" / "visAware" / "agent" / "gemini.py"
 	)
@@ -137,21 +133,60 @@ def load_gemini_models_module():
 
 class GeminiAgentInteractionsTestCase(unittest.TestCase):
 	def test_current_model_presets(self) -> None:
-		module = load_gemini_models_module()
+		module = load_gemini_module()
+		models = sys.modules["addon.globalPlugins.visAware.geminiModels"]
+		expected = {
+			"gemini-3.8-flash": ("low", "low", "high"),
+			"gemini-3.7-flash": ("low", "low", "high"),
+			"gemini-3.6-flash": ("medium", "medium", "high"),
+			"gemini-3.5-flash-lite": ("minimal", "minimal", "high"),
+			"gemini-3.5-flash": ("minimal", "minimal", "high"),
+			"gemini-flash-latest": ("medium", "medium", "high"),
+			"gemini-3.1-pro-preview": ("low", "low", "high"),
+			"gemini-pro-latest": ("low", "low", "high"),
+			"gemini-3-flash-preview": ("minimal", "minimal", "high"),
+			"gemini-3.1-flash-lite": ("minimal", "minimal", "high"),
+			"gemini-flash-lite-latest": ("minimal", "minimal", "high"),
+			"gemini-2.5-flash-lite": (0, None, None),
+		}
 
-		self.assertEqual(module.DEFAULT_GEMINI_MODEL, "gemini-3.6-flash")
+		self.assertEqual(models.DEFAULT_GEMINI_MODEL, "gemini-3.6-flash")
+		self.assertEqual(list(models.getGeminiModelChoices()), list(expected))
+		agentModels = models.getGeminiAgentModelChoices()
 		self.assertEqual(
-			list(module.getGeminiModelChoices())[:2],
-			["gemini-3.8-flash", "gemini-3.7-flash"],
+			list(agentModels.items()),
+			[
+				(model, label)
+				for model, label in models.getGeminiModelChoices().items()
+				if model not in {"gemini-3.1-pro-preview", "gemini-pro-latest"}
+			],
 		)
-		self.assertEqual(
-			module.getGeminiLowLatencyThinkingConfig("gemini-3.6-flash"),
-			{"thinkingLevel": "medium"},
-		)
-		self.assertEqual(
-			module.getGeminiLowLatencyThinkingConfig("gemini-3.5-flash-lite"),
-			{"thinkingLevel": "minimal"},
-		)
+		self.assertIn(models.DEFAULT_GEMINI_MODEL, agentModels)
+		expected["gemini-3-unknown"] = (None, None, None)
+		for model, (thinking, interactionsLevel, resolution) in expected.items():
+			with self.subTest(model=model):
+				if isinstance(thinking, str):
+					thinkingConfig = {"thinkingLevel": thinking}
+				elif thinking == 0:
+					thinkingConfig = {"thinkingBudget": 0}
+				else:
+					thinkingConfig = None
+				self.assertEqual(models.getGeminiLowLatencyThinkingConfig(model), thinkingConfig)
+				generationConfig = module._buildGenerationConfig(model)
+				if interactionsLevel:
+					self.assertEqual(generationConfig["thinking_level"], interactionsLevel)
+				else:
+					self.assertNotIn("thinking_level", generationConfig)
+				client = module.GeminiAgentClient(
+					module.GeminiAgentSettings(
+						apiKey="key", model=model, mediaResolution="MEDIA_RESOLUTION_HIGH"
+					),
+				)
+				image = client._buildInputSteps("read text", module.Screenshot(), [])[0]["content"][1]
+				if resolution:
+					self.assertEqual(image["resolution"], resolution)
+				else:
+					self.assertNotIn("resolution", image)
 
 	def test_next_action_continues_interaction_with_function_result(self) -> None:
 		module = load_gemini_module()
@@ -198,17 +233,21 @@ class GeminiAgentInteractionsTestCase(unittest.TestCase):
 		]
 
 		def sendRequest(**kwargs):
+			self.assertEqual(kwargs["url"], "https://generativelanguage.googleapis.com/v1beta/interactions")
+			self.assertEqual(kwargs["headers"]["Api-Revision"], "2026-05-20")
 			payloads.append(kwargs["json"])
 			return responses.pop(0)
 
 		module.network.sendRequest = sendRequest
-		client = module.GeminiAgentClient(module.GeminiAgentSettings(apiKey="key", model="gemini-test"))
+		client = module.GeminiAgentClient(module.GeminiAgentSettings(apiKey="key", model="gemini-3.8-flash"))
 		screenshot = module.Screenshot()
 
 		client.nextAction("open settings", screenshot, [])
 		client.nextAction("open settings", screenshot, ["Clicked Settings."])
 
 		firstPayload, secondPayload = payloads
+		self.assertEqual(firstPayload["generation_config"]["thinking_level"], "low")
+		self.assertEqual(secondPayload["generation_config"]["thinking_level"], "low")
 		self.assertNotIn("max_output_tokens", firstPayload["generation_config"])
 		self.assertNotIn("max_output_tokens", secondPayload["generation_config"])
 		self.assertNotIn("temperature", firstPayload["generation_config"])

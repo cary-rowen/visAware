@@ -14,8 +14,8 @@ from ...engineGUIHelper import ChoiceEngineSetting, TextInputEngineSetting
 from ...geminiModels import (
 	DEFAULT_GEMINI_MEDIA_RESOLUTION,
 	DEFAULT_GEMINI_MODEL,
+	getGeminiAgentModelChoices,
 	getGeminiMediaResolutionChoices,
-	getGeminiModelChoices,
 )
 from ..gemini import GeminiAgentClient, GeminiAgentSettings
 from ..settings import BaseAgentEngine
@@ -78,6 +78,8 @@ class AgentEngine(BaseAgentEngine):
 	def model(self, value: str) -> None:
 		if value in self.availableModels:
 			self._model = value
+		else:
+			self._model = DEFAULT_GEMINI_MODEL
 
 	@property
 	def mediaResolution(self) -> str:
@@ -95,7 +97,7 @@ class AgentEngine(BaseAgentEngine):
 
 		:returns: A dictionary of model IDs to display names.
 		"""
-		return self.generateStringSettings(getGeminiModelChoices())
+		return self.generateStringSettings(getGeminiAgentModelChoices())
 
 	@property
 	def availableMediaResolutions(self) -> dict:

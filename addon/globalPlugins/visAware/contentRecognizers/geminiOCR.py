@@ -135,7 +135,10 @@ class CustomContentRecognizer(BaseRecognizer):
 
 	@model.setter
 	def model(self, value: str) -> None:
-		self._model = value
+		if value in self.availableModels:
+			self._model = value
+		else:
+			self._model = DEFAULT_GEMINI_MODEL
 
 	@property
 	def availableModels(self) -> dict:

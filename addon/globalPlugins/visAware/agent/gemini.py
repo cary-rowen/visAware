@@ -18,13 +18,13 @@ from logHandler import log
 
 from .. import network
 from ..exceptions import ApiError, AuthenticationError
-from ..geminiModels import getGeminiLowLatencyThinkingConfig
+from ..geminiModels import getGeminiLowLatencyThinkingConfig, supportsGeminiPerImageResolution
 from .actions import JPEG_QUALITY, Screenshot, formatScreenshotPromptContext
 from .decision import AGENT_ACTION_SCHEMA, AgentDecision, parseAgentDecision
 
 addonHandler.initTranslation()
 
-INTERACTIONS_URL = "https://generativelanguage.googleapis.com/v1/interactions"
+INTERACTIONS_URL = "https://generativelanguage.googleapis.com/v1beta/interactions"
 INTERACTIONS_API_REVISION = "2026-05-20"
 AGENT_DECISION_TOOL_NAME = "agent_decision"
 MAX_HISTORY_ITEMS = 8
@@ -151,7 +151,7 @@ class GeminiAgentClient:
 			"mime_type": screenshot.mimeType,
 		}
 		resolution = _normalizeMediaResolution(self.mediaResolution)
-		if resolution:
+		if resolution and supportsGeminiPerImageResolution(self.model):
 			imageContent["resolution"] = resolution
 		return imageContent
 
@@ -248,8 +248,7 @@ def _getInteractionsThinkingLevel(model: str) -> str | None:
 	thinkingLevel = thinkingConfig.get("thinkingLevel")
 	if isinstance(thinkingLevel, str) and thinkingLevel:
 		return thinkingLevel.lower()
-	if thinkingConfig.get("thinkingBudget") == 0:
-		return "minimal"
+	# Interactions has no equivalent to a zero thinkingBudget; use the Gemini 2.5 model default.
 	return None
 
 
