@@ -41,7 +41,11 @@ def _install_module_stubs() -> None:
 	sys.modules["ui"] = uiModule
 	sys.modules["addon.globalPlugins.visAware.cues"] = types.SimpleNamespace(
 		CueType=types.SimpleNamespace(
-			ACTION="action", QUESTION="question", SUCCESS="success", ERROR="error", CANCEL="cancel"
+			ACTION="action",
+			QUESTION="question",
+			SUCCESS="success",
+			ERROR="error",
+			CANCEL="cancel",
 		),
 	)
 
@@ -218,7 +222,8 @@ class AgentSessionRequestThreadTestCase(unittest.TestCase):
 		self.assertEqual(self.cues.start.call_count, 3)
 		self.assertTrue(all(handle.is_set() for handle in self.handles))
 		self.assertEqual(
-			[call.args[0] for call in self.cues.play.call_args_list], ["question", "action", "success"]
+			[call.args[0] for call in self.cues.play.call_args_list],
+			["question", "action", "success"],
 		)
 
 	def test_agent_termination_uses_cancel_or_error_sound(self) -> None:

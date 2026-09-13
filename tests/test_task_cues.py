@@ -54,7 +54,8 @@ def loadMethods(fileName, className, methodNames, namespace):
 	for method in cls.body:
 		method.decorator_list = []
 	tree = ast.Module(
-		body=[ast.ImportFrom(module="__future__", names=[ast.alias("annotations")]), cls], type_ignores=[]
+		body=[ast.ImportFrom(module="__future__", names=[ast.alias("annotations")]), cls],
+		type_ignores=[],
 	)
 	exec(compile(ast.fix_missing_locations(tree), fileName, "exec"), namespace)
 	return namespace[className]
@@ -282,7 +283,10 @@ class TaskCuesTestCase(unittest.TestCase):
 		plugin._getCurrentEngine = lambda _kind: engine
 		plugin._getImageFromSource = lambda *_args: (object(), Mock())
 		plugin.startRecognition = lambda gesture, simpleText: plugin.executeRecognition(
-			gesture, "clipboardImage", "OCR", simpleText
+			gesture,
+			"clipboardImage",
+			"OCR",
+			simpleText,
 		)
 		plugin.script_recognizeAccordingToSettings(None, 1)
 		self.assertFalse(engine.textResult)

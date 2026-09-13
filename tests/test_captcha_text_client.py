@@ -176,7 +176,8 @@ class CaptchaTextClientTestCase(unittest.TestCase):
 				),
 			),
 			f"{package}.recogHandler": types.SimpleNamespace(
-				BaseRecognizer=object, RecognitionRequest=object
+				BaseRecognizer=object,
+				RecognitionRequest=object,
 			),
 			f"{package}.recogHistory": types.SimpleNamespace(attachEntry=lambda result, entry: result),
 		}
@@ -200,7 +201,7 @@ class CaptchaTextClientTestCase(unittest.TestCase):
 						{"status": 1, "request": "12345"},
 						{"status": 0, "request": self.module.CAPTCHA_NOT_READY},
 						{"status": 1, "request": "A7k2"},
-					]
+					],
 				)
 				params = {"imageContent": b"YWJjZA=="}
 				if timeout is not None:
@@ -213,7 +214,8 @@ class CaptchaTextClientTestCase(unittest.TestCase):
 				)
 				self.assertEqual(result.text, "A7k2")
 				self.assertEqual(
-					[call[2]["timeout"] for call in calls], [timeout] * 3 if timeout else [120, 30, 30]
+					[call[2]["timeout"] for call in calls],
+					[timeout] * 3 if timeout else [120, 30, 30],
 				)
 				self.assertFalse(calls[0][2]["retry"])
 				self.assertTrue(all(callable(call[2]["cancelCheck"]) for call in calls))

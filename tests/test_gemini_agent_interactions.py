@@ -179,7 +179,9 @@ class GeminiAgentInteractionsTestCase(unittest.TestCase):
 					self.assertNotIn("thinking_level", generationConfig)
 				client = module.GeminiAgentClient(
 					module.GeminiAgentSettings(
-						apiKey="key", model=model, mediaResolution="MEDIA_RESOLUTION_HIGH"
+						apiKey="key",
+						model=model,
+						mediaResolution="MEDIA_RESOLUTION_HIGH",
 					),
 				)
 				image = client._buildInputSteps("read text", module.Screenshot(), [])[0]["content"][1]

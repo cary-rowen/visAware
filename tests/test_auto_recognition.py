@@ -493,7 +493,7 @@ class AutoRecognitionP0TestCase(unittest.TestCase):
 							side_effect=[
 								None,
 								RuntimeError("auth failed") if outcome == "fallbackFailure" else None,
-							]
+							],
 						),
 					)
 					handler = types.SimpleNamespace(getEngineInstance=lambda _name: engine)
@@ -501,7 +501,12 @@ class AutoRecognitionP0TestCase(unittest.TestCase):
 					controller._recognizeImage = Mock(side_effect=RuntimeError("screenshot failed"))
 					controller._downloadAndDescribeWithEngine = Mock()
 					controller._captureAndDescribe(
-						0, "key", (0, 0, 10, 10), 0, "https://example.test/image", lambda: "key"
+						0,
+						"key",
+						(0, 0, 10, 10),
+						0,
+						"https://example.test/image",
+						lambda: "key",
 					)
 					if outcome == "cache":
 						self.cues.play.assert_not_called()

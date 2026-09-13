@@ -39,7 +39,10 @@ class AskQuestionFrame(DpiScalingHelperMixinWithoutInit, wx.Frame):
 	QUESTION_MIN_SIZE = (460, 80)
 
 	def __init__(
-		self, parent: wx.Window | None, context: ConversationContext, taskCues: TaskCueManager
+		self,
+		parent: wx.Window | None,
+		context: ConversationContext,
+		taskCues: TaskCueManager,
 	) -> None:
 		# Translators: The title of the follow-up question dialog.
 		super().__init__(parent=parent, title=_("Ask a Follow-up Question"))

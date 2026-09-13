@@ -520,7 +520,7 @@ class AutoRecognitionController:
 		if engineName not in enabledEngineNames:
 			if _verboseDebugLogging():
 				_debug(
-					f"automatic recognition skipped: engine {engineName!r} is unavailable for automatic recognition."
+					f"automatic recognition skipped: engine {engineName!r} is unavailable for automatic recognition.",
 				)
 			return None
 		return handler, engineName, f"{prefix}{engineName}"

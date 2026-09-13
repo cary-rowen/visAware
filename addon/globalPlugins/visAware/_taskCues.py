@@ -113,7 +113,11 @@ class TaskCueManager:
 
 	@staticmethod
 	def _loopWaiting(
-		player: nvwave.WavePlayer, stopEvent: Event, data: bytes, chunkSize: int, duration: float
+		player: nvwave.WavePlayer,
+		stopEvent: Event,
+		data: bytes,
+		chunkSize: int,
+		duration: float,
 	) -> None:
 		try:
 			while not stopEvent.is_set():
