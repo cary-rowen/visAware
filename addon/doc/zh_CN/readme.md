@@ -122,6 +122,7 @@ OCR 引擎：
 * PaddleOCR / PaddleOCR-VL
 * Ollama OCR
 * Kimi OCR
+* 通过 RuCaptcha 或 2Captcha 识别文本验证码
 
 图像描述引擎：
 

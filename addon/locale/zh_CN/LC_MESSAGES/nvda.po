@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 'customOCR' '0.1.1-dev'\n"
 "Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
-"POT-Creation-Date: 2026-09-13 02:42+0800\n"
+"POT-Creation-Date: 2026-09-13 22:47+0800\n"
 "PO-Revision-Date: 2026-09-13 01:23+0800\n"
 "Last-Translator: Larry Wang <larry.wang.801@gmail.com>\n"
 "Language-Team: \n"
@@ -432,22 +432,22 @@ msgstr "Kimi K2.7 Code（公共 API 高速版）"
 msgid "Kimi K2.6 (public API)"
 msgstr "Kimi K2.6（公共 API）"
 
-#: addon\globalPlugins\visAware\network.py:107
+#: addon\globalPlugins\visAware\network.py:116
 msgid ""
 "Network connection failed after multiple attempts. Please check your "
 "connection and try again."
 msgstr "多次尝试后连接失败。请检查您的网络连接并重试。"
 
-#: addon\globalPlugins\visAware\network.py:110
-#: addon\globalPlugins\visAware\network.py:297
+#: addon\globalPlugins\visAware\network.py:119
+#: addon\globalPlugins\visAware\network.py:308
 msgid "Network connection failed. Please check your connection and try again."
 msgstr "网络连接失败。请检查您的网络连接并重试。"
 
-#: addon\globalPlugins\visAware\network.py:135
+#: addon\globalPlugins\visAware\network.py:145
 msgid "Authentication failed. Please check your API key or credentials."
 msgstr "身份验证失败。请检查您的 API 密钥或凭据。"
 
-#: addon\globalPlugins\visAware\network.py:144
+#: addon\globalPlugins\visAware\network.py:154
 #, python-brace-format
 msgid ""
 "Service is temporarily unavailable or rate limited: {code} {reason}. Please "
@@ -455,11 +455,11 @@ msgid ""
 msgstr "服务暂时不可用或受到限流：{code} {reason}。请稍后重试。"
 
 #. Translators: Used when an HTTP error response does not include a response body.
-#: addon\globalPlugins\visAware\network.py:152
+#: addon\globalPlugins\visAware\network.py:162
 msgid "No additional details were provided."
 msgstr "服务未提供更多详细信息。"
 
-#: addon\globalPlugins\visAware\network.py:155
+#: addon\globalPlugins\visAware\network.py:165
 #, python-brace-format
 msgid "Service returned an error: {code} {reason}. Details: {details}"
 msgstr "服务返回错误：{code} {reason}。详情：{details}"
@@ -1779,6 +1779,149 @@ msgstr "退出白描登录失败"
 msgid "Invalid image content for Baimiao."
 msgstr "提供给白描的图像内容无效。"
 
+#. Translators: The description of the text CAPTCHA recognition engine.
+#: addon\globalPlugins\visAware\contentRecognizers\captchaText.py:54
+msgid "Text CAPTCHA recognition"
+msgstr "文本验证码识别"
+
+#. Translators: The label for selecting the CAPTCHA recognition service.
+#: addon\globalPlugins\visAware\contentRecognizers\captchaText.py:85
+msgid "CAPTCHA &service:"
+msgstr "验证码服务(&S)："
+
+#. Translators: The label for the CAPTCHA service API key field.
+#: addon\globalPlugins\visAware\contentRecognizers\captchaText.py:91
+msgid "API &key:"
+msgstr "API 密钥(&K)："
+
+#. Translators: The label for a CAPTCHA setting to request case-sensitive recognition.
+#: addon\globalPlugins\visAware\contentRecognizers\captchaText.py:97
+msgid "&Case-sensitive recognition"
+msgstr "区分大小写的识别(&C)"
+
+#. Translators: The label for a CAPTCHA setting to request recognition of answers with multiple words.
+#: addon\globalPlugins\visAware\contentRecognizers\captchaText.py:102
+msgid "Answer has multiple &words"
+msgstr "答案包含多个单词(&W)"
+
+#. Translators: The label for selecting the expected CAPTCHA answer type.
+#: addon\globalPlugins\visAware\contentRecognizers\captchaText.py:107
+msgid "Answer &type:"
+msgstr "答案类型(&T)："
+
+#. Translators: The label for a CAPTCHA setting to solve math captcha images as calculations.
+#: addon\globalPlugins\visAware\contentRecognizers\captchaText.py:113
+msgid "Solve as a &math CAPTCHA"
+msgstr "将验证码作为数学题求解(&M)"
+
+#. Translators: The label for selecting the CAPTCHA image language.
+#: addon\globalPlugins\visAware\contentRecognizers\captchaText.py:118
+msgid "Image &language:"
+msgstr "图像语言(&L)："
+
+#. Translators: The label for the minimum expected CAPTCHA answer length.
+#: addon\globalPlugins\visAware\contentRecognizers\captchaText.py:124
+msgid "Minimum answer &length:"
+msgstr "答案最小长度(&L)："
+
+#. Translators: The label for the maximum expected CAPTCHA answer length.
+#: addon\globalPlugins\visAware\contentRecognizers\captchaText.py:129
+msgid "Maximum answer l&ength:"
+msgstr "答案最大长度(&E)："
+
+#. Translators: The label for optional instructions sent to CAPTCHA service workers.
+#: addon\globalPlugins\visAware\contentRecognizers\captchaText.py:134
+msgid "Worker &instruction (max 140 characters):"
+msgstr "工作指令（最多 140 个字符）(&I)："
+
+#. Translators: The label for the CAPTCHA service account balance field.
+#: addon\globalPlugins\visAware\contentRecognizers\captchaText.py:139
+msgid "Account &balance:"
+msgstr "账户余额(&B)："
+
+#. Translators: The label for a button that checks CAPTCHA service account balance.
+#: addon\globalPlugins\visAware\contentRecognizers\captchaText.py:144
+msgid "Check account &balance"
+msgstr "检查账户余额(&B)"
+
+#. Translators: The CAPTCHA account balance value shown before it has been checked.
+#: addon\globalPlugins\visAware\contentRecognizers\captchaText.py:213
+msgid "Not checked"
+msgstr "未检查"
+
+#: addon\globalPlugins\visAware\contentRecognizers\captchaText.py:227
+msgid "RuCaptcha"
+msgstr "RuCaptcha"
+
+#: addon\globalPlugins\visAware\contentRecognizers\captchaText.py:228
+msgid "2Captcha"
+msgstr "2Captcha"
+
+#. Translators: A CAPTCHA answer type setting option.
+#. Translators: A CAPTCHA language setting option.
+#: addon\globalPlugins\visAware\contentRecognizers\captchaText.py:241
+#: addon\globalPlugins\visAware\contentRecognizers\captchaText.py:262
+msgid "Unspecified"
+msgstr "未指定"
+
+#. Translators: A CAPTCHA answer type setting option.
+#: addon\globalPlugins\visAware\contentRecognizers\captchaText.py:243
+msgid "Numbers only"
+msgstr "仅数字"
+
+#. Translators: A CAPTCHA answer type setting option.
+#: addon\globalPlugins\visAware\contentRecognizers\captchaText.py:245
+msgid "Letters only"
+msgstr "仅字母"
+
+#. Translators: A CAPTCHA answer type setting option.
+#: addon\globalPlugins\visAware\contentRecognizers\captchaText.py:247
+msgid "Numbers or letters"
+msgstr "数字或字母"
+
+#. Translators: A CAPTCHA answer type setting option.
+#: addon\globalPlugins\visAware\contentRecognizers\captchaText.py:249
+msgid "Numbers and letters"
+msgstr "数字和字母"
+
+#. Translators: A CAPTCHA language setting option.
+#: addon\globalPlugins\visAware\contentRecognizers\captchaText.py:264
+msgid "Cyrillic only"
+msgstr "仅西里尔字母"
+
+#. Translators: A CAPTCHA language setting option.
+#: addon\globalPlugins\visAware\contentRecognizers\captchaText.py:266
+msgid "Latin only"
+msgstr "仅拉丁字母"
+
+#. Translators: Reported after retrieving the CAPTCHA service account balance.
+#: addon\globalPlugins\visAware\contentRecognizers\captchaText.py:325
+#, python-brace-format
+msgid "CAPTCHA balance: {}"
+msgstr "验证码余额：{}"
+
+#. Translators: Reported when retrieving CAPTCHA service account balance fails. {} is the error message.
+#: addon\globalPlugins\visAware\contentRecognizers\captchaText.py:332
+#, python-brace-format
+msgid "Could not get CAPTCHA balance: {}"
+msgstr "无法获取验证码余额：{}"
+
+#. Translators: An error message if the CAPTCHA API key is missing.
+#: addon\globalPlugins\visAware\contentRecognizers\captchaText.py:401
+#: addon\globalPlugins\visAware\contentRecognizers\_captchaTextClient.py:297
+msgid "API key is missing. Please configure it in CAPTCHA settings."
+msgstr "缺少 API 密钥。请在验证码设置中配置。"
+
+#. Translators: An error message when the configured CAPTCHA answer length range is invalid.
+#: addon\globalPlugins\visAware\contentRecognizers\captchaText.py:404
+msgid "Minimum answer length cannot be greater than maximum answer length."
+msgstr "答案最小长度不能大于最大长度。"
+
+#. Translators: An error message for a blank CAPTCHA recognition result.
+#: addon\globalPlugins\visAware\contentRecognizers\captchaText.py:450
+msgid "CAPTCHA recognition result is blank."
+msgstr "验证码识别结果为空。"
+
 #. Translators: The description of the Gemini OCR engine.
 #: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:91
 msgid "Google Gemini OCR"
@@ -2214,6 +2357,133 @@ msgstr "白描返回了无效的图像上传地址。"
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:650
 msgid "Baimiao returned an invalid image upload signature."
 msgstr "白描返回了无效的图像上传签名。"
+
+#. Translators: An error message when a text CAPTCHA task does not finish in time.
+#: addon\globalPlugins\visAware\contentRecognizers\_captchaTextClient.py:169
+msgid "CAPTCHA recognition did not finish before the timeout."
+msgstr "验证码识别在超时前未完成。"
+
+#. Translators: An error message for malformed CAPTCHA service response data.
+#: addon\globalPlugins\visAware\contentRecognizers\_captchaTextClient.py:181
+#: addon\globalPlugins\visAware\contentRecognizers\_captchaTextClient.py:184
+msgid "CAPTCHA service returned malformed response data."
+msgstr "验证码服务返回的数据格式错误。"
+
+#. Translators: An error message when a CAPTCHA service success response has no result.
+#: addon\globalPlugins\visAware\contentRecognizers\_captchaTextClient.py:194
+msgid "CAPTCHA service returned an empty result."
+msgstr "验证码服务返回了空结果。"
+
+#. Translators: An error message when the CAPTCHA API key is missing.
+#: addon\globalPlugins\visAware\contentRecognizers\_captchaTextClient.py:209
+msgid "CAPTCHA API key is not specified."
+msgstr "未指定验证码 API 密钥。"
+
+#. Translators: An error message when the CAPTCHA API key is invalid.
+#: addon\globalPlugins\visAware\contentRecognizers\_captchaTextClient.py:211
+msgid "The configured CAPTCHA API key does not exist."
+msgstr "配置的验证码 API 密钥不存在。"
+
+#. Translators: An error message when the CAPTCHA service account has no balance.
+#: addon\globalPlugins\visAware\contentRecognizers\_captchaTextClient.py:213
+msgid "The CAPTCHA service account balance is zero."
+msgstr "验证码服务账户余额为零。"
+
+#. Translators: An error message when the CAPTCHA service has no available workers.
+#: addon\globalPlugins\visAware\contentRecognizers\_captchaTextClient.py:215
+msgid "The CAPTCHA service is busy. Please try again later."
+msgstr "验证码服务繁忙，请稍后再试。"
+
+#. Translators: An error message when a CAPTCHA image is too small.
+#: addon\globalPlugins\visAware\contentRecognizers\_captchaTextClient.py:217
+msgid "The CAPTCHA image is too small."
+msgstr "验证码图像太小。"
+
+#. Translators: An error message when a CAPTCHA image is too large.
+#: addon\globalPlugins\visAware\contentRecognizers\_captchaTextClient.py:219
+msgid "The CAPTCHA image is too large."
+msgstr "验证码图像太大。"
+
+#. Translators: An error message when the CAPTCHA image file extension is not supported.
+#: addon\globalPlugins\visAware\contentRecognizers\_captchaTextClient.py:221
+msgid "The CAPTCHA image format is not supported."
+msgstr "不支持的验证码图像格式。"
+
+#. Translators: An error message when the CAPTCHA image content type is not supported.
+#: addon\globalPlugins\visAware\contentRecognizers\_captchaTextClient.py:223
+msgid "The CAPTCHA image type is not supported."
+msgstr "不支持的验证码图像类型。"
+
+#. Translators: An error message when a CAPTCHA image upload fails.
+#: addon\globalPlugins\visAware\contentRecognizers\_captchaTextClient.py:225
+msgid "The CAPTCHA image could not be uploaded."
+msgstr "无法上传验证码图像。"
+
+#. Translators: An error message when CAPTCHA service request parameters are invalid.
+#: addon\globalPlugins\visAware\contentRecognizers\_captchaTextClient.py:227
+msgid "The CAPTCHA service request parameters are invalid."
+msgstr "验证码服务请求参数无效。"
+
+#. Translators: An error message when the CAPTCHA service receives a malformed task id.
+#: addon\globalPlugins\visAware\contentRecognizers\_captchaTextClient.py:229
+msgid "The CAPTCHA task id has an invalid format."
+msgstr "验证码任务 ID 格式无效。"
+
+#. Translators: An error message when the CAPTCHA task id does not exist.
+#: addon\globalPlugins\visAware\contentRecognizers\_captchaTextClient.py:231
+msgid "The CAPTCHA task id does not exist."
+msgstr "验证码任务 ID 不存在。"
+
+#. Translators: An error message when the CAPTCHA service account restricts API access by IP.
+#: addon\globalPlugins\visAware\contentRecognizers\_captchaTextClient.py:233
+msgid "This IP address is not allowed for the CAPTCHA service account."
+msgstr "验证码服务账户不允许使用此 IP 地址。"
+
+#. Translators: An error message when the CAPTCHA service blocks the current IP address.
+#: addon\globalPlugins\visAware\contentRecognizers\_captchaTextClient.py:235
+msgid "This IP address is temporarily blocked by the CAPTCHA service."
+msgstr "此 IP 地址已被验证码服务暂时阻止。"
+
+#. Translators: An error message when the CAPTCHA cannot be solved.
+#: addon\globalPlugins\visAware\contentRecognizers\_captchaTextClient.py:237
+msgid "The CAPTCHA could not be solved."
+msgstr "无法解决验证码。"
+
+#. Translators: An error message when the CAPTCHA service cannot get enough matching answers.
+#: addon\globalPlugins\visAware\contentRecognizers\_captchaTextClient.py:239
+msgid "The CAPTCHA service could not get enough matching answers."
+msgstr "验证码服务无法获得足够的匹配答案。"
+
+#. Translators: An error message when the CAPTCHA image is blocked by the service.
+#: addon\globalPlugins\visAware\contentRecognizers\_captchaTextClient.py:241
+msgid "This CAPTCHA image cannot be recognized."
+msgstr "无法识别此验证码图像。"
+
+#: addon\globalPlugins\visAware\contentRecognizers\_captchaTextClient.py:244
+msgid ""
+"Too many unrecognizable CAPTCHA images were sent. Please try again later."
+msgstr "提交了过多无法识别的验证码图片，请稍后再试。"
+
+#. Translators: A generic CAPTCHA service error. {error} is the service error code or message.
+#: addon\globalPlugins\visAware\contentRecognizers\_captchaTextClient.py:250
+#, python-brace-format
+msgid "CAPTCHA service returned an error: {error}"
+msgstr "验证码服务返回错误：{error}"
+
+#. Translators: An error message when the CAPTCHA service setting is invalid.
+#: addon\globalPlugins\visAware\contentRecognizers\_captchaTextClient.py:257
+msgid "Unsupported CAPTCHA service."
+msgstr "不支持的验证码服务。"
+
+#: addon\globalPlugins\visAware\contentRecognizers\_captchaTextClient.py:279
+#, python-brace-format
+msgid "CAPTCHA answer length must be between {minLength} and {maxLength}."
+msgstr "验证码答案长度必须介于 {minLength} 和 {maxLength} 之间。"
+
+#. Translators: An error message when CAPTCHA image data cannot be sent to the service.
+#: addon\globalPlugins\visAware\contentRecognizers\_captchaTextClient.py:292
+msgid "CAPTCHA image data could not be prepared for upload."
+msgstr "无法准备验证码图像数据以上传。"
 
 #. Translators: An error message when a PaddleOCR service type setting is invalid.
 #: addon\globalPlugins\visAware\contentRecognizers\_paddleOCRClient.py:78

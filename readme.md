@@ -220,6 +220,7 @@ OCR engines:
 * PaddleOCR / PaddleOCR-VL
 * Ollama OCR
 * Kimi OCR
+* Text CAPTCHA recognition through RuCaptcha or 2Captcha
 
 Image description engines:
 

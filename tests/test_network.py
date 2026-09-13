@@ -5,6 +5,7 @@ import builtins
 from pathlib import Path
 import sys
 import types
+import traceback
 import unittest
 
 import requests
@@ -181,6 +182,49 @@ class NetworkRequestRetryTestCase(unittest.TestCase):
 
 		self.assertIn("Network connection failed.", str(error.exception))
 		self.assertEqual(len(requestCalls), 1)
+
+	def test_query_credentials_are_hidden_in_logs_and_exception_chains(self) -> None:
+		secret = "private-test-key"
+		url = f"https://example.test/res.php?key={secret}&action=getbalance"
+		for failure in (500, 400, "timeout"):
+			with self.subTest(failure=failure):
+				messages = []
+				calls = []
+
+				def record(message, **kwargs):
+					messages.append(message)
+					if error := kwargs.get("exc_info"):
+						messages.extend(traceback.format_exception(error))
+
+				def request(**kwargs):
+					calls.append(kwargs)
+					if failure == "timeout":
+						try:
+							raise OSError(url)
+						except OSError as cause:
+							raise requests.exceptions.ReadTimeout(url) from cause
+					response = requests.Response()
+					response.status_code = failure
+					response.url = url
+					response.reason = "test failure"
+					response._content = b""
+					return response
+
+				self.module.log.warning = record
+				self.module.log.debugWarning = record
+				self.module.requests.request = request
+				try:
+					self.module.sendRequest("GET", "https://example.test/res.php", params={"key": secret})
+				except (self.module.ApiError, self.module.NetworkError):
+					messages.append(traceback.format_exc())
+				else:
+					self.fail("Expected a request failure")
+				output = "\n".join(messages)
+				self.assertNotIn(secret, output)
+				self.assertIn("<redacted>", output)
+				self.assertIn("example.test/res.php", output)
+				self.assertEqual(len(calls), 1 if failure == 400 else 3)
+				self.assertEqual(calls[0]["params"]["key"], secret)
 
 	def test_streaming_request_checks_cancellation_on_empty_lines(self) -> None:
 		class StreamingResponse(_FakeResponse):

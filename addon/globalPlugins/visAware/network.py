@@ -5,6 +5,7 @@
 """Network utility functions for the Vis Aware add-on."""
 
 import functools
+import re
 import time
 from typing import TypeVar, ParamSpec, Any, NoReturn
 from collections.abc import Iterator, Callable
@@ -19,6 +20,13 @@ addonHandler.initTranslation()
 
 P = ParamSpec("P")
 R = TypeVar("R")
+
+
+def _redactNetworkError(error: requests.exceptions.RequestException) -> None:
+	# URLs can contain credentials, including in nested connection errors.
+	error.args = (re.sub(r"([?&][^=\s&]+)=([^&\s]*)", r"\1=<redacted>", str(error)),)
+	error.__cause__ = None
+	error.__suppress_context__ = True
 
 
 def sleepWithCancellation(seconds: float, cancelCheck: Any) -> None:
@@ -86,6 +94,7 @@ def retryOnNetworkError(
 						# For other HTTP errors (like 4xx client errors), don't retry.
 						raise e
 
+				_redactNetworkError(lastException)
 				if attempt + 1 >= maxAttempts:
 					log.debugWarning(
 						f"{func.__name__} failed after {maxAttempts} attempts.",
@@ -127,6 +136,7 @@ def _handleHttpError(e: requests.exceptions.HTTPError) -> NoReturn:
 	:raises AuthenticationError: For 401 or 403 errors.
 	:raises ApiError: For other client or server errors.
 	"""
+	_redactNetworkError(e)
 	statusCode = e.response.status_code
 	# Handle authentication/authorization errors.
 	if statusCode in (401, 403):
@@ -283,6 +293,7 @@ def sendStreamingRequest(method: str, url: str, **kwargs: Any) -> Iterator[bytes
 			# Delegate error handling to the centralized function.
 			_handleHttpError(e)
 		except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) as e:
+			_redactNetworkError(e)
 			if not hasYieldedChunk and attempt + 1 < attempts:
 				attempt += 1
 				log.warning(
