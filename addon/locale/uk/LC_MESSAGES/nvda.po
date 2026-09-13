@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
 "POT-Creation-Date: 2026-09-13 02:42+0800\n"
-"PO-Revision-Date: 2026-07-29 12:04+0300\n"
+"PO-Revision-Date: 2026-09-13 17:12+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: uk\n"
@@ -212,19 +212,17 @@ msgstr "Попередній результат розпізнавання по�
 #. Translators: The display name for the current DeepSeek vision model.
 #: addon\globalPlugins\visAware\deepseekModels.py:20
 msgid "DeepSeek Flash Vision"
-msgstr ""
+msgstr "DeepSeek Flash Vision"
 
 #. Translators: The display name for a Gemini model preset.
 #: addon\globalPlugins\visAware\geminiModels.py:26
-#, fuzzy
 msgid "Gemini 3.8 Flash (latest)"
-msgstr "Gemini Flash Latest"
+msgstr "Gemini 3.8 Flash (найновіша версія)"
 
 #. Translators: The display name for a Gemini model preset.
 #: addon\globalPlugins\visAware\geminiModels.py:28
-#, fuzzy
 msgid "Gemini 3.7 Flash"
-msgstr "Gemini 3.5 Flash"
+msgstr "Gemini 3.7 Flash"
 
 #. Translators: The display name for a Gemini model preset.
 #: addon\globalPlugins\visAware\geminiModels.py:30
@@ -278,15 +276,13 @@ msgstr "Gemini 2.5 Flash-Lite (стабільна, недорога версія
 
 #. Translators: The display name for a Gemini model preset.
 #: addon\globalPlugins\visAware\geminiModels.py:50
-#, fuzzy
 msgid "Gemini 2.5 Flash (stable)"
-msgstr "Gemini 2.5 Flash-Lite (стабільна, недорога версія)"
+msgstr "Gemini 2.5 Flash (стабільна версія)"
 
 #. Translators: The display name for a Gemini model preset.
 #: addon\globalPlugins\visAware\geminiModels.py:52
-#, fuzzy
 msgid "Gemini 2.5 Pro (stable, higher reasoning)"
-msgstr "Gemini Pro Latest (покращене міркування)"
+msgstr "Gemini 2.5 Pro (стабільний, вища логіка)"
 
 #. Translators: The display name for Gemini's default media resolution.
 #: addon\globalPlugins\visAware\geminiModels.py:66
@@ -892,6 +888,8 @@ msgstr "Перемикає режими розпізнавання"
 msgid ""
 "Cycles through automatic recognition modes: off, image description, and OCR"
 msgstr ""
+"Перемикає між режимами автоматичного розпізнавання: вимкнено, опис "
+"зображення та OCR"
 
 #. Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
 #: addon\globalPlugins\visAware\__init__.py:830
@@ -1038,16 +1036,16 @@ msgstr "{} повернув непідтримувану дію помічник
 
 #. Do not use Python truthiness for provider data: strings such as "false" are truthy.
 #: addon\globalPlugins\visAware\agent\decision.py:264
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "{} returned malformed agent action data."
-msgstr "Kimi повернув некоректно сформовані дані про дії помічника."
+msgstr "{} повернуто дані про дії помічника з некоректним форматом."
 
 #. Translators: The description of the DeepSeek Agent engine.
 #. Translators: The description of the DeepSeek image describer engine.
 #: addon\globalPlugins\visAware\agent\deepseek.py:45
 #: addon\globalPlugins\visAware\imageDescribers\deepseek.py:41
 msgid "DeepSeek"
-msgstr ""
+msgstr "DeepSeek"
 
 #. Translators: The label for the DeepSeek API key used by the Agent.
 #. Translators: The label for the Gemini API key used by the Agent.
@@ -1130,61 +1128,54 @@ msgstr ""
 "Ключ API відсутній. Будь ласка, налаштуйте його в налаштуваннях ШІ помічника."
 
 #: addon\globalPlugins\visAware\agent\deepseek.py:232
-#, fuzzy
 msgid "The current screenshot is too large for the DeepSeek request limit."
-msgstr "Поточний знімок екрана перевищує обмеження розміру запиту Kimi."
+msgstr "Поточний знімок екрана занадто великий для обмеження запитів DeepSeek."
 
 #: addon\globalPlugins\visAware\agent\deepseek.py:238
-#, fuzzy
 msgid "DeepSeek did not return exactly one agent tool call."
-msgstr "Kimi не повернув рівно одного виклику інструменту помічника."
+msgstr "DeepSeek не повернув рівно один виклик інструменту помічника."
 
 #: addon\globalPlugins\visAware\agent\deepseek.py:242
 #: addon\globalPlugins\visAware\agent\deepseek.py:255
-#, fuzzy
 msgid "DeepSeek returned malformed agent action data."
-msgstr "Gemini повернув некоректно сформовані дані про дії помічника."
+msgstr "DeepSeek повернув дані про дії помічника з некоректним форматом."
 
 #: addon\globalPlugins\visAware\agent\deepseek.py:247
-#, fuzzy
 msgid "DeepSeek returned a duplicate agent tool call ID."
 msgstr ""
-"Kimi повернув повторюваний ідентифікатор виклику інструменту помічника."
+"DeepSeek повернув дублікат ідентифікатора виклику інструменту помічника."
 
 #: addon\globalPlugins\visAware\agent\deepseek.py:253
-#, fuzzy
 msgid "DeepSeek returned invalid agent action JSON."
-msgstr "Gemini повернув недійсний JSON дії помічника."
+msgstr "DeepSeek повернув недійсний JSON дії помічника."
 
 #: addon\globalPlugins\visAware\agent\deepseek.py:272
 #: addon\globalPlugins\visAware\imageDescribers\deepseek.py:261
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "DeepSeek API error: {}"
-msgstr "Помилка API OpenAI: {}"
+msgstr "Помилка API DeepSeek: {}"
 
 #: addon\globalPlugins\visAware\agent\deepseek.py:275
 msgid "DeepSeek agent response failed."
-msgstr ""
+msgstr "Помилка під час обробки запиту помічником DeepSeek."
 
 #: addon\globalPlugins\visAware\agent\deepseek.py:280
-#, fuzzy
 msgid "DeepSeek agent response was truncated at the token limit."
-msgstr ""
-"Відповідь помічника Kimi була обрізана через обмеження кількості токенів."
+msgstr "Відповідь агента DeepSeek була скорочена до ліміту токенів."
 
 #: addon\globalPlugins\visAware\agent\deepseek.py:282
 msgid "DeepSeek agent response was blocked by content filtering."
 msgstr ""
+"Відповідь помічника DeepSeek була заблокована системою фільтрації вмісту."
 
 #: addon\globalPlugins\visAware\agent\deepseek.py:283
 msgid "DeepSeek agent response was incomplete."
-msgstr ""
+msgstr "Відповідь помічника DeepSeek була неповною."
 
 #: addon\globalPlugins\visAware\agent\deepseek.py:285
 #: addon\globalPlugins\visAware\agent\deepseek.py:291
-#, fuzzy
 msgid "DeepSeek returned an invalid agent response."
-msgstr "Сервер повернув недійсну відповідь."
+msgstr "DeepSeek повернув недійсну відповідь помічника."
 
 #. Translators: An error message returned from the Gemini API.
 #: addon\globalPlugins\visAware\agent\gemini.py:289
@@ -1735,57 +1726,56 @@ msgstr "Помилка розпізнавання зображення"
 #. Translators: The description of the Baimiao formula recognition engine.
 #: addon\globalPlugins\visAware\contentRecognizers\baimiaoFormula.py:23
 msgid "Baimiao Formula Recognition"
-msgstr ""
+msgstr "Розпізнавання формули Baimiao"
 
 #. Translators: The description of the Baimiao OCR engine.
 #: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:37
-#, fuzzy
 msgid "Baimiao OCR"
-msgstr "Baidu OCR"
+msgstr "Baimiao OCR"
 
 #. Translators: A Baimiao account membership level.
 #: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:71
 msgid "Regular user"
-msgstr ""
+msgstr "Звичайний користувач"
 
 #. Translators: A Baimiao account membership level.
 #: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:73
 msgid "Regular member"
-msgstr ""
+msgstr "Звичайний учасник"
 
 #. Translators: A Baimiao account membership level.
 #: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:75
 msgid "Gold member"
-msgstr ""
+msgstr "Золотий учасник"
 
 #. Translators: A Baimiao account membership level.
 #: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:77
 msgid "Super member"
-msgstr ""
+msgstr "Суперучасник"
 
 #. Translators: The label for a button that logs out of Baimiao. {account} is a
 #. nickname, masked login, or user ID; {membership} is the account membership level.
 #: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:82
 #, python-brace-format
 msgid "Log out of Baimiao ({account}, {membership})"
-msgstr ""
+msgstr "Вийти з Baimiao ({account}, {membership})"
 
 #. Translators: The label for a button that logs out of Baimiao. {account} is a
 #. nickname, masked login, or user ID.
 #: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:89
 #, python-brace-format
 msgid "Log out of Baimiao ({account})"
-msgstr ""
+msgstr "Вийти з Baimiao ({account})"
 
 #. Translators: The label for a button that logs out of Baimiao when account details are unavailable.
 #: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:91
 msgid "Log out of Baimiao (logged in)"
-msgstr ""
+msgstr "Вийти з Baimiao (виконано вхід)"
 
 #. Translators: The label for a button that opens Baimiao login.
 #: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:93
 msgid "Log in to Baimiao..."
-msgstr ""
+msgstr "Увійти до Baimiao..."
 
 #: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:116
 msgid ""
@@ -1794,24 +1784,28 @@ msgid ""
 "device out of your Baimiao account. If you no longer use this device, sign "
 "it out in the Baimiao mobile app."
 msgstr ""
+"Ви впевнені, що хочете вийти з Baimiao у Vis Aware? Це призведе до видалення "
+"даних входу в Baimiao, збережених на цьому комп’ютері, але не призведе до "
+"автоматичного виходу з вашого облікового запису Baimiao на цьому пристрої. "
+"Якщо ви більше не користуєтеся цим пристроєм, вийдіть з нього в мобільному "
+"додатку Baimiao."
 
 #. Translators: The title of a confirmation dialog shown before logging out of Baimiao.
 #: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:122
 msgid "Log out of Baimiao"
-msgstr ""
+msgstr "Вийти з Baimiao"
 
 #. Translators: The title of an error shown when Baimiao logout fails.
 #: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:134
 msgid "Baimiao Logout Failed"
-msgstr ""
+msgstr "Не вдалося вийти з Baimiao"
 
 #. Translators: An error when Baimiao receives invalid image content.
 #. Translators: An error when an empty image is passed to Baimiao.
 #: addon\globalPlugins\visAware\contentRecognizers\baimiaoOCR.py:167
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:369
-#, fuzzy
 msgid "Invalid image content for Baimiao."
-msgstr "Не вдалося підготувати вміст зображення для завантаження."
+msgstr "Недійсний вміст зображення для Baimiao."
 
 #. Translators: The description of the Gemini OCR engine.
 #: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:91
@@ -2102,62 +2096,59 @@ msgstr "Стандартний (швидше)"
 #. Translators: The title of the Baimiao login dialog.
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoGui.py:28
 msgid "Log in to Baimiao"
-msgstr ""
+msgstr "Увійти до Baimiao"
 
 #. Translators: The label for a Baimiao email address or mobile number field.
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoGui.py:40
 msgid "&Email or mobile number"
-msgstr ""
+msgstr "&Електронна адреса або номер мобільного телефону"
 
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoGui.py:43
-#, fuzzy
 msgid "&Password"
-msgstr "Пароль:"
+msgstr "&Пароль"
 
 #. Translators: The label for a button that submits Baimiao login information.
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoGui.py:50
 msgid "&Log in"
-msgstr ""
+msgstr "&Увійти"
 
 #. Translators: The label for a button that cancels Baimiao login.
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoGui.py:52
 msgid "&Cancel"
-msgstr ""
+msgstr "&Скасувати"
 
 #. Translators: An error when a Baimiao login field is empty.
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoGui.py:72
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:328
 msgid "Enter your Baimiao account and password."
-msgstr ""
+msgstr "Введіть свій обліковий запис Baimiao та пароль."
 
 #. Translators: The title of a Baimiao login error dialog.
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoGui.py:74
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoGui.py:137
 msgid "Baimiao Login Failed"
-msgstr ""
+msgstr "Не вдалося ввійти в систему Baimiao"
 
 #. Translators: A message shown when Baimiao login succeeds.
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoGui.py:115
 msgid "Logged in to Baimiao successfully."
-msgstr ""
+msgstr "Ввхід у Baimiao успішний."
 
 #. Translators: The title of a dialog shown when Baimiao login succeeds.
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoGui.py:117
 msgid "Baimiao Login Successful"
-msgstr ""
+msgstr "Вхід до Baimiao успішний"
 
 #. Translators: An error when Baimiao login fails unexpectedly.
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoGui.py:130
-#, fuzzy
 msgid "Baimiao login failed with an unexpected error."
-msgstr "Виконання запиту завершилося невдачею через несподівану помилку."
+msgstr "Вхід до Baimiao не вдався через неочікувану помилку."
 
 #. Translators: An error when Baimiao returns invalid login information.
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:157
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:350
-#, fuzzy
 msgid "Baimiao returned invalid login information."
-msgstr "Kimi повернув недійсний JSON дії помічника."
+msgstr "Baimiao повернув недійсну інформацію для входу."
 
 #. Translators: An error when Baimiao login information cannot be stored securely.
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:166
@@ -2165,95 +2156,89 @@ msgstr "Kimi повернув недійсний JSON дії помічника.
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:172
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:185
 msgid "Could not save Baimiao login information securely."
-msgstr ""
+msgstr "Не вдалося безпечно зберегти дані для входу в Baimiao."
 
 #. Translators: An error when Baimiao Web has not been logged in.
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:307
-#, fuzzy
 msgid "Please log in to Baimiao in the OCR engine settings."
-msgstr ""
-"Відсутній ключ API. Будь ласка, налаштуйте його в налаштуваннях сервісу Kimi "
-"OCR."
+msgstr "Будь ласка, увійдіть у Baimiao в налаштуваннях OCR."
 
 #. Translators: An error when Baimiao does not grant a usable OCR request.
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:389
 msgid "Baimiao did not provide valid OCR permission."
-msgstr ""
+msgstr "Baimiao не надав дійсного дозволу на OCR."
 
 #. Translators: An error when Baimiao does not start an OCR task.
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:417
 msgid "Baimiao did not start the OCR task."
-msgstr ""
+msgstr "Baimiao не розпочав виконання завдання OCR."
 
 #. Translators: An error when the stored Baimiao login is no longer valid.
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:438
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:447
-#, fuzzy
 msgid "Baimiao login has expired. Please log in again."
-msgstr "Термін дії токена закінчився, спробуйте ще раз."
+msgstr "Термін дії входу в Baimiao закінчився. Будь ласка, увійдіть ще раз."
 
 #. Translators: An error when Baimiao returns malformed task status data.
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:483
-#, fuzzy
 msgid "Baimiao returned an invalid OCR task status."
-msgstr "Kimi повернув недійсну відповідь."
+msgstr "Baimiao повернув недійсний статус завдання OCR."
 
 #. Translators: An error when a completed Baimiao task has no OCR result.
 #. Translators: An error when a completed Baimiao task has no usable OCR result.
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:487
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:726
-#, fuzzy
 msgid "Baimiao returned an invalid OCR response."
-msgstr "Kimi повернув недійсну відповідь."
+msgstr "Baimiao повернув недійсну відповідь OCR."
 
 #. Translators: An error when Baimiao does not finish an OCR task in time.
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:494
 msgid "Baimiao OCR timed out."
-msgstr ""
+msgstr "Час очікування OCR Baimiao минув."
 
 #. Translators: An error when Baimiao returns data that is not valid JSON.
 #. Translators: An error when Baimiao returns malformed API data.
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:525
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:528
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:562
-#, fuzzy
 msgid "Baimiao returned an invalid API response."
-msgstr "Kimi повернув недійсну відповідь."
+msgstr "Baimiao повернув недійсну відповідь API."
 
 #. Translators: A Baimiao login error. {message} is returned by the service.
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:542
 #, python-brace-format
 msgid "Baimiao login failed: {message}"
-msgstr ""
+msgstr "Не вдалося ввійти в Baimiao: {message}"
 
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:549
 msgid ""
 "In the Baimiao mobile app, log out any devices you no longer use, then try "
 "again."
 msgstr ""
+"У мобільному додатку Baimiao вийдіть із будь-яких пристроїв, які ви більше "
+"не використовуєте, а потім спробуйте ще раз."
 
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:556
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Baimiao API error: {message}"
-msgstr "Помилка API Kimi: {}"
+msgstr "Помилка API Baimiao: {message}"
 
 #. Translators: A Baimiao error without a message. {code} is a service error code.
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:575
 #, python-brace-format
 msgid "Baimiao returned service error code {code}."
-msgstr ""
+msgstr "Baimiao повернув код помилки служби {code}."
 
 #. Translators: A Baimiao error without a message. {code} is an API error code.
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:579
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid "Baimiao returned API error code {code}."
-msgstr "Невідомий код помилки: {code}"
+msgstr "Baimiao повернув код помилки API {code}."
 
 #. Translators: A Baimiao error response without a message or code.
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:581
-#, fuzzy
 msgid "Baimiao returned an unknown API error."
-msgstr "Розпізнавання повернуло невідомий тип результату."
+msgstr "Baimiao повернув невідому помилку API."
 
 #. Translators: An error when a Baimiao OCR task reports a failure.
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:592
@@ -2262,19 +2247,17 @@ msgstr "Розпізнавання повернуло невідомий тип 
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:678
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:711
 msgid "Baimiao OCR task failed."
-msgstr ""
+msgstr "Завдання OCR Baimiao не вдалося."
 
 #. Translators: An error when Baimiao returns an unsafe upload endpoint.
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:619
-#, fuzzy
 msgid "Baimiao returned an invalid image upload endpoint."
-msgstr "Ollama повернув недійсний список моделей."
+msgstr "Baimiao повернув недійсну кінцеву точку завантаження зображення."
 
 #. Translators: An error when Baimiao returns an incomplete upload signature.
 #: addon\globalPlugins\visAware\contentRecognizers\_baimiaoWeb.py:650
-#, fuzzy
 msgid "Baimiao returned an invalid image upload signature."
-msgstr "Kimi повернув недійсну відповідь."
+msgstr "Baimiao повернув недійсний підпис завантаженого зображення."
 
 #. Translators: An error message when a PaddleOCR service type setting is invalid.
 #: addon\globalPlugins\visAware\contentRecognizers\_paddleOCRClient.py:78
@@ -2364,12 +2347,11 @@ msgstr "Недійсна відповідь від сервера автенти
 
 #: addon\globalPlugins\visAware\imageDescribers\deepseek.py:138
 #: addon\globalPlugins\visAware\imageDescribers\deepseek.py:191
-#, fuzzy
 msgid ""
 "API key is missing. Please configure it in the DeepSeek engine settings."
 msgstr ""
-"Ключ API відсутній. Будь ласка, налаштуйте його в налаштуваннях сервісу "
-"Gemma."
+"Ключ API відсутній. Будь ласка, налаштуйте його в налаштуваннях сервіса "
+"DeepSeek."
 
 #. Translators: An error message for malformed Gemini response data.
 #. Translators: An error message for malformed Gemma response data.
@@ -2383,21 +2365,16 @@ msgstr "Сервер повернув недійсну відповідь."
 #: addon\globalPlugins\visAware\imageDescribers\deepseek.py:264
 #: addon\globalPlugins\visAware\imageDescribers\deepseek.py:267
 #: addon\globalPlugins\visAware\imageDescribers\deepseek.py:274
-#, fuzzy
 msgid "DeepSeek returned an invalid response."
-msgstr "Сервер повернув недійсну відповідь."
+msgstr "DeepSeek повернув недійсну відповідь."
 
 #: addon\globalPlugins\visAware\imageDescribers\deepseek.py:270
-#, fuzzy
 msgid "DeepSeek response was truncated at the token limit."
-msgstr ""
-"Відповідь помічника Kimi була обрізана через обмеження кількості токенів."
+msgstr "Відповідь DeepSeek була скорочена до ліміту токенів."
 
 #: addon\globalPlugins\visAware\imageDescribers\deepseek.py:272
-#, fuzzy
 msgid "DeepSeek response was blocked by content filtering."
-msgstr ""
-"Відповідь помічника Kimi була обрізана через обмеження кількості токенів."
+msgstr "Відповідь DeepSeek була заблокована фільтрацією контенту."
 
 #. Translators: The label for an engine setting to enable streaming output.
 #: addon\globalPlugins\visAware\imageDescribers\gemini.py:77
@@ -2661,7 +2638,6 @@ msgstr ""
 "помічника."
 
 #: buildVars.py:38
-#, fuzzy
 msgid ""
 "### 0.9.6\n"
 "\n"
@@ -2706,23 +2682,48 @@ msgid ""
 "* Added Copy and Close buttons to browsable recognition and follow-up result "
 "dialogs."
 msgstr ""
+"### 0.9.6\n"
+"\n"
+"* Updated the default DeepSeek vision model to `deepseek-flash` and added "
+"newer Gemini vision model presets.\n"
+"* Added Baimiao OCR and formula recognition, including shared account login, "
+"protected sessions, clickable text coordinates, and accessible MathML "
+"formula output.\n"
+"* Added OCR, image description, and AI Agent support in Screen Curtain mode "
+"on NVDA 2026.3 and later.\n"
+"* Improved automatic recognition settings so the selected engine is "
+"preserved correctly.\n"
+"\n"
+"### 0.9.0\n"
+"\n"
+"* Added DeepSeek image description and AI Agent engines, with configurable "
+"API endpoints and vision models.\n"
+"* Added a command to cycle automatic recognition between off, image "
+"description, and OCR; it has no default gesture.\n"
+"* Improved automatic recognition reliability by serializing background work, "
+"keeping only the latest pending task, propagating cancellation through "
+"network and OCR requests, and using shorter request timeouts.\n"
+"* Improved browse-mode automatic recognition for web graphics by recognizing "
+"current and lazy-loaded image URLs and falling back to screenshots when URLs "
+"are unavailable.\n"
+"* Improved automatic recognition result handling to ignore results after the "
+"active recognition target changes.\n"
+"\n"
 "### 0.8.1\n"
 "\n"
-"* Додано підтримку Kimi для опису зображень, додаткових запитань, OCR зі "
-"структурованими координатами та ШІ-помічника через сумісний з OpenAI API "
-"Kimi.\n"
-"* Удосконалено підказки опису зображень у підтримуваних рушіях і додано "
-"локалізовані типові значення.\n"
-"* Удосконалено опис математичних зображень: видимі формули перетворюються на "
-"LaTeX, а для зображень лише з формулою повертається тільки формула LaTeX.\n"
-"* Удосконалено автоматичне розпізнавання зображень: використовуються стислі "
-"описи з 20–30 слів без Markdown.\n"
-"* Удосконалено доступний для перегляду вивід опису зображень: табличні дані "
-"подаються як стандартні таблиці Markdown без блоків коду.\n"
-"* З діалогу додаткових запитань прибрано назви моделі та постачальника "
-"моделі.\n"
-"* До діалогів результатів розпізнавання й додаткових запитань із можливістю "
-"перегляду додано кнопки «Копіювати» та «Закрити»."
+"* Added Kimi image description, follow-up questions, OCR with structured "
+"coordinates, and AI Agent support through the OpenAI-compatible Kimi API.\n"
+"* Improved image-description prompts across supported engines with localized "
+"defaults.\n"
+"* Improved mathematical image descriptions by converting visible formulas to "
+"LaTeX and returning formula-only images as LaTeX formulas.\n"
+"* Improved automatic image recognition with concise 20 to 30 word "
+"descriptions without Markdown.\n"
+"* Improved browsable image-description output by using standard Markdown "
+"tables for tabular content and avoiding code fences.\n"
+"* Removed model and model-provider names from the follow-up dialog.\n"
+"* Added Copy and Close buttons to browsable recognition and follow-up result "
+"dialogs."
 
 #~ msgid ""
 #~ "### 0.7.0\n"
