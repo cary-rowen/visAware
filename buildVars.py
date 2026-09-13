@@ -31,11 +31,18 @@ addon_info = AddonInfo(
 		"""NVDA add-on for OCR, AI-powered image description, automatic recognition, and AI-assisted computer control.""",
 	),
 	# version
-	addon_version="0.9.6",
+	addon_version="0.9.9",
 	# Brief changelog for this version
 	# Translators: what's new content for the add-on version to be shown in the add-on store
 	addon_changelog=_(
-		"""### 0.9.6
+		"""### 0.9.9
+
+* Fixed Gemini compatibility across OCR, image description, and AI Agent engines.
+* Added sound cues to recognition and AI Agent workflows for start, waiting, actions, questions, success, cancellation, and error states.
+* Improved automatic recognition to show only engines that explicitly support it.
+* Added text CAPTCHA recognition through RuCaptcha and 2Captcha, with configurable recognition options and account balance checks.
+
+### 0.9.6
 
 * Updated the default DeepSeek vision model to `deepseek-flash` and added newer Gemini vision model presets.
 * Added Baimiao OCR and formula recognition, including shared account login, protected sessions, clickable text coordinates, and accessible MathML formula output.

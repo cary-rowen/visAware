@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 'customOCR' '0.1.1-dev'\n"
 "Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
-"POT-Creation-Date: 2026-09-14 01:33+0800\n"
+"POT-Creation-Date: 2026-09-14 06:35+0800\n"
 "PO-Revision-Date: 2026-09-13 01:23+0800\n"
 "Last-Translator: Larry Wang <larry.wang.801@gmail.com>\n"
 "Language-Team: \n"
@@ -215,92 +215,82 @@ msgid "DeepSeek Flash Vision"
 msgstr "DeepSeek Flash Vision"
 
 #. Translators: The display name for a Gemini model preset.
-#: addon\globalPlugins\visAware\geminiModels.py:26
+#: addon\globalPlugins\visAware\geminiModels.py:40
 msgid "Gemini 3.8 Flash (latest)"
 msgstr "Gemini 3.8 Flash（最新）"
 
 #. Translators: The display name for a Gemini model preset.
-#: addon\globalPlugins\visAware\geminiModels.py:28
+#: addon\globalPlugins\visAware\geminiModels.py:42
 msgid "Gemini 3.7 Flash"
 msgstr "Gemini 3.7 Flash"
 
 #. Translators: The display name for a Gemini model preset.
-#: addon\globalPlugins\visAware\geminiModels.py:30
+#: addon\globalPlugins\visAware\geminiModels.py:44
 msgid "Gemini 3.6 Flash (recommended)"
 msgstr "Gemini 3.6 Flash（推荐）"
 
 #. Translators: The display name for a Gemini model preset.
-#: addon\globalPlugins\visAware\geminiModels.py:32
+#: addon\globalPlugins\visAware\geminiModels.py:46
 msgid "Gemini 3.5 Flash-Lite (fast, lower cost)"
 msgstr "Gemini 3.5 Flash-Lite（快速，成本更低）"
 
 #. Translators: The display name for a Gemini model preset.
-#: addon\globalPlugins\visAware\geminiModels.py:34
+#: addon\globalPlugins\visAware\geminiModels.py:48
 msgid "Gemini 3.5 Flash"
 msgstr "Gemini 3.5 Flash"
 
 #. Translators: The display name for a Gemini model preset.
-#: addon\globalPlugins\visAware\geminiModels.py:36
+#: addon\globalPlugins\visAware\geminiModels.py:50
 msgid "Gemini Flash Latest"
 msgstr "Gemini Flash 最新版"
 
 #. Translators: The display name for a Gemini model preset.
-#: addon\globalPlugins\visAware\geminiModels.py:38
+#: addon\globalPlugins\visAware\geminiModels.py:52
 msgid "Gemini 3.1 Pro Preview (higher reasoning, slower)"
 msgstr "Gemini 3.1 Pro Preview（推理更强，较慢）"
 
 #. Translators: The display name for a Gemini model preset.
-#: addon\globalPlugins\visAware\geminiModels.py:40
+#: addon\globalPlugins\visAware\geminiModels.py:54
 msgid "Gemini Pro Latest (higher reasoning)"
 msgstr "Gemini Pro 最新版（推理更强）"
 
 #. Translators: The display name for a Gemini model preset.
-#: addon\globalPlugins\visAware\geminiModels.py:42
+#: addon\globalPlugins\visAware\geminiModels.py:56
 msgid "Gemini 3 Flash Preview (agentic preview)"
 msgstr "Gemini 3 Flash Preview（Agent 预览）"
 
 #. Translators: The display name for a Gemini model preset.
-#: addon\globalPlugins\visAware\geminiModels.py:44
+#: addon\globalPlugins\visAware\geminiModels.py:58
 msgid "Gemini 3.1 Flash-Lite (fast, lower cost)"
 msgstr "Gemini 3.1 Flash-Lite（快速，成本更低）"
 
 #. Translators: The display name for a Gemini model preset.
-#: addon\globalPlugins\visAware\geminiModels.py:46
+#: addon\globalPlugins\visAware\geminiModels.py:60
 msgid "Gemini Flash-Lite Latest (fast, lower cost)"
 msgstr "Gemini Flash-Lite 最新版（快速，成本更低）"
 
 #. Translators: The display name for a Gemini model preset.
-#: addon\globalPlugins\visAware\geminiModels.py:48
+#: addon\globalPlugins\visAware\geminiModels.py:62
 msgid "Gemini 2.5 Flash-Lite (stable low cost)"
 msgstr "Gemini 2.5 Flash-Lite（稳定低成本）"
 
-#. Translators: The display name for a Gemini model preset.
-#: addon\globalPlugins\visAware\geminiModels.py:50
-msgid "Gemini 2.5 Flash (stable)"
-msgstr "Gemini 2.5 Flash（稳定版）"
-
-#. Translators: The display name for a Gemini model preset.
-#: addon\globalPlugins\visAware\geminiModels.py:52
-msgid "Gemini 2.5 Pro (stable, higher reasoning)"
-msgstr "Gemini 2.5 Pro（稳定版，推理能力更强）"
-
 #. Translators: The display name for Gemini's default media resolution.
-#: addon\globalPlugins\visAware\geminiModels.py:66
+#: addon\globalPlugins\visAware\geminiModels.py:95
 msgid "Automatic (model default)"
 msgstr "自动（模型默认）"
 
 #. Translators: The display name for high Gemini media resolution.
-#: addon\globalPlugins\visAware\geminiModels.py:68
+#: addon\globalPlugins\visAware\geminiModels.py:97
 msgid "High (best detail, slower)"
 msgstr "高（细节最丰富，速度较慢）"
 
 #. Translators: The display name for medium Gemini media resolution.
-#: addon\globalPlugins\visAware\geminiModels.py:70
+#: addon\globalPlugins\visAware\geminiModels.py:99
 msgid "Medium (balanced)"
 msgstr "中（均衡）"
 
 #. Translators: The display name for low Gemini media resolution.
-#: addon\globalPlugins\visAware\geminiModels.py:72
+#: addon\globalPlugins\visAware\geminiModels.py:101
 msgid "Low (faster, less detail)"
 msgstr "低（速度较快，细节较少）"
 
@@ -1173,30 +1163,30 @@ msgid "DeepSeek returned an invalid agent response."
 msgstr "DeepSeek 返回的 Agent 响应无效。"
 
 #. Translators: An error message returned from the Gemini API.
-#: addon\globalPlugins\visAware\agent\gemini.py:289
-#: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:235
-#: addon\globalPlugins\visAware\imageDescribers\gemini.py:237
-#: addon\globalPlugins\visAware\imageDescribers\gemini.py:340
+#: addon\globalPlugins\visAware\agent\gemini.py:288
+#: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:238
+#: addon\globalPlugins\visAware\imageDescribers\gemini.py:239
+#: addon\globalPlugins\visAware\imageDescribers\gemini.py:342
 #, python-brace-format
 msgid "Gemini API error: {}"
 msgstr "Gemini API 错误：{}"
 
-#: addon\globalPlugins\visAware\agent\gemini.py:292
-#: addon\globalPlugins\visAware\agent\gemini.py:300
-#: addon\globalPlugins\visAware\agent\gemini.py:309
-#: addon\globalPlugins\visAware\agent\gemini.py:316
+#: addon\globalPlugins\visAware\agent\gemini.py:291
+#: addon\globalPlugins\visAware\agent\gemini.py:299
+#: addon\globalPlugins\visAware\agent\gemini.py:308
+#: addon\globalPlugins\visAware\agent\gemini.py:315
 msgid "Gemini returned malformed agent action data."
 msgstr "Gemini 返回了格式错误的 Agent 动作数据。"
 
-#: addon\globalPlugins\visAware\agent\gemini.py:297
+#: addon\globalPlugins\visAware\agent\gemini.py:296
 msgid "Gemini returned an unsupported agent tool call."
 msgstr "Gemini 返回了不支持的 Agent 工具调用。"
 
-#: addon\globalPlugins\visAware\agent\gemini.py:302
+#: addon\globalPlugins\visAware\agent\gemini.py:301
 msgid "Gemini did not return an agent tool call."
 msgstr "Gemini 未返回 Agent 工具调用。"
 
-#: addon\globalPlugins\visAware\agent\gemini.py:314
+#: addon\globalPlugins\visAware\agent\gemini.py:313
 msgid "Gemini returned invalid agent action JSON."
 msgstr "Gemini 返回了无效的 Agent 动作 JSON。"
 
@@ -1945,25 +1935,25 @@ msgstr "验证码识别结果为空。"
 msgid "Google Gemini OCR"
 msgstr "Google Gemini OCR"
 
-#: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:179
+#: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:182
 msgid ""
 "API key is missing. Please configure it in the Gemini OCR engine settings."
 msgstr "缺少 API 密钥。请在 Gemini OCR 引擎设置中配置。"
 
 #. Translators: An error message for malformed Gemini OCR structured data.
-#: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:228
-#: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:299
-#: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:359
-#: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:363
-#: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:367
-#: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:371
-#: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:376
+#: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:231
+#: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:302
+#: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:362
+#: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:366
+#: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:370
+#: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:374
+#: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:379
 msgid "Gemini OCR returned malformed structured data."
 msgstr "Gemini OCR 返回的结构化数据格式错误。"
 
 #. Translators: An error message indicating content was blocked by safety filters.
-#: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:292
-#: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:303
+#: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:295
+#: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:306
 #: addon\globalPlugins\visAware\imageDescribers\_googleGenerativeLanguage.py:82
 #: addon\globalPlugins\visAware\imageDescribers\_googleGenerativeLanguage.py:99
 msgid "Content blocked due to safety settings."
@@ -1975,10 +1965,10 @@ msgstr "由于安全设置，内容已被屏蔽。"
 #. Translators: An error message for an empty response from an image-description server.
 #. Translators: An error message for an empty but successful Ollama response.
 #. Translators: An error message for an empty but successful server response.
-#: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:294
+#: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:297
 #: addon\globalPlugins\visAware\contentRecognizers\ollamaOCR.py:218
 #: addon\globalPlugins\visAware\imageDescribers\deepseek.py:238
-#: addon\globalPlugins\visAware\imageDescribers\gemini.py:346
+#: addon\globalPlugins\visAware\imageDescribers\gemini.py:348
 #: addon\globalPlugins\visAware\imageDescribers\gemma.py:456
 #: addon\globalPlugins\visAware\imageDescribers\kimi.py:427
 #: addon\globalPlugins\visAware\imageDescribers\ollama.py:178
@@ -1987,18 +1977,18 @@ msgid "Server returned a successful but empty response."
 msgstr "服务器返回了成功但为空的响应。"
 
 #. Translators: An error message for an empty Gemini OCR response.
-#: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:307
+#: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:310
 msgid "Gemini OCR returned an empty response."
 msgstr "Gemini OCR 返回了空响应。"
 
 #. Translators: An error message for malformed Gemini OCR structured JSON.
-#: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:312
+#: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:315
 msgid "Gemini OCR returned invalid JSON."
 msgstr "Gemini OCR 返回了无效的 JSON。"
 
 #. Translators: An error message when coordinate conversion cannot be completed.
-#: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:390
-#: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:394
+#: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:393
+#: addon\globalPlugins\visAware\contentRecognizers\geminiOCR.py:397
 msgid "Gemini OCR cannot convert coordinates without the uploaded image size."
 msgstr "Gemini OCR 缺少上传图像尺寸，无法转换坐标。"
 
@@ -2596,7 +2586,7 @@ msgstr "缺少 API 密钥。请在 DeepSeek 引擎设置中配置。"
 #. Translators: An error message for malformed Gemini response data.
 #. Translators: An error message for malformed Gemma response data.
 #: addon\globalPlugins\visAware\imageDescribers\deepseek.py:235
-#: addon\globalPlugins\visAware\imageDescribers\gemini.py:336
+#: addon\globalPlugins\visAware\imageDescribers\gemini.py:338
 #: addon\globalPlugins\visAware\imageDescribers\gemma.py:442
 #: addon\globalPlugins\visAware\imageDescribers\gemma.py:445
 msgid "Server returned an invalid response."
@@ -2623,9 +2613,9 @@ msgstr "DeepSeek 响应因内容过滤而被阻止。"
 msgid "&Enable streaming output (if available)"
 msgstr "启用流式输出（如果可用）(&S)"
 
-#: addon\globalPlugins\visAware\imageDescribers\gemini.py:190
-#: addon\globalPlugins\visAware\imageDescribers\gemini.py:256
-#: addon\globalPlugins\visAware\imageDescribers\gemini.py:301
+#: addon\globalPlugins\visAware\imageDescribers\gemini.py:192
+#: addon\globalPlugins\visAware\imageDescribers\gemini.py:258
+#: addon\globalPlugins\visAware\imageDescribers\gemini.py:303
 msgid "API key is missing. Please configure it in the Gemini engine settings."
 msgstr "缺少 API 密钥。请在 Gemini 引擎设置中配置。"
 
@@ -2856,8 +2846,18 @@ msgid ""
 msgstr "为 NVDA 提供 OCR、AI 图像描述、自动识别和 AI 辅助计算机控制的插件。"
 
 #: buildVars.py:38
-#, fuzzy
 msgid ""
+"### 0.9.9\n"
+"\n"
+"* Fixed Gemini compatibility across OCR, image description, and AI Agent "
+"engines.\n"
+"* Added sound cues to recognition and AI Agent workflows for start, waiting, "
+"actions, questions, success, cancellation, and error states.\n"
+"* Improved automatic recognition to show only engines that explicitly "
+"support it.\n"
+"* Added text CAPTCHA recognition through RuCaptcha and 2Captcha, with "
+"configurable recognition options and account balance checks.\n"
+"\n"
 "### 0.9.6\n"
 "\n"
 "* Updated the default DeepSeek vision model to `deepseek-flash` and added "
@@ -2901,6 +2901,13 @@ msgid ""
 "* Added Copy and Close buttons to browsable recognition and follow-up result "
 "dialogs."
 msgstr ""
+"### 0.9.9\n"
+"\n"
+"* 修复 Gemini 在 OCR、图像描述和 AI Agent 引擎中的兼容性问题。\n"
+"* 为识别和 AI Agent 流程新增声音提示，涵盖开始、等待、执行操作、提问、成功、取消和错误等状态。\n"
+"* 改进自动识别：仅显示明确支持自动识别的引擎。\n"
+"* 新增通过 RuCaptcha 和 2Captcha 识别文本验证码，支持配置识别选项并查询账户余额。\n"
+"\n"
 "### 0.9.6\n"
 "\n"
 "* 更新默认 DeepSeek 视觉模型为 `deepseek-flash`，并新增较新的 Gemini 视觉模型"
@@ -2931,6 +2938,12 @@ msgstr ""
 "* 改进可浏览图像描述输出，表格内容使用标准 Markdown 表格并避免代码围栏。\n"
 "* 从追问对话框中移除模型和模型提供商名称。\n"
 "* 为可浏览的识别与追问结果对话框添加“复制”和“关闭”按钮。"
+
+#~ msgid "Gemini 2.5 Flash (stable)"
+#~ msgstr "Gemini 2.5 Flash（稳定版）"
+
+#~ msgid "Gemini 2.5 Pro (stable, higher reasoning)"
+#~ msgstr "Gemini 2.5 Pro（稳定版，推理能力更强）"
 
 #~ msgid "Are you sure you want to log out of Baimiao?"
 #~ msgstr "确定要退出白描登录吗？"
