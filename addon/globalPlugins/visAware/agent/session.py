@@ -10,6 +10,7 @@ from collections.abc import Callable
 import config
 from threading import Event, Thread
 import time
+from typing import TYPE_CHECKING
 
 import addonHandler
 from logHandler import log
@@ -17,6 +18,7 @@ import ui
 import wx
 
 from ..exceptions import ApiError, AuthenticationError, CancellationError, NetworkError
+from ..cues import CueType
 from .actions import (
 	ActionExecutionError,
 	AgentAction,
@@ -29,6 +31,9 @@ from .actions import (
 )
 from .client import createAgentClient
 from .decision import AgentDecision
+
+if TYPE_CHECKING:
+	from .._taskCues import TaskCueManager
 
 addonHandler.initTranslation()
 
@@ -45,10 +50,13 @@ class AgentSession:
 	def __init__(
 		self,
 		goal: str,
+		taskCues: TaskCueManager,
 		onDone: Callable[["AgentSession"], None] | None = None,
 		askUser: AskUserCallback | None = None,
 	) -> None:
 		self.goal = goal
+		self._taskCues = taskCues
+		self._cueHandle: Event | None = None
 		self._onDone = onDone
 		self._askUser = askUser
 		self._cancelEvent = Event()
@@ -62,6 +70,7 @@ class AgentSession:
 	def cancel(self) -> bool:
 		wasCancelling = self._cancelEvent.is_set()
 		self._cancelEvent.set()
+		self._taskCues.stop(self._cueHandle)
 		releaseHeldInputs()
 		return not wasCancelling
 
@@ -72,7 +81,6 @@ class AgentSession:
 	def _run(self) -> None:
 		try:
 			log.info("Vis Aware agent session starting.")
-			self._beep(600, 80)
 			self._message(_("Agent started."))
 			client = createAgentClient()
 			boundWindow = getForegroundWindowInfo()
@@ -126,10 +134,9 @@ class AgentSession:
 					)
 				if unchangedCount >= UNCHANGED_SCREEN_LIMIT:
 					log.warning("Agent stopped because the screen did not change.")
-					self._beep(260, 180)
+					self._taskCues.play(CueType.ERROR)
 					self._message(_("Agent stopped because the screen did not change."))
 					return
-				self._beep(520, 50)
 				self._message(_("Analyzing screen."))
 				log.info(f"Agent step {stepIndex}/{MAX_STEPS}: requesting next action.")
 				decision = self._requestNextAction(client, screenshot, history)
@@ -141,7 +148,7 @@ class AgentSession:
 					f"message={decision.message!r}",
 				)
 				if decision.status == "finish":
-					self._beep(900, 150)
+					self._taskCues.play(CueType.SUCCESS)
 					self._message(decision.message or _("Agent finished."))
 					return
 				if decision.status == "ask_user":
@@ -155,10 +162,10 @@ class AgentSession:
 					return
 				if not actions:
 					log.warning("Agent returned action status without an action.")
-					self._beep(260, 180)
+					self._taskCues.play(CueType.ERROR)
 					self._message(_("Agent did not return an action."))
 					return
-				self._beep(760, 50)
+				self._taskCues.play(CueType.ACTION)
 				executedActions = []
 				for action in actions:
 					self._message(_formatActionProgress(action, action.message or decision.message))
@@ -188,20 +195,20 @@ class AgentSession:
 					self._sleepAfterAction()
 				self._message(_("Checking result."))
 				boundWindow = self._getReboundWindow(boundWindow)
-			self._beep(260, 180)
+			self._taskCues.play(CueType.ERROR)
 			log.warning("Agent stopped after reaching the maximum number of steps.")
 			self._message(_("Agent stopped after reaching the maximum number of steps."))
 		except CancellationError:
 			log.info("Vis Aware agent session cancelled.")
-			self._beep(300, 120)
+			self._taskCues.play(CueType.CANCEL)
 			self._message(_("Agent stopped."))
 		except (AuthenticationError, NetworkError, ApiError, ActionExecutionError) as e:
 			log.warning("Vis Aware agent session stopped with an expected error.", exc_info=True)
-			self._beep(220, 220)
+			self._taskCues.play(CueType.ERROR)
 			self._message(str(e))
 		except Exception:
 			log.error("Unexpected agent error", exc_info=True)
-			self._beep(180, 260)
+			self._taskCues.play(CueType.ERROR)
 			self._message(_("Agent failed."))
 		finally:
 			releaseHeldInputs()
@@ -215,6 +222,7 @@ class AgentSession:
 			raise CancellationError("Agent session was cancelled.", self._cancelEvent)
 
 	def _requestNextAction(self, client, screenshot, history: list[str]) -> AgentDecision:
+		self._checkCancelled()
 		doneEvent = Event()
 		result: dict[str, AgentDecision | Exception] = {}
 
@@ -227,9 +235,15 @@ class AgentSession:
 				doneEvent.set()
 
 		requestThread = Thread(target=request, name="VisAwareAgentRequest", daemon=True)
-		self._requestThread = requestThread
-		requestThread.start()
+		self._cueHandle = self._taskCues.start()
 		try:
+			self._checkCancelled()
+			self._requestThread = requestThread
+			try:
+				requestThread.start()
+			except Exception:
+				self._requestThread = None
+				raise
 			while not doneEvent.wait(0.05):
 				self._checkCancelled()
 			error = result.get("error")
@@ -240,6 +254,8 @@ class AgentSession:
 				return decision
 			raise ApiError(_("Agent did not return an action."))
 		finally:
+			self._taskCues.stop(self._cueHandle)
+			self._cueHandle = None
 			if doneEvent.is_set() and self._requestThread is requestThread:
 				self._requestThread = None
 
@@ -254,13 +270,14 @@ class AgentSession:
 			self._requestThread = None
 
 	def _handleUserQuestion(self, question: str, history: list[str]) -> bool:
-		self._beep(650, 180)
+		self._taskCues.play(CueType.QUESTION)
 		self._message(question)
 		if not self._askUser:
 			return False
 		answer = self._askUser(question, self._cancelEvent)
 		self._checkCancelled()
 		if not answer:
+			self._taskCues.play(CueType.CANCEL)
 			self._message(_("Agent stopped."))
 			return False
 		history.append(f"Agent asked user: {question}")
@@ -333,14 +350,6 @@ class AgentSession:
 	def _message(self, text: str) -> None:
 		if text:
 			wx.CallAfter(ui.message, text)
-
-	def _beep(self, frequency: int, duration: int) -> None:
-		try:
-			from tones import beep
-
-			wx.CallAfter(beep, frequency, duration)
-		except Exception:
-			log.debugWarning("Agent beep failed.", exc_info=True)
 
 
 def _verboseDebugLogging() -> bool:

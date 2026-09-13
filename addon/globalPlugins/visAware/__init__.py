@@ -32,6 +32,7 @@ import vision
 from PIL import Image, ImageGrab
 
 from ._autoRecognition import AutoRecognitionController, getNextAutoRecognitionSetting
+from ._taskCues import TaskCueManager
 from .askDialog import AskQuestionFrame
 from .agent.settings import AgentHandler, AgentPanel
 from .agent.session import AgentSession
@@ -177,6 +178,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		super().__init__()
 		self._activeEngine = None
 		self._activeRecognitionSequence = 0
+		self._taskCues = TaskCueManager()
+		self._recognitionCue: Event | None = None
 		self._agentSession: AgentSession | None = None
 		self._agentPromptDialogActive = False
 		self._agentQuestionDialog: wx.Dialog | None = None
@@ -200,7 +203,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		ImageDescriberHandler.initialize()
 		self.descHandler = ImageDescriberHandler
 		AgentHandler.initialize()
-		self._autoRecognitionController = AutoRecognitionController()
+		self._autoRecognitionController = AutoRecognitionController(self._taskCues)
 		self._registerAutoRecognitionEventHandlers()
 		config.post_configProfileSwitch.register(self._handleAutoRecognitionConfigProfileSwitch)
 		self._autoRecognitionConfigProfileSwitchRegistered = True
@@ -228,6 +231,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			)
 
 	def terminate(self) -> None:
+		self._taskCues.terminate()
 		if self._autoRecognitionConfigProfileSwitchRegistered:
 			try:
 				config.post_configProfileSwitch.unregister(self._handleAutoRecognitionConfigProfileSwitch)
@@ -524,7 +528,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			return
 		context = self._askQuestionContext
 		if not self._askQuestionFrame:
-			self._askQuestionFrame = AskQuestionFrame(gui.mainFrame, context)
+			self._askQuestionFrame = AskQuestionFrame(gui.mainFrame, context, self._taskCues)
 			contextChanged = False
 		elif contextChanged:
 			self._askQuestionFrame.setContext(context)
@@ -583,7 +587,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if self._agentSession and self._agentSession.isRunning:
 			return
 		log.info("Starting Vis Aware agent from user prompt.")
-		self._agentSession = AgentSession(goal, onDone=self._onAgentDone, askUser=self._askAgentUser)
+		self._agentSession = AgentSession(
+			goal,
+			self._taskCues,
+			onDone=self._onAgentDone,
+			askUser=self._askAgentUser,
+		)
 		self._agentSession.start()
 
 	def _stopAgent(self, isUserInitiated: bool = True) -> bool:
@@ -715,16 +724,14 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				# Translators: Reported when a recognition task is cancelled by the user.
 				ui.message(_("Recognition cancelled"))
 			return True
-		if (
-			self._activeEngine
-			and self._activeEngine._recognitionThread
-			and self._activeEngine._recognitionThread.is_alive()
-		):
+		if self._activeEngine:
 			self._activeRecognitionSequence += 1
+			self._taskCues.stop(self._recognitionCue)
 			activeEngine = self._activeEngine
 			log.info(f"Cancelling active task from engine '{activeEngine.name}'.")
 			activeEngine.cancel(isUserInitiated=isUserInitiated)
-			activeEngine._recognitionThread.join(timeout=0.2)
+			if activeEngine._recognitionThread and activeEngine._recognitionThread.is_alive():
+				activeEngine._recognitionThread.join(timeout=0.2)
 			if hasattr(self, "_streamingSpeechPresenter"):
 				self._streamingSpeechPresenter.cancel()
 			self._activeEngine = None
@@ -734,6 +741,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			return True
 		if hasattr(self, "_streamingSpeechPresenter") and self._streamingSpeechPresenter.isActive:
 			self._activeRecognitionSequence += 1
+			self._taskCues.stop(self._recognitionCue)
 			log.info("Cancelling active streaming speech presenter without active recognition thread.")
 			self._streamingSpeechPresenter.cancel()
 			return True
@@ -790,14 +798,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		:param gesture: The gesture that triggered the recognition.
 		:param pressCount: The number of times the gesture was pressed.
 		"""
-		from tones import beep
-
-		if pressCount == 1:
-			beep(700, 200)
-			self.startRecognition(gesture=gesture, simpleText=False)
-		else:
-			beep(300, 500)
-			self.startRecognition(gesture=gesture, simpleText=True)
+		self.startRecognition(gesture=gesture, simpleText=pressCount != 1)
 
 	@script(
 		# Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
@@ -1101,15 +1102,19 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		:param streamResult: Whether the task will deliver streaming events.
 		:returns: A callback suitable for ContentRecognizer.recognize.
 		"""
+		cueHandle = self._recognitionCue
 
 		def onResult(result: Any) -> None:
 			if recognitionSequence != self._activeRecognitionSequence:
+				self._taskCues.stop(cueHandle)
 				log.debug(
 					"Ignoring result from a superseded recognition task. "
 					f"callbackSequence={recognitionSequence}, activeSequence={self._activeRecognitionSequence}, "
 					f"streamResult={streamResult}, resultType={type(result)}",
 				)
 				return
+			if not streamResult or not isinstance(result, StreamText) or result.text.strip():
+				self._taskCues.stop(cueHandle)
 			if streamResult:
 				self._onStreamingRecognitionResult(result)
 			else:
@@ -1134,6 +1139,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		"""
 		try:
 			self._cancelCurrentRecognition(isUserInitiated=False)
+			self._taskCues.stop(self._recognitionCue)
+			self._recognitionCue = None
 			engine = self._getCurrentEngine(currentEngineType)
 			self._activeRecognitionSequence += 1
 			recognitionSequence = self._activeRecognitionSequence
@@ -1171,11 +1178,13 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			pixels = recognizeImage.tobytes("raw", "BGRX")
 			# Translators: Reporting when content recognition (e.g. OCR) begins.
 			ui.message(_("Recognizing"))
+			self._recognitionCue = self._taskCues.start()
 			if shouldStream:
 				self._streamingSpeechPresenter.start()
 			onResult = self._makeRecognitionCallback(recognitionSequence, shouldStream)
 			engine.recognize(pixels, imageInfo, onResult)
 		except Exception as e:
+			self._taskCues.stop(self._recognitionCue)
 			log.error(f"Error preparing for recognition: {e!r}", exc_info=True)
 			if "shouldStream" in locals() and shouldStream:
 				self._streamingSpeechPresenter.cancel()

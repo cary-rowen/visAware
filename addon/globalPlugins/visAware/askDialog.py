@@ -7,7 +7,7 @@
 from __future__ import annotations
 
 from threading import Event, Thread
-from typing import Any
+from typing import Any, TYPE_CHECKING
 
 import addonHandler
 import ui
@@ -20,6 +20,9 @@ from .conversation import ROLE_ASSISTANT, ConversationContext, QuestionStreamFin
 from .exceptions import CancellationError, OCRError
 from .markdownRenderer import showMarkdownBrowseableMessage
 from .streamingSpeech import StreamingSpeechPresenter
+
+if TYPE_CHECKING:
+	from ._taskCues import TaskCueManager
 
 addonHandler.initTranslation()
 
@@ -35,11 +38,15 @@ class AskQuestionFrame(DpiScalingHelperMixinWithoutInit, wx.Frame):
 	MESSAGE_MIN_SIZE = (620, 360)
 	QUESTION_MIN_SIZE = (460, 80)
 
-	def __init__(self, parent: wx.Window | None, context: ConversationContext) -> None:
+	def __init__(
+		self, parent: wx.Window | None, context: ConversationContext, taskCues: TaskCueManager
+	) -> None:
 		# Translators: The title of the follow-up question dialog.
 		super().__init__(parent=parent, title=_("Ask a Follow-up Question"))
 		self.SetName("visAwareAskQuestionFrame")
 		self._context = context
+		self._taskCues = taskCues
+		self._cueHandle: Event | None = None
 		self._cancellationEvent: Event | None = None
 		self._requestSequence = 0
 		self._activeRequestSequence: int | None = None
@@ -180,13 +187,18 @@ class AskQuestionFrame(DpiScalingHelperMixinWithoutInit, wx.Frame):
 		# Translators: Reported while a follow-up question is being answered.
 		ui.message(_("Waiting for answer."))
 		self._cancellationEvent = Event()
-		thread = Thread(
-			name="VisAwareAskQuestionThread",
-			target=self._askWorker,
-			args=(requestSequence, context, question, self._cancellationEvent),
-			daemon=True,
-		)
-		thread.start()
+		self._cueHandle = self._taskCues.start()
+		try:
+			thread = Thread(
+				name="VisAwareAskQuestionThread",
+				target=self._askWorker,
+				args=(requestSequence, context, question, self._cancellationEvent),
+				daemon=True,
+			)
+			thread.start()
+		except Exception:
+			log.error("Could not start follow-up question worker.", exc_info=True)
+			self._onAskFailed(requestSequence, _("Question failed with an unexpected error."))
 
 	def _askWorker(
 		self,
@@ -232,6 +244,8 @@ class AskQuestionFrame(DpiScalingHelperMixinWithoutInit, wx.Frame):
 	def _onAskTextReceived(self, requestSequence: int, text: str, replace: bool = False) -> None:
 		if requestSequence != self._activeRequestSequence or not text:
 			return
+		if text.strip():
+			self._taskCues.stop(self._cueHandle)
 		if self._streamingAnswerRequestSequence != requestSequence:
 			self._startStreamingAnswer(requestSequence)
 		if replace:
@@ -334,6 +348,8 @@ class AskQuestionFrame(DpiScalingHelperMixinWithoutInit, wx.Frame):
 	def _finishRequest(self, requestSequence: int) -> bool:
 		if requestSequence != self._requestSequence or requestSequence != self._activeRequestSequence:
 			return False
+		self._taskCues.stop(self._cueHandle)
+		self._cueHandle = None
 		self._activeRequestSequence = None
 		self._cancellationEvent = None
 		return True
@@ -363,6 +379,8 @@ class AskQuestionFrame(DpiScalingHelperMixinWithoutInit, wx.Frame):
 		)
 
 	def _cancelWorker(self) -> None:
+		self._taskCues.stop(self._cueHandle)
+		self._cueHandle = None
 		self._requestSequence += 1
 		if self._cancellationEvent:
 			self._cancellationEvent.set()

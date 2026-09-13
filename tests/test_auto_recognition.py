@@ -6,7 +6,7 @@ import sys
 from threading import Event, Thread
 import types
 import unittest
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 from test_request_log_redaction import load_recog_handler_module
 
@@ -67,6 +67,7 @@ def _installModuleStubs() -> None:
 	wxModule = types.ModuleType("wx")
 	wxModule.CallAfter = lambda callback, *args: callback(*args)
 	wxModule.CallLater = object
+	wxModule.IsMainThread = lambda: True
 	sys.modules["wx"] = wxModule
 
 	contentRecogModule = types.ModuleType("contentRecog")
@@ -85,6 +86,9 @@ def _installModuleStubs() -> None:
 	recogHistoryModule.addEntry = lambda *args, **kwargs: None
 	recogHistoryModule.getAttachedEntry = lambda _result: None
 	sys.modules[recogHistoryModule.__name__] = recogHistoryModule
+	sys.modules["addon.globalPlugins.visAware.cues"] = types.SimpleNamespace(
+		CueType=types.SimpleNamespace(AUTO="auto"),
+	)
 
 	exceptionsModule = types.ModuleType("addon.globalPlugins.visAware.exceptions")
 	exceptionsModule.CancellationError = type("CancellationError", (Exception,), {})
@@ -137,6 +141,11 @@ def loadAutoRecognitionModule():
 class AutoRecognitionP0TestCase(unittest.TestCase):
 	def setUp(self) -> None:
 		self.module = loadAutoRecognitionModule()
+		self.cues = Mock()
+
+	def tearDown(self) -> None:
+		self.cues.start.assert_not_called()
+		self.cues.stop.assert_not_called()
 
 	def test_automatic_recognition_setting_cycle(self) -> None:
 		getNextSetting = self.module.getNextAutoRecognitionSetting
@@ -160,13 +169,14 @@ class AutoRecognitionP0TestCase(unittest.TestCase):
 			getEngineInstance=Mock(),
 		)
 		self.module.CustomOCRHandler = self.module.ImageDescriberHandler = handler
-		controller = self.module.AutoRecognitionController()
+		controller = self.module.AutoRecognitionController(self.cues)
 		for kind in ("ocr", "imageDescriber"):
 			for name in ("captchaText", "current", "missing"):
 				self.assertIsNone(controller._resolveAutoRecognitionEngine(f"{kind}:{name}"))
 			key = self.module.makeRecognitionScopedKey(f"{kind}:captchaText", "target")
 			self.assertIsNone(controller._createRecognitionEngine(0, key))
 		handler.getEngineInstance.assert_not_called()
+		self.cues.play.assert_not_called()
 		current.name = "supported"
 		self.assertEqual(controller._resolveAutoRecognitionEngine("ocr:current")[1], "supported")
 		handler.getEngineList = lambda: [("captchaText", "CAPTCHA")]
@@ -300,7 +310,7 @@ class AutoRecognitionP0TestCase(unittest.TestCase):
 		)
 		sys.modules[screenCaptureModule.__name__] = screenCaptureModule
 
-		controller = module.AutoRecognitionController()
+		controller = module.AutoRecognitionController(self.cues)
 		controller._token = 1
 		controller._activeKey = "key"
 		controller._captureAndDescribe(1, "key", (-10, 20, 30, 40), 0, None, None)
@@ -309,7 +319,7 @@ class AutoRecognitionP0TestCase(unittest.TestCase):
 		controller.terminate()
 
 	def test_worker_keeps_only_latest_queued_task(self) -> None:
-		controller = self.module.AutoRecognitionController()
+		controller = self.module.AutoRecognitionController(self.cues)
 		firstStarted = Event()
 		releaseFirst = Event()
 		latestFinished = Event()
@@ -337,7 +347,7 @@ class AutoRecognitionP0TestCase(unittest.TestCase):
 		self.assertEqual(calls, ["first", "latest"])
 
 	def test_worker_slot_reserves_an_assigned_thread_before_it_starts(self) -> None:
-		controller = self.module.AutoRecognitionController()
+		controller = self.module.AutoRecognitionController(self.cues)
 		assignedWorker = Thread(target=lambda: None)
 		controller._workerThread = assignedWorker
 
@@ -352,7 +362,7 @@ class AutoRecognitionP0TestCase(unittest.TestCase):
 		controller.terminate()
 
 	def test_cancel_reports_active_task_only_once_while_worker_drains(self) -> None:
-		controller = self.module.AutoRecognitionController()
+		controller = self.module.AutoRecognitionController(self.cues)
 		controller._activeKey = "key"
 		controller._workerThread = Thread(target=lambda: None)
 
@@ -360,26 +370,27 @@ class AutoRecognitionP0TestCase(unittest.TestCase):
 		self.assertFalse(controller.cancel())
 		controller.terminate()
 
-	def test_url_start_tone_waits_for_queued_worker(self) -> None:
-		controller = self.module.AutoRecognitionController()
+	def test_url_start_cue_waits_for_queued_worker(self) -> None:
+		controller = self.module.AutoRecognitionController(self.cues)
 		queuedWork = []
-		tones = []
-		self.module._playStartTone = lambda: tones.append("tone")
 		controller._currentKeyMatchesGetter = lambda *_args: True
 		controller._startWorker = lambda target, args: queuedWork.append((target, args))
+		engine = types.SimpleNamespace(cancel=Mock())
+		handler = types.SimpleNamespace(getEngineInstance=lambda _name: engine)
+		controller._resolveRecognitionScopedEngine = lambda _key: (handler, "engine", "key")
+		controller._downloadAndDescribeWithEngine = Mock()
 
 		controller._beginUrlDescription("key", "https://example.test/image", "test", lambda: "key", 0.0)
 
-		self.assertEqual(tones, [])
+		self.cues.play.assert_not_called()
 		self.assertEqual(len(queuedWork), 1)
-		controller._createRecognitionEngine = lambda *_args: None
 		target, args = queuedWork[0]
 		target(*args)
-		self.assertEqual(tones, ["tone"])
+		self.cues.play.assert_called_once_with("auto")
 		controller.cancel()
 
 	def test_recognition_keeps_armed_event_when_cancelled_during_start(self) -> None:
-		controller = self.module.AutoRecognitionController()
+		controller = self.module.AutoRecognitionController(self.cues)
 		controller._token = 1
 		controller._activeKey = "key"
 		cancellationEvent = Event()
@@ -421,6 +432,87 @@ class AutoRecognitionP0TestCase(unittest.TestCase):
 
 		self.assertTrue(cancellationEvent.is_set())
 		self.assertEqual(recognitionEvents, [cancellationEvent])
+
+	def test_start_cue_is_once_per_task_and_ignores_stale_results(self) -> None:
+		controller = self.module.AutoRecognitionController(self.cues)
+		controller._activeKey = "key"
+		controller._activeCurrentKeyGetter = lambda: "key"
+		controller._startTaskCue(0, "key")
+		controller._startTaskCue(0, "key")
+		self.cues.play.assert_called_once_with("auto")
+		controller.cancel()
+		controller._activeKey = "key"
+		controller._activeCurrentKeyGetter = lambda: "key"
+		controller._startTaskCue(controller._token, "key")
+		controller._onResult(0, "key", RuntimeError("old task"), 0)
+		controller._startTaskCue(0, "key")
+		self.assertEqual(controller._activeKey, "key")
+		controller._onResult(controller._token, "key", RuntimeError("current task"), 0)
+		controller._startTaskCue(controller._token, "key")
+		self.assertEqual(self.cues.play.call_count, 2)
+		self.assertIsNone(controller._activeKey)
+
+	def test_cancel_discards_queued_cue_start(self) -> None:
+		controller = self.module.AutoRecognitionController(self.cues)
+		controller._activeKey = "key"
+		controller._activeCurrentKeyGetter = lambda: "key"
+		engine = types.SimpleNamespace(cancel=Mock())
+		handler = types.SimpleNamespace(getEngineInstance=lambda _name: engine)
+		controller._resolveRecognitionScopedEngine = lambda _key: (handler, "engine", "key")
+		queued = []
+		self.module.wx.CallAfter = lambda callback, *args: queued.append((callback, args))
+		controller._createRecognitionEngine(0, "key")
+		controller.cancel()
+		for callback, args in queued:
+			callback(*args)
+		self.cues.play.assert_not_called()
+
+	def test_screenshot_cache_and_url_fallback_cue_lifecycle(self) -> None:
+		module = self.module
+		screenCapture = types.SimpleNamespace(
+			ScreenCaptureError=RuntimeError,
+			hasNvdaCapture=lambda: False,
+			captureNvdaPixels=Mock(),
+			imageFromNvdaPixels=Mock(),
+			isScreenCurtainCaptureSupported=lambda: True,
+		)
+		module.ImageGrab.grab = lambda **_kwargs: types.SimpleNamespace(width=10, height=10)
+		module.makeScreenshotContentKey = lambda image: ("content", image)
+		with patch.dict(sys.modules, {"addon.globalPlugins.visAware._screenCapture": screenCapture}):
+			for outcome in ("cache", "fallback", "fallbackFailure"):
+				with self.subTest(outcome=outcome):
+					self.cues.reset_mock()
+					controller = module.AutoRecognitionController(self.cues)
+					controller._activeKey = "key"
+					controller._activeCurrentKeyGetter = lambda: "key"
+					controller._makeTargetScopedContentKey = lambda *_args: "content"
+					controller._getCachedResult = lambda _key: "cached" if outcome == "cache" else None
+					engine = types.SimpleNamespace(
+						cancel=Mock(),
+						prefetchAuthHeaders=Mock(
+							side_effect=[
+								None,
+								RuntimeError("auth failed") if outcome == "fallbackFailure" else None,
+							]
+						),
+					)
+					handler = types.SimpleNamespace(getEngineInstance=lambda _name: engine)
+					controller._resolveRecognitionScopedEngine = lambda _key: (handler, "engine", "key")
+					controller._recognizeImage = Mock(side_effect=RuntimeError("screenshot failed"))
+					controller._downloadAndDescribeWithEngine = Mock()
+					controller._captureAndDescribe(
+						0, "key", (0, 0, 10, 10), 0, "https://example.test/image", lambda: "key"
+					)
+					if outcome == "cache":
+						self.cues.play.assert_not_called()
+						self.assertIsNone(controller._activeKey)
+					else:
+						self.cues.play.assert_called_once_with("auto")
+						if outcome == "fallbackFailure":
+							self.assertIsNone(controller._activeKey)
+						else:
+							controller._downloadAndDescribeWithEngine.assert_called_once()
+							controller.cancel()
 
 
 if __name__ == "__main__":

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 'customOCR' '0.1.1-dev'\n"
 "Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
-"POT-Creation-Date: 2026-09-13 23:44+0800\n"
+"POT-Creation-Date: 2026-09-14 01:33+0800\n"
 "PO-Revision-Date: 2026-09-13 01:23+0800\n"
 "Last-Translator: Larry Wang <larry.wang.801@gmail.com>\n"
 "Language-Team: \n"
@@ -101,44 +101,44 @@ msgid "{engine} (enabled)"
 msgstr "{engine}（已启用）"
 
 #. Translators: The sender label for assistant answers in the follow-up dialog.
-#: addon\globalPlugins\visAware\askDialog.py:27
+#: addon\globalPlugins\visAware\askDialog.py:30
 msgid "Answer"
 msgstr "回答"
 
 #. Translators: The title of the follow-up question dialog.
-#: addon\globalPlugins\visAware\askDialog.py:40
+#: addon\globalPlugins\visAware\askDialog.py:45
 msgid "Ask a Follow-up Question"
 msgstr "追问"
 
 #. Translators: The label for the conversation history read-only text field in the follow-up dialog.
-#: addon\globalPlugins\visAware\askDialog.py:64
+#: addon\globalPlugins\visAware\askDialog.py:71
 msgid "Conversation &history:"
 msgstr "对话记录(&H)："
 
 #. Translators: The label for the follow-up question edit field.
-#: addon\globalPlugins\visAware\askDialog.py:82
+#: addon\globalPlugins\visAware\askDialog.py:89
 msgid "&Question:"
 msgstr "问题(&Q)："
 
 #. Translators: The label for a button that sends a follow-up question.
-#: addon\globalPlugins\visAware\askDialog.py:96
+#: addon\globalPlugins\visAware\askDialog.py:103
 msgid "&Send"
 msgstr "发送(&S)"
 
 #. Translators: The label for a button that opens the latest content rendered as Markdown.
-#: addon\globalPlugins\visAware\askDialog.py:99
+#: addon\globalPlugins\visAware\askDialog.py:106
 msgid "View &formatted content"
 msgstr "查看格式化内容(&F)"
 
 #. Translators: The label for a button that closes the follow-up question dialog.
-#: addon\globalPlugins\visAware\askDialog.py:102
+#: addon\globalPlugins\visAware\askDialog.py:109
 msgid "&Close"
 msgstr "关闭(&C)"
 
 #. Translators: The sender label for the original image description in the follow-up dialog.
 #. Translators: The title of the Image Describer engine settings panel.
 #. Translators: A choice meaning automatic recognition should use image description engines.
-#: addon\globalPlugins\visAware\askDialog.py:127
+#: addon\globalPlugins\visAware\askDialog.py:134
 #: addon\globalPlugins\visAware\recogHandler.py:43
 #: addon\globalPlugins\visAware\recogHandler.py:1100
 #: addon\globalPlugins\visAware\recogHandler.py:1129
@@ -146,40 +146,41 @@ msgid "Image description"
 msgstr "图像描述"
 
 #. Translators: The sender label for the user in the follow-up dialog.
-#: addon\globalPlugins\visAware\askDialog.py:131
-#: addon\globalPlugins\visAware\askDialog.py:174
+#: addon\globalPlugins\visAware\askDialog.py:138
+#: addon\globalPlugins\visAware\askDialog.py:181
 msgid "You"
 msgstr "您"
 
 #. Translators: Reported while a follow-up question is still being answered.
 #. Translators: Reported while a follow-up question is being answered.
-#: addon\globalPlugins\visAware\askDialog.py:163
-#: addon\globalPlugins\visAware\askDialog.py:181
+#: addon\globalPlugins\visAware\askDialog.py:170
+#: addon\globalPlugins\visAware\askDialog.py:188
 msgid "Waiting for answer."
 msgstr "正在等待回答。"
 
 #. Translators: Reported when the user tries to send an empty follow-up question.
-#: addon\globalPlugins\visAware\askDialog.py:169
+#: addon\globalPlugins\visAware\askDialog.py:176
 msgid "Enter a question."
 msgstr "请输入问题。"
 
 #. Translators: Reported when a follow-up question fails unexpectedly.
-#: addon\globalPlugins\visAware\askDialog.py:226
+#: addon\globalPlugins\visAware\askDialog.py:201
+#: addon\globalPlugins\visAware\askDialog.py:238
 msgid "Question failed with an unexpected error."
 msgstr "提问失败，发生意外错误。"
 
 #. Translators: The sender label for an error shown in the follow-up dialog.
-#: addon\globalPlugins\visAware\askDialog.py:317
-#: addon\globalPlugins\visAware\askDialog.py:325
+#: addon\globalPlugins\visAware\askDialog.py:331
+#: addon\globalPlugins\visAware\askDialog.py:339
 msgid "Error"
 msgstr "错误"
 
 #. Translators: Reported when there is no follow-up content to show in rendered form.
-#: addon\globalPlugins\visAware\askDialog.py:355
+#: addon\globalPlugins\visAware\askDialog.py:371
 msgid "There is no content to show."
 msgstr "没有可显示的内容。"
 
-#: addon\globalPlugins\visAware\askDialog.py:360
+#: addon\globalPlugins\visAware\askDialog.py:376
 msgid "Formatted Content"
 msgstr "格式化内容"
 
@@ -202,6 +203,11 @@ msgstr "上一次识别结果无法转换为文本。"
 #: addon\globalPlugins\visAware\conversation.py:115
 msgid "The previous recognition result is blank."
 msgstr "上一次识别结果为空。"
+
+#: addon\globalPlugins\visAware\cues.py:156
+#, python-format
+msgid "%d percent"
+msgstr "百分之 %d"
 
 #. Translators: The display name for the current DeepSeek vision model.
 #: addon\globalPlugins\visAware\deepseekModels.py:20
@@ -583,7 +589,8 @@ msgstr "自动识别"
 msgid ""
 "The saved engine is unavailable for automatic recognition. Choose another "
 "engine or save with automatic recognition off."
-msgstr "原先保存的引擎已无法用于自动识别。请选择其他引擎，或保持关闭并保存设置。"
+msgstr ""
+"原先保存的引擎已无法用于自动识别。请选择其他引擎，或保持关闭并保存设置。"
 
 #: addon\globalPlugins\visAware\recogHandler.py:1242
 msgid "Automatic recognition &type:"
@@ -738,131 +745,131 @@ msgstr "没有可用的 Ollama 模型。请先在 Ollama 中拉取视觉模型�
 #. Add-on summary/title, usually the user visible name of the add-on
 #. Translators: Summary/title for this add-on
 #. to be shown on installation and add-on information found in add-on store
-#: addon\globalPlugins\visAware\__init__.py:74 buildVars.py:27
+#: addon\globalPlugins\visAware\__init__.py:75 buildVars.py:27
 msgid "Vis Aware"
 msgstr "Vis Aware"
 
 #. Translators: The title of the settings dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:147
+#: addon\globalPlugins\visAware\__init__.py:148
 msgid "Vis Aware Settings"
 msgstr "Vis Aware 设置"
 
 #. Translators: The label for the menu item to open the Vis Aware settings dialog.
-#: addon\globalPlugins\visAware\__init__.py:212
+#: addon\globalPlugins\visAware\__init__.py:215
 msgid "&Vis Aware settings..."
 msgstr "Vis Aware 设置(&V)..."
 
 #. Translators: The help text for the menu item to open the Vis Aware settings dialog.
-#: addon\globalPlugins\visAware\__init__.py:214
+#: addon\globalPlugins\visAware\__init__.py:217
 msgid "Vis Aware settings"
 msgstr "Vis Aware 设置"
 
 #. Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:376
+#: addon\globalPlugins\visAware\__init__.py:380
 msgid "Describes the content of the current navigator object"
 msgstr "描述当前导航对象的内容"
 
 #. Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:390
+#: addon\globalPlugins\visAware\__init__.py:394
 msgid "Describes images on the clipboard"
 msgstr "描述剪贴板中的图像"
 
 #. Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:408
+#: addon\globalPlugins\visAware\__init__.py:412
 msgid "Recognizes the content of the current navigator object using OCR"
 msgstr "使用 OCR 识别当前导航对象的内容"
 
 #. Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:422
+#: addon\globalPlugins\visAware\__init__.py:426
 msgid "Recognizes text in images on the clipboard using OCR"
 msgstr "使用 OCR 识别剪贴板图像中的文字"
 
 #. Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:472
+#: addon\globalPlugins\visAware\__init__.py:476
 msgid "Shows the previous recognition result"
 msgstr "显示上一次识别结果"
 
 #. Translators: Reported when there is no previous recognition result to show.
-#: addon\globalPlugins\visAware\__init__.py:480
+#: addon\globalPlugins\visAware\__init__.py:484
 msgid "No previous recognition result"
 msgstr "没有上一次识别结果"
 
 #. Translators: Reported when the previous recognition result is blank.
-#: addon\globalPlugins\visAware\__init__.py:485
+#: addon\globalPlugins\visAware\__init__.py:489
 msgid "Previous recognition result is blank."
 msgstr "上一次识别结果为空。"
 
 #. Translators: The title for the browsable message showing the recognition result.
-#: addon\globalPlugins\visAware\__init__.py:493
-#: addon\globalPlugins\visAware\__init__.py:1037
+#: addon\globalPlugins\visAware\__init__.py:497
+#: addon\globalPlugins\visAware\__init__.py:1038
 msgid "Recognition result"
 msgstr "识别结果"
 
 #. Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:499
+#: addon\globalPlugins\visAware\__init__.py:503
 msgid "Asks a follow-up question about the previous image description"
 msgstr "对上一次图像描述进行追问"
 
 #. Translators: Reported when there is no previous recognition result to ask about.
-#: addon\globalPlugins\visAware\__init__.py:507
+#: addon\globalPlugins\visAware\__init__.py:511
 msgid "There is no previous recognition result to ask about."
 msgstr "没有可追问的上一次识别结果。"
 
 #. Translators: Reported when the follow-up question dialog cannot be opened.
-#: addon\globalPlugins\visAware\__init__.py:523
+#: addon\globalPlugins\visAware\__init__.py:527
 msgid "Could not open the follow-up question dialog."
 msgstr "无法打开追问对话框。"
 
 #. Translators: A message shown when trying to use the AI agent with screen curtain enabled.
-#: addon\globalPlugins\visAware\__init__.py:546
+#: addon\globalPlugins\visAware\__init__.py:550
 #: addon\globalPlugins\visAware\agent\actions.py:209
 msgid "Please disable screen curtain before starting the AI Agent."
 msgstr "请在启动 AI Agent 之前关闭黑屏。"
 
 #. Translators: Prompt shown when starting the AI agent.
-#: addon\globalPlugins\visAware\__init__.py:564
+#: addon\globalPlugins\visAware\__init__.py:568
 msgid "What should the AI Agent do?"
 msgstr "希望 AI Agent 做什么？"
 
 #. Translators: Title for the AI agent command dialog.
-#: addon\globalPlugins\visAware\__init__.py:566
-#: addon\globalPlugins\visAware\__init__.py:622
+#: addon\globalPlugins\visAware\__init__.py:570
+#: addon\globalPlugins\visAware\__init__.py:631
 msgid "Vis Aware Agent"
 msgstr "Vis Aware Agent"
 
 #. Translators: Reported when the AI agent is being stopped by the user.
-#: addon\globalPlugins\visAware\__init__.py:598
+#: addon\globalPlugins\visAware\__init__.py:607
 msgid "Agent is stopping."
 msgstr "Agent 正在停止。"
 
 #. Translators: Reported when content recognition (e.g. OCR) is attempted, but the content is not visible.
-#: addon\globalPlugins\visAware\__init__.py:668
+#: addon\globalPlugins\visAware\__init__.py:677
 msgid "Content is not visible"
 msgstr "内容不可见"
 
 #. Translators: A message shown when screen capture fails.
-#: addon\globalPlugins\visAware\__init__.py:700
+#: addon\globalPlugins\visAware\__init__.py:709
 msgid "Failed to capture screen image."
 msgstr "无法捕获屏幕图像。"
 
 #. Translators: Reported when a recognition task is cancelled by the user.
-#: addon\globalPlugins\visAware\__init__.py:716
-#: addon\globalPlugins\visAware\__init__.py:733
-#: addon\globalPlugins\visAware\__init__.py:1003
+#: addon\globalPlugins\visAware\__init__.py:725
+#: addon\globalPlugins\visAware\__init__.py:740
+#: addon\globalPlugins\visAware\__init__.py:1004
 msgid "Recognition cancelled"
 msgstr "识别已取消"
 
 #. Translators: Describes the command to cancel an ongoing recognition task.
-#: addon\globalPlugins\visAware\__init__.py:744
+#: addon\globalPlugins\visAware\__init__.py:752
 msgid "Cancels the current recognition"
 msgstr "取消当前识别"
 
 #. Translators: Reported when the cancel command is used but no recognition is in progress.
-#: addon\globalPlugins\visAware\__init__.py:751
+#: addon\globalPlugins\visAware\__init__.py:759
 msgid "No recognition is in progress."
 msgstr "当前没有正在进行的识别。"
 
-#: addon\globalPlugins\visAware\__init__.py:777
+#: addon\globalPlugins\visAware\__init__.py:785
 msgid ""
 "Performs recognition using the current settings. In OCR and image "
 "description modes, press once for a recognition result document. Press twice "
@@ -874,99 +881,99 @@ msgstr ""
 "识别结果。在 AI Agent 模式下启动或终止 Agent"
 
 #. Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:804
+#: addon\globalPlugins\visAware\__init__.py:805
 msgid "Cycles through recognition modes"
 msgstr "循环切换识别模式"
 
 #. Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:814
+#: addon\globalPlugins\visAware\__init__.py:815
 msgid ""
 "Cycles through automatic recognition modes: off, image description, and OCR"
 msgstr "循环切换自动识别模式：关闭、图像描述和 OCR"
 
 #. Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
-#: addon\globalPlugins\visAware\__init__.py:830
+#: addon\globalPlugins\visAware\__init__.py:831
 msgid "Cycles through recognition sources"
 msgstr "循环切换识别来源"
 
 #. Translators: Reported when recognition source cycling is requested while AI Agent mode is active.
-#: addon\globalPlugins\visAware\__init__.py:838
+#: addon\globalPlugins\visAware\__init__.py:839
 msgid "Changing recognition source is not supported in AI Agent mode."
 msgstr "AI Agent 模式下不支持切换识别来源。"
 
 #. Translators: Reported when attempting to recognize a clipboard image, but no image is found.
-#: addon\globalPlugins\visAware\__init__.py:922
+#: addon\globalPlugins\visAware\__init__.py:923
 msgid "No image in clipboard"
 msgstr "剪贴板中没有图像"
 
 #. Translators: An error message for authentication failures. The placeholder is the specific error.
-#: addon\globalPlugins\visAware\__init__.py:1007
+#: addon\globalPlugins\visAware\__init__.py:1008
 #, python-brace-format
 msgid "Authentication failed: {}"
 msgstr "身份验证失败：{}"
 
 #. Translators: An error message for network issues. The placeholder is the specific error.
-#: addon\globalPlugins\visAware\__init__.py:1010
+#: addon\globalPlugins\visAware\__init__.py:1011
 #, python-brace-format
 msgid "Network error: {}"
 msgstr "网络错误：{}"
 
 #. Translators: A generic error message for recognition failures from the API.
-#: addon\globalPlugins\visAware\__init__.py:1013
+#: addon\globalPlugins\visAware\__init__.py:1014
 #, python-brace-format
 msgid "Recognition failed: {}"
 msgstr "识别失败：{}"
 
 #. Translators: A message for an unexpected error during recognition.
-#: addon\globalPlugins\visAware\__init__.py:1017
+#: addon\globalPlugins\visAware\__init__.py:1018
 msgid "Recognition failed with an unexpected error."
 msgstr "识别失败，发生意外错误。"
 
 #. Translators: An error message for an unknown result type.
-#: addon\globalPlugins\visAware\__init__.py:1023
-#: addon\globalPlugins\visAware\__init__.py:1089
+#: addon\globalPlugins\visAware\__init__.py:1024
+#: addon\globalPlugins\visAware\__init__.py:1090
 msgid "Recognition returned an unknown result type."
 msgstr "识别返回了未知的结果类型。"
 
 #. Translators: Reported after partial streaming output when the service stopped before completing.
-#: addon\globalPlugins\visAware\__init__.py:1074
+#: addon\globalPlugins\visAware\__init__.py:1075
 msgid "Recognition was interrupted. The result may be incomplete."
 msgstr "识别过程中断，结果可能不完整。"
 
 #. Translators: A message indicating that no recognition engine is configured.
-#: addon\globalPlugins\visAware\__init__.py:1143
+#: addon\globalPlugins\visAware\__init__.py:1150
 msgid "No recognition engine is configured."
 msgstr "未配置识别引擎。"
 
 #. Translators: A message shown when trying to recognize with screen curtain enabled.
-#: addon\globalPlugins\visAware\__init__.py:1152
+#: addon\globalPlugins\visAware\__init__.py:1159
 msgid "Please disable screen curtain before recognition."
 msgstr "请在识别之前关闭黑屏。"
 
 #. Translators: Reporting when content recognition (e.g. OCR) begins.
-#: addon\globalPlugins\visAware\__init__.py:1173
+#: addon\globalPlugins\visAware\__init__.py:1180
 msgid "Recognizing"
 msgstr "正在识别"
 
-#: addon\globalPlugins\visAware\__init__.py:1186
+#: addon\globalPlugins\visAware\__init__.py:1195
 msgid ""
 "An error occurred before starting recognition. Please check your settings "
 "and try again."
 msgstr "识别开始前发生错误。请检查设置后重试。"
 
 #. Translators: Reported when there are no alternative engines to switch to.
-#: addon\globalPlugins\visAware\__init__.py:1201
+#: addon\globalPlugins\visAware\__init__.py:1210
 msgid "No other engines to switch to."
 msgstr "没有其他可切换的引擎。"
 
 #. Translators: Reports the name of the only available engine.
-#: addon\globalPlugins\visAware\__init__.py:1206
+#: addon\globalPlugins\visAware\__init__.py:1215
 #, python-brace-format
 msgid "Current engine: {engine_name}"
 msgstr "当前引擎：{engine_name}"
 
 #. Translators: Describes a command to cycle through available recognition engines.
-#: addon\globalPlugins\visAware\__init__.py:1224
+#: addon\globalPlugins\visAware\__init__.py:1233
 msgid "Cycles through engines for the current mode"
 msgstr "循环切换当前模式的引擎"
 
@@ -1233,7 +1240,7 @@ msgid "Kimi returned incomplete preserved thinking data."
 msgstr "Kimi 返回的保留思考数据不完整。"
 
 #: addon\globalPlugins\visAware\agent\openai.py:70
-#: addon\globalPlugins\visAware\agent\session.py:145
+#: addon\globalPlugins\visAware\agent\session.py:152
 msgid "Agent finished."
 msgstr "Agent 已完成。"
 
@@ -1255,19 +1262,19 @@ msgstr "OpenAI 返回了空的用户问题。"
 
 #. Translators: Reported when the Agent waits.
 #: addon\globalPlugins\visAware\agent\openai.py:303
-#: addon\globalPlugins\visAware\agent\session.py:530
+#: addon\globalPlugins\visAware\agent\session.py:539
 msgid "Waiting."
 msgstr "正在等待。"
 
 #. Translators: Reported before the Agent types text.
 #: addon\globalPlugins\visAware\agent\openai.py:311
-#: addon\globalPlugins\visAware\agent\session.py:518
+#: addon\globalPlugins\visAware\agent\session.py:527
 msgid "Typing text."
 msgstr "正在输入文本。"
 
 #. Translators: Reported before the Agent scrolls.
 #: addon\globalPlugins\visAware\agent\openai.py:321
-#: addon\globalPlugins\visAware\agent\session.py:527
+#: addon\globalPlugins\visAware\agent\session.py:536
 msgid "Scrolling."
 msgstr "正在滚动。"
 
@@ -1277,7 +1284,7 @@ msgstr "正在移动鼠标。"
 
 #. Translators: Reported before the Agent clicks the mouse.
 #: addon\globalPlugins\visAware\agent\openai.py:341
-#: addon\globalPlugins\visAware\agent\session.py:521
+#: addon\globalPlugins\visAware\agent\session.py:530
 msgid "Clicking."
 msgstr "正在点击。"
 
@@ -1309,7 +1316,7 @@ msgstr "OpenAI 返回的按键操作数据格式错误。"
 #. Translators: Reported before the Agent presses keys.
 #: addon\globalPlugins\visAware\agent\openai.py:466
 #: addon\globalPlugins\visAware\agent\openai.py:470
-#: addon\globalPlugins\visAware\agent\session.py:524
+#: addon\globalPlugins\visAware\agent\session.py:533
 msgid "Pressing keys."
 msgstr "正在按键。"
 
@@ -1323,52 +1330,52 @@ msgstr "正在执行 {count} 项计算机操作。"
 msgid "OpenAI API error: {}"
 msgstr "OpenAI API 错误：{}"
 
-#: addon\globalPlugins\visAware\agent\session.py:76
+#: addon\globalPlugins\visAware\agent\session.py:84
 msgid "Agent started."
 msgstr "Agent 已启动。"
 
-#: addon\globalPlugins\visAware\agent\session.py:130
+#: addon\globalPlugins\visAware\agent\session.py:138
 msgid "Agent stopped because the screen did not change."
 msgstr "由于屏幕没有变化，Agent 已停止。"
 
-#: addon\globalPlugins\visAware\agent\session.py:133
+#: addon\globalPlugins\visAware\agent\session.py:140
 msgid "Analyzing screen."
 msgstr "正在分析屏幕。"
 
-#: addon\globalPlugins\visAware\agent\session.py:149
+#: addon\globalPlugins\visAware\agent\session.py:156
 msgid "Agent needs more information."
 msgstr "Agent 需要更多信息。"
 
-#: addon\globalPlugins\visAware\agent\session.py:159
-#: addon\globalPlugins\visAware\agent\session.py:241
+#: addon\globalPlugins\visAware\agent\session.py:166
+#: addon\globalPlugins\visAware\agent\session.py:255
 msgid "Agent did not return an action."
 msgstr "Agent 未返回动作。"
 
-#: addon\globalPlugins\visAware\agent\session.py:189
+#: addon\globalPlugins\visAware\agent\session.py:196
 msgid "Checking result."
 msgstr "正在检查结果。"
 
-#: addon\globalPlugins\visAware\agent\session.py:193
+#: addon\globalPlugins\visAware\agent\session.py:200
 msgid "Agent stopped after reaching the maximum number of steps."
 msgstr "Agent 已达到最大步骤数并停止。"
 
-#: addon\globalPlugins\visAware\agent\session.py:197
-#: addon\globalPlugins\visAware\agent\session.py:264
+#: addon\globalPlugins\visAware\agent\session.py:204
+#: addon\globalPlugins\visAware\agent\session.py:281
 msgid "Agent stopped."
 msgstr "Agent 已停止。"
 
-#: addon\globalPlugins\visAware\agent\session.py:205
+#: addon\globalPlugins\visAware\agent\session.py:212
 msgid "Agent failed."
 msgstr "Agent 失败。"
 
 #. Translators: Reported before the Agent performs an action. {} is the action description.
-#: addon\globalPlugins\visAware\agent\session.py:515
+#: addon\globalPlugins\visAware\agent\session.py:524
 #, python-brace-format
 msgid "Executing: {}"
 msgstr "正在执行：{}"
 
 #. Translators: Reported before the Agent performs an unspecified action.
-#: addon\globalPlugins\visAware\agent\session.py:532
+#: addon\globalPlugins\visAware\agent\session.py:541
 msgid "Executing action."
 msgstr "正在执行动作。"
 

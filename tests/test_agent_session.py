@@ -8,6 +8,7 @@ import sys
 from threading import Event, Thread
 import types
 import unittest
+from unittest.mock import Mock, patch
 
 
 def _install_module_stubs() -> None:
@@ -38,6 +39,11 @@ def _install_module_stubs() -> None:
 	uiModule = types.ModuleType("ui")
 	uiModule.message = lambda *args, **kwargs: None
 	sys.modules["ui"] = uiModule
+	sys.modules["addon.globalPlugins.visAware.cues"] = types.SimpleNamespace(
+		CueType=types.SimpleNamespace(
+			ACTION="action", QUESTION="question", SUCCESS="success", ERROR="error", CANCEL="cancel"
+		),
+	)
 
 	wxModule = types.ModuleType("wx")
 	wxModule.CallAfter = lambda func, *args, **kwargs: func(*args, **kwargs)
@@ -115,6 +121,18 @@ def load_session_module():
 
 
 class AgentSessionRequestThreadTestCase(unittest.TestCase):
+	def setUp(self) -> None:
+		self.cues = Mock()
+		self.handles = []
+
+		def start():
+			handle = Event()
+			self.handles.append(handle)
+			return handle
+
+		self.cues.start.side_effect = start
+		self.cues.stop.side_effect = lambda handle: handle.set() if handle is not None else None
+
 	def test_cancelled_request_remains_tracked_until_joined(self) -> None:
 		module = load_session_module()
 		startedEvent = Event()
@@ -127,7 +145,7 @@ class AgentSessionRequestThreadTestCase(unittest.TestCase):
 				finishEvent.wait(5)
 				return module.AgentDecision(status="finish")
 
-		session = module.AgentSession("goal")
+		session = module.AgentSession("goal", self.cues)
 
 		def requestAction() -> None:
 			try:
@@ -142,6 +160,7 @@ class AgentSessionRequestThreadTestCase(unittest.TestCase):
 		self.assertTrue(session._requestThread.is_alive())
 
 		session.cancel()
+		self.assertTrue(self.handles[0].is_set())
 		thread.join(1)
 		self.assertIsInstance(result.get("error"), module.CancellationError)
 		self.assertIsNotNone(session._requestThread)
@@ -149,6 +168,72 @@ class AgentSessionRequestThreadTestCase(unittest.TestCase):
 		finishEvent.set()
 		session._joinPendingRequestThread()
 		self.assertIsNone(session._requestThread)
+
+	def test_cues_end_on_request_error_or_thread_start_failure(self) -> None:
+		module = load_session_module()
+		session = module.AgentSession("goal", self.cues)
+		client = Mock()
+		client.nextAction.side_effect = RuntimeError("request failed")
+		with self.assertRaises(RuntimeError):
+			session._requestNextAction(client, object(), [])
+		self.assertTrue(self.handles[-1].is_set())
+		with patch.object(module, "Thread") as thread:
+			thread.return_value.start.side_effect = RuntimeError("thread failed")
+			with self.assertRaises(RuntimeError):
+				session._requestNextAction(client, object(), [])
+		self.assertTrue(self.handles[-1].is_set())
+		self.assertIsNone(session._requestThread)
+
+	def test_each_analysis_has_cues_but_actions_and_user_waits_do_not(self) -> None:
+		module = load_session_module()
+		window = types.SimpleNamespace(hwnd=1, appName="app", title="title")
+		module.getForegroundWindowInfo = lambda: window
+		screenshots = [types.SimpleNamespace(digest=str(index), window=window) for index in range(3)]
+		module.captureScreen = lambda *_args, **_kwargs: screenshots.pop(0)
+		decisions = [
+			module.AgentDecision(status="ask_user", message="question"),
+			module.AgentDecision(
+				status="action",
+				actions=[types.SimpleNamespace(name="click", message="click", arguments={})],
+			),
+			module.AgentDecision(status="finish"),
+		]
+
+		def nextAction(*_args):
+			self.assertFalse(self.handles[-1].is_set())
+			return decisions.pop(0)
+
+		module.createAgentClient = lambda: types.SimpleNamespace(imageQuality=80, nextAction=nextAction)
+
+		def askUser(_question, _cancelEvent):
+			self.assertTrue(self.handles[-1].is_set())
+			return "answer"
+
+		session = module.AgentSession("goal", self.cues, askUser=askUser)
+		session._message = Mock()
+		session._getReboundWindow = lambda bound: bound
+		session._executeAction = lambda *_args: self.assertTrue(self.handles[-1].is_set())
+		session._sleepAfterAction = lambda: self.assertTrue(self.handles[-1].is_set())
+		session._run()
+		self.assertEqual(self.cues.start.call_count, 3)
+		self.assertTrue(all(handle.is_set() for handle in self.handles))
+		self.assertEqual(
+			[call.args[0] for call in self.cues.play.call_args_list], ["question", "action", "success"]
+		)
+
+	def test_agent_termination_uses_cancel_or_error_sound(self) -> None:
+		module = load_session_module()
+		for error, cue in (
+			(module.CancellationError("cancelled"), "cancel"),
+			(module.NetworkError("offline"), "error"),
+			(RuntimeError("unexpected"), "error"),
+		):
+			with self.subTest(cue=cue, error=type(error)):
+				self.cues.reset_mock()
+				module.createAgentClient = Mock(side_effect=error)
+				session = module.AgentSession("goal", self.cues)
+				session._run()
+				self.cues.play.assert_called_once_with(cue)
 
 
 if __name__ == "__main__":

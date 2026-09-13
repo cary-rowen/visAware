@@ -12,7 +12,7 @@ from collections.abc import Callable
 from io import BytesIO
 from threading import Event, Lock, Thread
 import time
-from typing import Any
+from typing import Any, TYPE_CHECKING
 from urllib.parse import urldefrag, urlsplit
 
 import api
@@ -26,6 +26,7 @@ from logHandler import log
 from PIL import Image, ImageGrab
 
 from . import recogHistory
+from .cues import CueType
 from .exceptions import CancellationError
 from .network import sendRequest
 from .recogHandler import (
@@ -44,14 +45,15 @@ from .recogHandler import (
 )
 from .streamingSpeech import StreamingSpeechPresenter
 
+if TYPE_CHECKING:
+	from ._taskCues import TaskCueManager
+
 MAX_IMAGE_BYTES = 8 * 1024 * 1024
 MAX_IMAGE_PIXELS = 10_000_000
 MAX_CACHE_ENTRIES = 20
 DOWNLOAD_TIMEOUT = (2, 5)
 DOWNLOAD_CHUNK_SIZE = 16 * 1024
 DESCRIPTION_DEBOUNCE_MS = 200
-START_TONE_HZ = 230
-START_TONE_LENGTH_MS = 30
 SCREENSHOT_OBJECT_NAMES = frozenset(("", "图片", "图形", "图像", "Image"))
 SCREENSHOT_OBJECT_ROLES = frozenset((controlTypes.Role.BUTTON, controlTypes.Role.LISTITEM))
 WEB_OBJECT_MODULE_PREFIXES = (
@@ -111,15 +113,6 @@ def getNextAutoRecognitionSetting(setting: str) -> str:
 def _debug(message: str) -> None:
 	if _verboseDebugLogging():
 		log.io(f"Vis Aware automatic recognition: {message}")
-
-
-def _playStartTone() -> None:
-	try:
-		from tones import beep
-	except Exception:
-		log.debugWarning("Could not play automatic recognition start tone.", exc_info=True)
-		return
-	wx.CallAfter(beep, START_TONE_HZ, START_TONE_LENGTH_MS)
 
 
 def _urlForLog(url: str) -> str:
@@ -483,7 +476,9 @@ def getNavigatorScreenshotTargetKey() -> str | None:
 class AutoRecognitionController:
 	"""Coordinates fast, non-blocking automatic recognition of focused image objects."""
 
-	def __init__(self) -> None:
+	def __init__(self, taskCues: TaskCueManager) -> None:
+		self._taskCues = taskCues
+		self._lastCueToken: int | None = None
 		self._token = 0
 		self._activeKey: str | None = None
 		self._activeCurrentKeyGetter: Callable[[], str | None] | None = None
@@ -1012,6 +1007,11 @@ class AutoRecognitionController:
 			self._terminated = True
 		self.cancel()
 
+	def _startTaskCue(self, token: int, key: str) -> None:
+		if self._isCurrent(token, key) and self._currentKeyMatches(key) and self._lastCueToken != token:
+			self._lastCueToken = token
+			self._taskCues.play(CueType.AUTO)
+
 	def _createRecognitionEngine(self, token: int, key: str) -> tuple[Any, Event | None] | None:
 		engineInfo = self._resolveRecognitionScopedEngine(key)
 		if not engineInfo:
@@ -1036,6 +1036,7 @@ class AutoRecognitionController:
 			if self._activeEngine is engine:
 				self._activeEngine = None
 			return None
+		wx.CallAfter(self._startTaskCue, token, key)
 		if hasattr(engine, "prefetchAuthHeaders"):
 			engine.prefetchAuthHeaders()
 		return engine, cancellationEvent
@@ -1044,10 +1045,10 @@ class AutoRecognitionController:
 		try:
 			if not self._isCurrent(token, key):
 				return
-			_playStartTone()
 			engineAndCancellation = self._createRecognitionEngine(token, key)
 			if not engineAndCancellation:
 				_debug("download task ignored: task is no longer current.")
+				self._clearActive(token, key)
 				return
 			engine, cancellationEvent = engineAndCancellation
 			self._downloadAndDescribeWithEngine(engine, cancellationEvent, token, key, src, startedAt)
@@ -1138,7 +1139,6 @@ class AutoRecognitionController:
 				_debug("screenshot task ignored: task is no longer current.")
 				return
 			engine, cancellationEvent = engineAndCancellation
-			_playStartTone()
 			self._recognizeImage(
 				engine,
 				image,
@@ -1151,16 +1151,8 @@ class AutoRecognitionController:
 		except Exception as e:
 			if self._isCurrent(token, key):
 				if fallbackSrc and fallbackCurrentKeyGetter:
-					engineAndCancellation = self._createRecognitionEngine(token, key)
-					if not engineAndCancellation:
-						_debug("image URL fallback ignored: task is no longer current.")
-						return
-					engine, cancellationEvent = engineAndCancellation
 					_debug(f"object screenshot failed; falling back to image URL: {e!r}")
-					_playStartTone()
 					self._fallbackToSrc(
-						engine,
-						cancellationEvent,
 						token,
 						key,
 						fallbackSrc,
@@ -1173,8 +1165,6 @@ class AutoRecognitionController:
 
 	def _fallbackToSrc(
 		self,
-		engine: Any,
-		cancellationEvent: Event | None,
 		token: int,
 		key: str,
 		src: str,
@@ -1186,19 +1176,7 @@ class AutoRecognitionController:
 		self._activeCurrentKeyGetter = currentKeyGetter
 		if _verboseDebugLogging():
 			_debug(f"starting image URL fallback: {_urlForLog(src)}")
-		try:
-			self._downloadAndDescribeWithEngine(
-				engine,
-				cancellationEvent,
-				token,
-				key,
-				src,
-				startedAt,
-			)
-		except Exception:
-			if self._isCurrent(token, key):
-				log.debugWarning("Automatic image URL fallback recognition could not start.", exc_info=True)
-				self._clearActive(token, key)
+		self._downloadAndDescribe(token, key, src, startedAt)
 
 	def _onScreenshotCacheHit(
 		self,
@@ -1424,6 +1402,9 @@ class AutoRecognitionController:
 		return True
 
 	def _clearActive(self, token: int, key: str) -> None:
+		if not wx.IsMainThread():
+			wx.CallAfter(self._clearActive, token, key)
+			return
 		if not self._isCurrent(token, key):
 			return
 		self._activeKey = None
