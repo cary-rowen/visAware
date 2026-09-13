@@ -7,6 +7,7 @@ import sys
 from threading import Event, current_thread
 import types
 import unittest
+from unittest.mock import Mock
 
 
 def _install_module_stubs() -> None:
@@ -55,6 +56,7 @@ def _install_module_stubs() -> None:
 
 	guiSettingsDialogsModule = sys.modules["gui.settingsDialogs"]
 	guiSettingsDialogsModule.SettingsPanel = type("SettingsPanel", (), {})
+	guiSettingsDialogsModule.PANEL_DESCRIPTION_WIDTH = 544
 
 	pilImageModule = sys.modules["PIL.Image"]
 	pilImageModule.LANCZOS = 1
@@ -90,6 +92,7 @@ def _install_module_stubs() -> None:
 	sys.modules["addon.globalPlugins.visAware.network"] = networkModule
 	recogHistoryModule = types.ModuleType("addon.globalPlugins.visAware.recogHistory")
 	recogHistoryModule.HistoryEntryPayload = type("HistoryEntryPayload", (), {})
+	recogHistoryModule.attachEntry = lambda result, entry: result
 	sys.modules["addon.globalPlugins.visAware.recogHistory"] = recogHistoryModule
 	sys.modules["addon.globalPlugins.visAware"].recogHistory = recogHistoryModule
 	conversationModule = types.ModuleType("addon.globalPlugins.visAware.conversation")
@@ -241,6 +244,7 @@ class RequestLogRedactionTestCase(unittest.TestCase):
 			{
 				"supportedSettings": property(lambda _self: []),
 				"supportsStreaming": False,
+				"supportsAutomaticRecognition": True,
 				"_prepareImageContent": lambda _self, _image, _imageInfo: b"image",
 				"_buildRequestParams": lambda _self, _imageContent, _request: {
 					"method": "POST",
@@ -273,6 +277,19 @@ class RequestLogRedactionTestCase(unittest.TestCase):
 		with self.assertRaises(self.module.CancellationError):
 			capturedParams["cancelCheck"]()
 
+		cancellationEvent.clear()
+		engine.supportsAutomaticRecognition = False
+		capturedParams.clear()
+		prepareImage = Mock(return_value=b"image")
+		engine._prepareImageContent = prepareImage
+		with self.assertRaisesRegex(self.module.ApiError, "does not support automatic recognition"):
+			engine._runRecognition(object(), object(), lambda _result: None, cancellationEvent, request)
+		prepareImage.assert_not_called()
+		self.assertEqual(capturedParams, {})
+		manualRequest = self.module.RecognitionRequest(textResult=False, streamResult=False)
+		engine._runRecognition(object(), object(), lambda _result: None, cancellationEvent, manualRequest)
+		self.assertEqual(capturedParams["method"], "POST")
+
 	def test_automatic_recognition_can_reuse_the_controller_worker(self) -> None:
 		workerThreads = []
 		engine = types.SimpleNamespace(
@@ -299,25 +316,73 @@ class AutoRecognitionSettingsTestCase(unittest.TestCase):
 	def setUp(self) -> None:
 		self.module = load_recog_handler_module()
 
-	def test_unavailable_configured_auto_recognition_engine_stays_selected(self) -> None:
 		class _ConfigSection(dict):
 			def __getitem__(self, key: str, checkValidity: bool = True):
 				return super().__getitem__(key)
 
-		self.module.config.conf = {
-			"visAwareGeneral": _ConfigSection(
-				autoRecognitionEngine="imageDescriber:missingImageEngine",
-			),
+		self.conf = _ConfigSection(autoRecognitionEngine="ocr:current")
+		self.module.config.conf = {"visAwareGeneral": self.conf}
+		self.engineClasses = {
+			"supported": types.SimpleNamespace(supportsAutomaticRecognition=True),
+			"captchaText": types.SimpleNamespace(supportsAutomaticRecognition=False),
+			"undeclared": types.SimpleNamespace(),
 		}
-		self.module.ImageDescriberHandler.getEngineList = classmethod(
-			lambda _cls: [("vivoImageDescriber", "Vivo image describer")],
+		self.current = types.SimpleNamespace(name="supported")
+		self.handler = types.SimpleNamespace(
+			getEngineList=lambda: [("empty", "Empty")] + [(name, name) for name in self.engineClasses],
+			getEngine=self.engineClasses.__getitem__,
+			getCurrentEngine=lambda: self.current,
+			getEngineInstance=Mock(),
 		)
+		self.module.ImageDescriberHandler = self.handler
+		self.module.CustomOCRHandler = self.handler
 
-		_typeChoices, engineChoices, _typeSelection, engineSelection = (
+	def test_only_enabled_supporting_engines_are_choices_without_instantiation(self) -> None:
+		for kind in ("ocr", "imageDescriber"):
+			self.assertEqual(
+				[name for name, _label in self.module.getAutoRecognitionEngineChoices(kind)],
+				["current", "supported"],
+			)
+		self.handler.getEngineInstance.assert_not_called()
+		self.handler.getEngineList = lambda: [("captchaText", "CAPTCHA")]
+		self.assertEqual(self.module.getAutoRecognitionEngineList(self.handler), [])
+
+	def test_unavailable_saved_engine_shows_off_without_changing_configuration(self) -> None:
+		for name in ("captchaText", "missingImageEngine", "undeclared"):
+			with self.subTest(name=name):
+				setting = f"ocr:{name}"
+				self.conf["autoRecognitionEngine"] = setting
+				typesList, choices, typeSelection, engineSelection = (
+					self.module.getAutoRecognitionTypeAndEngineChoices()
+				)
+				self.assertEqual(typesList[typeSelection][0], "off")
+				self.assertEqual(choices, [])
+				self.assertEqual(engineSelection, self.module.wx.NOT_FOUND)
+				self.assertEqual(self.conf["autoRecognitionEngine"], setting)
+
+	def test_current_unsupported_engine_does_not_change_follow_current_setting(self) -> None:
+		self.current.name = "captchaText"
+		typesList, choices, typeSelection, engineSelection = (
 			self.module.getAutoRecognitionTypeAndEngineChoices()
 		)
+		self.assertEqual(typesList[typeSelection][0], "ocr")
+		self.assertEqual(choices[engineSelection][0], "current")
 
-		self.assertEqual(engineChoices[engineSelection][0], "missingImageEngine")
+	def test_settings_do_not_instantiate_unsupported_current_or_explicit_engine(self) -> None:
+		panel = object.__new__(self.module.AutomaticRecognitionPanel)
+		panel._getSelectedAutoRecognitionType = lambda: "ocr"
+		self.current.name = "captchaText"
+		for name in ("current", "captchaText"):
+			panel._getSelectedAutoRecognitionEngineName = lambda: name
+			self.assertIsNone(panel._getSelectedAutoRecognitionEngine())
+		self.handler.getEngineInstance.assert_not_called()
+		self.current.name = "supported"
+		panel._getSelectedAutoRecognitionEngineName = lambda: "current"
+		self.assertIs(
+			panel._getSelectedAutoRecognitionEngine(),
+			self.handler.getEngineInstance.return_value,
+		)
+		self.handler.getEngineInstance.assert_called_once_with("supported")
 
 
 if __name__ == "__main__":

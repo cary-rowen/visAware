@@ -37,6 +37,7 @@ class CustomContentRecognizer(BaseDescriber):
 	"""An image description engine that uses the DeepSeek Chat Completions API."""
 
 	name = "deepseek"
+	supportsAutomaticRecognition = True
 	# Translators: The description of the DeepSeek image describer engine.
 	description = _("DeepSeek")
 

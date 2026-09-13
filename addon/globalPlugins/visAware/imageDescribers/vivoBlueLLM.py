@@ -35,6 +35,7 @@ class CustomContentRecognizer(BaseDescriber):
 	"""An image description engine that uses the VIVO BlueLLM Vision model."""
 
 	name = "vivoBlueLLM"
+	supportsAutomaticRecognition = True
 	# Translators: The description of the VIVO BlueLLM engine.
 	description = _("VIVO BlueLLM Vision (NVDACN)")
 

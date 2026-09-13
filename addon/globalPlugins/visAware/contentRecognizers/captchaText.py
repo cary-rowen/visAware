@@ -50,6 +50,7 @@ class CustomContentRecognizer(BaseRecognizer):
 	"""Recognizes text CAPTCHA images through CAPTCHA solving services."""
 
 	name = "captchaText"
+	supportsAutomaticRecognition = False
 	# Translators: The description of the text CAPTCHA recognition engine.
 	description = _("Text CAPTCHA recognition")
 

@@ -376,6 +376,7 @@ class CustomContentRecognizer(BaseRecognizer):
 	"""Recognizes text and document layout using PaddleOCR services."""
 
 	name = "paddleOCR"
+	supportsAutomaticRecognition = True
 	# Translators: The description of the PaddleOCR engine.
 	description = _("PaddleOCR / PaddleOCR-VL")
 

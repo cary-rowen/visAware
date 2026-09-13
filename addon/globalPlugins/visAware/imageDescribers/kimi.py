@@ -59,6 +59,7 @@ class CustomContentRecognizer(BaseDescriber):
 	"""An image description engine that uses Kimi's Chat Completions API."""
 
 	name = "kimi"
+	supportsAutomaticRecognition = True
 	# Translators: The description of the Kimi engine. "Moonshot AI" is a proper noun
 	# and should not be translated.
 	description = _("Kimi (Moonshot AI)")

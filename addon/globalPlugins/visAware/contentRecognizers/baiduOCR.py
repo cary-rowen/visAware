@@ -21,6 +21,7 @@ class CustomContentRecognizer(BaseRecognizer):
 	"""An OCR engine that uses the Baidu OCR API."""
 
 	name = "baiduOCR"
+	supportsAutomaticRecognition = True
 	# Translators: The description of the Baidu OCR engine.
 	description = _("Baidu OCR")
 

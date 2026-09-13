@@ -33,6 +33,7 @@ class CustomContentRecognizer(BaseRecognizer):
 	"""Recognizes text and coordinates with Baimiao OCR."""
 
 	name = "baimiaoOCR"
+	supportsAutomaticRecognition = True
 	# Translators: The description of the Baimiao OCR engine.
 	description = _("Baimiao OCR")
 

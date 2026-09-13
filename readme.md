@@ -112,6 +112,13 @@ default prompt (20 to 30 characters, without Markdown), and choose **Use the
 model selected in engine settings** to follow its regular model. When
 supported, use **Fetch models** to load available model names.
 
+Only engines that support automatic recognition appear in its engine list.
+Text CAPTCHA recognition is available only for manual recognition. When using
+the current engine, automatic recognition pauses if that engine does not support
+it, and resumes when you select a supported engine. If a saved engine is no longer
+available for automatic recognition, settings show it as off until you choose
+another engine; the saved configuration changes only when you save settings.
+
 Automatic recognition runs in the background when the system focus, browse
 mode cursor, or navigator object moves to a supported graphic control. The
 result is announced automatically and saved as the previous result; follow-up

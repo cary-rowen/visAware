@@ -15,7 +15,7 @@ from dataclasses import dataclass
 from gui import guiHelper
 from gui.nvdaControls import CustomCheckListBox
 from gui.guiHelper import BoxSizerHelper
-from gui.settingsDialogs import SettingsPanel
+from gui.settingsDialogs import PANEL_DESCRIPTION_WIDTH, SettingsPanel
 from . import imageDescribers
 import json
 from logHandler import log
@@ -255,6 +255,7 @@ class BaseRecognizer(ContentRecognizer, AbstractEngine, ABC):
 	description: str = ""
 	configSectionName: str = "OCR"
 	supportsStreaming: bool = False
+	supportsAutomaticRecognition: bool = False
 	isStreaming: bool = False
 
 	_recognitionThread: Optional[Thread] = None
@@ -526,6 +527,9 @@ class BaseRecognizer(ContentRecognizer, AbstractEngine, ABC):
 		request: RecognitionRequest,
 	) -> None:
 		self._checkCancelled(cancellationEvent)
+		if request.isAutomaticRecognition and not self.supportsAutomaticRecognition:
+			# Translators: An error when an engine is called automatically but only supports manual recognition.
+			raise ApiError(_("This engine does not support automatic recognition."))
 		imageContent = self._prepareImageContent(imageObject, imageInfo)
 		if not imageContent:
 			# Translators: An error message when failing to prepare the image for upload.
@@ -1140,6 +1144,15 @@ def getAutoRecognitionTypeAndEngine(value: str) -> Tuple[str, str]:
 	return AUTO_RECOGNITION_OFF, AUTO_RECOGNITION_CURRENT_ENGINE_NAME
 
 
+def getAutoRecognitionEngineList(handler: type[AbstractEngineHandler]) -> List[Tuple[str, str]]:
+	"""Returns enabled engines that declare support for automatic recognition, without instantiating them."""
+	return [
+		(name, description)
+		for name, description in handler.getEngineList()
+		if name != "empty" and getattr(handler.getEngine(name), "supportsAutomaticRecognition", False)
+	]
+
+
 def getAutoRecognitionEngineChoices(autoRecognitionType: str) -> List[Tuple[str, str]]:
 	"""Returns engine choices for the selected automatic recognition type."""
 	if autoRecognitionType == AUTO_RECOGNITION_IMAGE_DESCRIBER_MODE:
@@ -1147,22 +1160,14 @@ def getAutoRecognitionEngineChoices(autoRecognitionType: str) -> List[Tuple[str,
 			# Translators: A choice for automatic recognition to use the current image description engine.
 			(AUTO_RECOGNITION_CURRENT_ENGINE_NAME, _("Current image description engine")),
 		]
-		choices.extend(
-			(engineName, engineDescription)
-			for engineName, engineDescription in ImageDescriberHandler.getEngineList()
-			if engineName != "empty"
-		)
+		choices.extend(getAutoRecognitionEngineList(ImageDescriberHandler))
 		return choices
 	if autoRecognitionType == AUTO_RECOGNITION_OCR_MODE:
 		choices = [
 			# Translators: A choice for automatic recognition to use the current OCR engine.
 			(AUTO_RECOGNITION_CURRENT_ENGINE_NAME, _("Current OCR engine")),
 		]
-		choices.extend(
-			(engineName, engineDescription)
-			for engineName, engineDescription in CustomOCRHandler.getEngineList()
-			if engineName != "empty"
-		)
+		choices.extend(getAutoRecognitionEngineList(CustomOCRHandler))
 		return choices
 	return []
 
@@ -1191,11 +1196,9 @@ def getAutoRecognitionTypeAndEngineChoices() -> Tuple[List[Tuple[str, str]], Lis
 	try:
 		engineSelection = engineValues.index(engineName)
 	except ValueError:
-		if engineName and engineChoices:
-			engineChoices.append((engineName, engineName))
-			engineSelection = len(engineChoices) - 1
-		else:
-			engineSelection = 0 if engineChoices else wx.NOT_FOUND
+		typeSelection = autoRecognitionTypeValues.index(AUTO_RECOGNITION_OFF)
+		engineChoices = []
+		engineSelection = wx.NOT_FOUND
 	return autoRecognitionTypes, engineChoices, typeSelection, engineSelection
 
 
@@ -1219,6 +1222,21 @@ class AutomaticRecognitionPanel(SettingsPanel):
 			typeSelection,
 			engineSelection,
 		) = getAutoRecognitionTypeAndEngineChoices()
+		if (
+			getEffectiveAutoRecognitionEngine() != AUTO_RECOGNITION_OFF
+			and self.autoRecognitionTypeChoices[typeSelection][0] == AUTO_RECOGNITION_OFF
+		):
+			notice = settingsSizerHelper.addItem(
+				wx.StaticText(
+					self,
+					# Translators: Explains why an old automatic recognition setting is shown as off.
+					label=_(
+						"The saved engine is unavailable for automatic recognition. "
+						"Choose another engine or save with automatic recognition off.",
+					),
+				),
+			)
+			notice.Wrap(self.scaleSize(PANEL_DESCRIPTION_WIDTH))
 		# Translators: The label for a choice control to select the kind of automatic recognition.
 		self.autoRecognitionTypeList = settingsSizerHelper.addLabeledControl(
 			_("Automatic recognition &type:"),
@@ -1342,6 +1360,8 @@ class AutomaticRecognitionPanel(SettingsPanel):
 		if not engineName or engineName == "empty":
 			return None
 		try:
+			if engineName not in dict(getAutoRecognitionEngineList(handler)):
+				return None
 			return handler.getEngineInstance(engineName)
 		except Exception:
 			log.debugWarning(f"Could not load automatic recognition engine {engineName!r}.", exc_info=True)

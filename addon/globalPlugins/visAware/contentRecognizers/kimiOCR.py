@@ -103,6 +103,7 @@ class CustomContentRecognizer(BaseRecognizer):
 	"""Recognizes text using Kimi's Chat Completions API."""
 
 	name = "kimiOCR"
+	supportsAutomaticRecognition = True
 	# Translators: The description of the Kimi OCR engine. "Moonshot AI" is a proper noun
 	# and should not be translated.
 	description = _("Kimi (Moonshot AI) OCR")

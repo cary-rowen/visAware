@@ -20,6 +20,7 @@ class CustomContentRecognizer(BaseRecognizer):
 	"""An OCR engine that uses the Vivo Cloud OCR API via NVDACN."""
 
 	name = "vivoOCR"
+	supportsAutomaticRecognition = True
 	# Translators: The description of the Vivo OCR engine.
 	description = _("Vivo OCR (NVDACN)")
 

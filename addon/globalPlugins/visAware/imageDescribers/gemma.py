@@ -90,6 +90,7 @@ class CustomContentRecognizer(BaseDescriber):
 	"""An image description engine that uses the Google Gemma API."""
 
 	name = "gemma"
+	supportsAutomaticRecognition = True
 	# Translators: The description of the Google Gemma engine.
 	description = _("Google Gemma")
 

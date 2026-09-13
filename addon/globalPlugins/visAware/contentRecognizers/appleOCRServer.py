@@ -22,6 +22,7 @@ class CustomContentRecognizer(BaseRecognizer):
 	"""Recognizes text using the "OCR Server" iOS app on the local network."""
 
 	name = "appleOCRServer"
+	supportsAutomaticRecognition = True
 	# Translators: The description of the Apple Vision (OCR Server) engine.
 	description = _("Apple Vision (OCR Server)")
 

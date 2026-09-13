@@ -24,6 +24,7 @@ class CustomContentRecognizer(BaseDescriber):
 	"""An image description engine that uses the Vivo Cloud API via NVDACN."""
 
 	name = "vivoImageDescriber"
+	supportsAutomaticRecognition = True
 	# Translators: The description of the Vivo Image Describer engine.
 	description = _("Vivo Image Describer (NVDACN)")
 

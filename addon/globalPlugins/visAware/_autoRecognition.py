@@ -39,6 +39,7 @@ from .recogHandler import (
 	ImageDescriberHandler,
 	StreamFinished,
 	StreamText,
+	getAutoRecognitionEngineList,
 	getEffectiveAutoRecognitionEngine,
 )
 from .streamingSpeech import StreamingSpeechPresenter
@@ -520,10 +521,12 @@ class AutoRecognitionController:
 			if _verboseDebugLogging():
 				_debug(f"automatic recognition skipped: no usable engine for {setting!r}.")
 			return None
-		enabledEngineNames = {name for name, _description in handler.getEngineList() if name != "empty"}
+		enabledEngineNames = {name for name, _description in getAutoRecognitionEngineList(handler)}
 		if engineName not in enabledEngineNames:
 			if _verboseDebugLogging():
-				_debug(f"automatic recognition skipped: engine {engineName!r} is not enabled.")
+				_debug(
+					f"automatic recognition skipped: engine {engineName!r} is unavailable for automatic recognition."
+				)
 			return None
 		return handler, engineName, f"{prefix}{engineName}"
 

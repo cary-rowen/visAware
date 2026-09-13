@@ -6,6 +6,9 @@ import sys
 from threading import Event, Thread
 import types
 import unittest
+from unittest.mock import Mock
+
+from test_request_log_redaction import load_recog_handler_module
 
 
 def _installModuleStubs() -> None:
@@ -103,6 +106,7 @@ def _installModuleStubs() -> None:
 	recogHandlerModule.StreamFinished = type("StreamFinished", (), {})
 	recogHandlerModule.StreamText = type("StreamText", (), {})
 	recogHandlerModule.getEffectiveAutoRecognitionEngine = lambda: "off"
+	recogHandlerModule.getAutoRecognitionEngineList = lambda handler: handler.getEngineList()
 	sys.modules[recogHandlerModule.__name__] = recogHandlerModule
 
 	class StreamingSpeechPresenter:
@@ -140,6 +144,33 @@ class AutoRecognitionP0TestCase(unittest.TestCase):
 		self.assertEqual(getNextSetting("imageDescriber:gemini"), "ocr:current")
 		self.assertEqual(getNextSetting("ocr:paddleOCR"), "off")
 		self.assertEqual(getNextSetting("invalid"), "imageDescriber:current")
+
+	def test_capability_check_applies_to_saved_current_and_queued_engines(self) -> None:
+		recogHandler = load_recog_handler_module()
+		self.module.getAutoRecognitionEngineList = recogHandler.getAutoRecognitionEngineList
+		current = types.SimpleNamespace(name="captchaText")
+		classes = {
+			"captchaText": types.SimpleNamespace(supportsAutomaticRecognition=False),
+			"supported": types.SimpleNamespace(supportsAutomaticRecognition=True),
+		}
+		handler = types.SimpleNamespace(
+			getEngineList=lambda: [(name, name) for name in classes],
+			getEngine=classes.__getitem__,
+			getCurrentEngine=lambda: current,
+			getEngineInstance=Mock(),
+		)
+		self.module.CustomOCRHandler = self.module.ImageDescriberHandler = handler
+		controller = self.module.AutoRecognitionController()
+		for kind in ("ocr", "imageDescriber"):
+			for name in ("captchaText", "current", "missing"):
+				self.assertIsNone(controller._resolveAutoRecognitionEngine(f"{kind}:{name}"))
+			key = self.module.makeRecognitionScopedKey(f"{kind}:captchaText", "target")
+			self.assertIsNone(controller._createRecognitionEngine(0, key))
+		handler.getEngineInstance.assert_not_called()
+		current.name = "supported"
+		self.assertEqual(controller._resolveAutoRecognitionEngine("ocr:current")[1], "supported")
+		handler.getEngineList = lambda: [("captchaText", "CAPTCHA")]
+		self.assertIsNone(controller._resolveAutoRecognitionEngine("ocr:current"))
 
 	def test_browse_mode_caret_keeps_object_without_src(self) -> None:
 		module = self.module

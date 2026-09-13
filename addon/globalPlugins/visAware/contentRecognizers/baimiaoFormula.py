@@ -19,6 +19,7 @@ class CustomContentRecognizer(BaimiaoOCRRecognizer):
 	"""Recognizes mathematical formulas and text with Baimiao."""
 
 	name = "baimiaoFormula"
+	supportsAutomaticRecognition = True
 	# Translators: The description of the Baimiao formula recognition engine.
 	description = _("Baimiao Formula Recognition")
 	engineConfigSpec = {}

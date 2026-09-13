@@ -87,6 +87,7 @@ class CustomContentRecognizer(BaseRecognizer):
 	"""Recognizes text using Gemini structured JSON output."""
 
 	name = "geminiOCR"
+	supportsAutomaticRecognition = True
 	# Translators: The description of the Gemini OCR engine.
 	description = _("Google Gemini OCR")
 

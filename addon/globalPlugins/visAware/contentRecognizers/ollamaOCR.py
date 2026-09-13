@@ -98,6 +98,7 @@ class CustomContentRecognizer(OllamaEngineMixin, BaseRecognizer):
 	"""Recognizes text using a local or hosted Ollama vision model."""
 
 	name = "ollamaOCR"
+	supportsAutomaticRecognition = True
 	# Translators: The description of the Ollama OCR engine.
 	description = _("Ollama OCR")
 

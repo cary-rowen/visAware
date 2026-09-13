@@ -38,6 +38,7 @@ class CustomContentRecognizer(BaseDescriber):
 	"""An image description engine that uses the Google Gemini."""
 
 	name = "gemini"
+	supportsAutomaticRecognition = True
 	# Translators: The description of the Google Gemini engine.
 	description = _("Google Gemini")
 

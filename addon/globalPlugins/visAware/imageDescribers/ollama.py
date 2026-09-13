@@ -54,6 +54,7 @@ class CustomContentRecognizer(OllamaEngineMixin, BaseDescriber):
 	"""An image description engine that uses a local or hosted Ollama model."""
 
 	name = "ollama"
+	supportsAutomaticRecognition = True
 	# Translators: The description of the Ollama image describer engine.
 	description = _("Ollama Vision")
 
