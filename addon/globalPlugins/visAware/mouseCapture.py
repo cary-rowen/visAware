@@ -78,6 +78,29 @@ def cropToImage(image: Image.Image, left: int, top: int, right: int, bottom: int
 	return image.crop((left, top, right, bottom))
 
 
+# Answers of :func:`fontFaceAvailable`, keyed by face name.
+_fontFaceAvailability: dict[str, bool] = {}
+
+
+def fontFaceAvailable(face: str) -> bool:
+	"""Return whether the given font face is installed.
+
+	wx reports back the face name it was asked for even when it quietly
+	substitutes another font, so the list of installed faces has to be consulted
+	instead. The answer is cached because enumerating fonts is expensive enough
+	to notice when it runs on every change of display.
+
+	:param face: The face name to look for, such as ``"Consolas"``.
+	:returns: True when a font with that face name is installed.
+	"""
+	available = _fontFaceAvailability.get(face)
+	if available is None:
+		installed = {name.casefold() for name in wx.FontEnumerator.GetFacenames()}
+		available = face.casefold() in installed
+		_fontFaceAvailability[face] = available
+	return available
+
+
 class ScreenCaptureDialog(wx.Dialog):
 	"""A borderless full-screen dialog for selecting a region to capture.
 
@@ -122,7 +145,16 @@ class ScreenCaptureDialog(wx.Dialog):
 	_PANEL_PADDING_X = 6
 	_PANEL_PADDING_Y = 4
 	_PANEL_GAP = 4
-	_PANEL_FONT_SIZE = 10
+	_PANEL_COLUMN_GAP = 12
+	_PANEL_CORNER_RADIUS = 4
+	# Panel font height in pixels at 100 % scaling, scaled like the rest of the
+	# panel geometry so the text grows with the DPI of the display in use.
+	_PANEL_FONT_PIXEL_HEIGHT = 13
+	# Fixed-pitch face used for the panel. Requesting the "modern" family alone
+	# resolves to an embedded-bitmap face on some systems, whose strokes look
+	# rough once it is scaled to a DPI-dependent pixel height, so a scalable face
+	# is asked for by name and the system UI font is used when it is unavailable.
+	_PANEL_FONT_FACE = "Consolas"
 
 	def __init__(self, parent: wx.Window | None) -> None:
 		# Capture the screen before creating the window so a capture failure
@@ -176,12 +208,7 @@ class ScreenCaptureDialog(wx.Dialog):
 		self._lensScaleDisplayIndex = -1
 		self._lensBitmap: wx.Bitmap | None = None
 		self._lensSourceRect: tuple[int, int, int, int] | None = None
-		self._panelFont = wx.Font(
-			self._PANEL_FONT_SIZE,
-			wx.FONTFAMILY_DEFAULT,
-			wx.FONTSTYLE_NORMAL,
-			wx.FONTWEIGHT_BOLD,
-		)
+		self._panelFont = self._createPanelFont()
 		self._updateLensScaleFactor()
 
 		self.Bind(wx.EVT_PAINT, self.onPaint)
@@ -462,6 +489,33 @@ class ScreenCaptureDialog(wx.Dialog):
 			return
 		self._lensScaleDisplayIndex = displayIndex
 		self._lensScaleFactor = self._getCursorScaleFactor(displayIndex)
+		# The panel font is sized in pixels, so it has to follow the same scale.
+		self._panelFont = self._createPanelFont()
+
+	def _createPanelFont(self) -> wx.Font:
+		"""Return the info panel font, sized for the display under the cursor.
+
+		A fixed-pitch face keeps the numeric readouts aligned. The height is given
+		in pixels instead of points so it does not depend on the DPI wxPython
+		resolves a point size against, which is the system DPI and is therefore
+		too small on monitors that use a higher DPI.
+		"""
+		pixelHeight = max(1, round(self._PANEL_FONT_PIXEL_HEIGHT * self._lensScaleFactor))
+		if fontFaceAvailable(self._PANEL_FONT_FACE):
+			family = wx.FONTFAMILY_MODERN
+			faceName = self._PANEL_FONT_FACE
+		else:
+			# The preferred face is not installed, so use the system UI font
+			# rather than whatever the "modern" family would substitute.
+			family = wx.FONTFAMILY_DEFAULT
+			faceName = ""
+		return wx.Font(
+			wx.Size(0, pixelHeight),
+			family,
+			wx.FONTSTYLE_NORMAL,
+			wx.FONTWEIGHT_BOLD,
+			faceName=faceName,
+		)
 
 	def _getLensSize(self) -> int:
 		"""Return the lens edge length, scaled for the display under the cursor."""
@@ -663,45 +717,56 @@ class ScreenCaptureDialog(wx.Dialog):
 			# Translators: Reported when the selected screen region could not be copied.
 			ui.message(_("Could not copy the selection image"))
 
-	def _getInfoPanelLines(self) -> list[str]:
-		"""Return the text lines shown in the magnifier info panel."""
+	def _getInfoPanelRows(self) -> list[tuple[str, str]]:
+		"""Return the label and value pairs shown in the magnifier info panel."""
 		screenPosition = self._getCursorScreenPosition()
 		if not screenPosition:
 			return []
-		# Translators: Zoom factor shown in the magnifier info panel.
-		lines = [_("Zoom: {zoom}x").format(zoom=f"{self._lensZoom:g}")]
-		# Translators: Cursor position in screen coordinates shown in the magnifier info panel.
-		lines.append(_("Pos: ({x}, {y})").format(x=screenPosition.x, y=screenPosition.y))
+		# Translators: Label of the zoom factor shown in the magnifier info panel.
+		rows = [(_("Zoom:"), f"{self._lensZoom:g}x")]
+		# Translators: Label of the cursor position in screen coordinates.
+		rows.append((_("Pos:"), f"({screenPosition.x}, {screenPosition.y})"))
 		colourHex = self._getCursorColourHex()
 		if colourHex:
-			# Translators: Hexadecimal colour of the pixel under the cursor.
-			lines.append(_("RGB: {colour}").format(colour=colourHex))
+			# Translators: Label of the hexadecimal colour of the pixel under the cursor.
+			rows.append((_("RGB:"), colourHex))
 		if len(self.displays) > 1:
 			for index, display in enumerate(self.displays):
 				if display.Contains(screenPosition):
-					# Translators: Index of the display containing the cursor.
-					lines.append(_("Display: {index}").format(index=index + 1))
+					# Translators: Label of the index of the display containing the cursor.
+					rows.append((_("Display:"), str(index + 1)))
 					break
 		if self._selectionActive:
 			rect = self._getSelectionRect()
-			# Translators: Size in pixels of the current selection.
-			lines.append(_("Selection: {width}x{height}").format(width=rect.width, height=rect.height))
-		return lines
+			# Translators: Label of the position of the selection origin in screen coordinates.
+			rows.append((_("Origin:"), f"({self._screenLeft + rect.x}, {self._screenTop + rect.y})"))
+			# Translators: Label of the size in pixels of the current selection.
+			rows.append((_("Selection:"), f"{rect.width}x{rect.height}"))
+		return rows
 
 	def _drawInfoPanel(self, dc: wx.DC, lensRect: wx.Rect) -> None:
-		"""Draw the zoom, cursor position and pixel colour details next to the lens."""
-		lines = self._getInfoPanelLines()
-		if not lines:
+		"""Draw the zoom, cursor position and pixel colour details next to the lens.
+
+		Each row puts its label against the left edge of the panel and its value
+		against the right edge, so the values form a column that is easy to scan.
+		"""
+		rows = self._getInfoPanelRows()
+		if not rows:
 			return
 		dc.SetFont(self._panelFont)
 		# Scale the panel's pixel dimensions to match the lens on this display.
 		paddingX = round(self._PANEL_PADDING_X * self._lensScaleFactor)
 		paddingY = round(self._PANEL_PADDING_Y * self._lensScaleFactor)
 		gap = round(self._PANEL_GAP * self._lensScaleFactor)
+		columnGap = round(self._PANEL_COLUMN_GAP * self._lensScaleFactor)
 		lineHeight = dc.GetTextExtent("Ag").height + 2
-		textWidth = max(dc.GetTextExtent(line).width for line in lines)
-		panelWidth = textWidth + 2 * paddingX
-		panelHeight = lineHeight * len(lines) + 2 * paddingY
+		widestRow = max(
+			dc.GetTextExtent(label).width + dc.GetTextExtent(value).width + columnGap for label, value in rows
+		)
+		# Keep the panel at least as wide as the lens so both elements look
+		# consistent on every display, while long details can still widen it.
+		panelWidth = max(widestRow + 2 * paddingX, lensRect.width)
+		panelHeight = lineHeight * len(rows) + 2 * paddingY
 
 		# Place the panel below the lens, flipping above it when there is no room.
 		clientWidth, clientHeight = self.GetClientSize()
@@ -716,12 +781,16 @@ class ScreenCaptureDialog(wx.Dialog):
 		# overlay it is drawn on top of.
 		dc.SetPen(wx.TRANSPARENT_PEN)
 		dc.SetBrush(wx.Brush(self._PANEL_COLOUR))
-		dc.DrawRoundedRectangle(panelLeft, panelTop, panelWidth, panelHeight, 4)
+		cornerRadius = max(1, round(self._PANEL_CORNER_RADIUS * self._lensScaleFactor))
+		dc.DrawRoundedRectangle(panelLeft, panelTop, panelWidth, panelHeight, cornerRadius)
 
 		dc.SetTextForeground(self._PANEL_TEXT_COLOUR)
+		textLeft = panelLeft + paddingX
+		textRight = panelLeft + panelWidth - paddingX
 		textTop = panelTop + paddingY
-		for line in lines:
-			dc.DrawText(line, panelLeft + paddingX, textTop)
+		for label, value in rows:
+			dc.DrawText(label, textLeft, textTop)
+			dc.DrawText(value, textRight - dc.GetTextExtent(value).width, textTop)
 			textTop += lineHeight
 
 	def _drawLens(self, dc: wx.DC) -> None:
