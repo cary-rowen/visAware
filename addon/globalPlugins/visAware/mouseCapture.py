@@ -59,18 +59,40 @@ def normalizedRect(first: wx.Point, second: wx.Point) -> wx.Rect:
 	)
 
 
+def cropToImage(image: Image.Image, left: int, top: int, right: int, bottom: int) -> Image.Image | None:
+	"""Crop an image to the given region, clamped to its bounds.
+
+	:param image: The image to crop.
+	:param left: Left edge of the region.
+	:param top: Top edge of the region.
+	:param right: Right edge of the region.
+	:param bottom: Bottom edge of the region.
+	:returns: The cropped image, or ``None`` when the region is empty.
+	"""
+	left = max(0, left)
+	top = max(0, top)
+	right = min(right, image.width)
+	bottom = min(bottom, image.height)
+	if right <= left or bottom <= top:
+		return None
+	return image.crop((left, top, right, bottom))
+
+
 class ScreenCaptureDialog(wx.Dialog):
 	"""A borderless full-screen dialog for selecting a region to capture.
 
-	The dialog overlays the desktop with a dimmed screenshot. Drag the mouse
-	to select a rectangular area, release the button to confirm, press Escape
-	to cancel, or right-click to clear the current selection.
+	The dialog overlays the desktop with a dimmed screenshot and starts with the
+	area of NVDA's mouse object selected, when it reports one. Drag the mouse to
+	select a different area, release the button or press Enter to confirm, click
+	inside the selection to accept it as it stands, press Escape to cancel, or
+	right-click to clear the current selection.
 
 	A magnifier lens follows the cursor so low-vision users can inspect
 	pixel-level detail: press M to toggle it, use the mouse wheel or +/- to
 	change its zoom, press C to hear the colour under the cursor and P to hear
 	its position in screen coordinates, or hold Control with either key to copy
-	that value to the clipboard instead.
+	that value to the clipboard instead. Press Ctrl+Shift+C to copy the selected
+	region itself to the clipboard as an image.
 	"""
 
 	# Minimum selection size, in pixels, below which a drag is treated as a stray click.
@@ -137,8 +159,10 @@ class ScreenCaptureDialog(wx.Dialog):
 
 		self._anchorPos: wx.Point | None = None
 		self._currentPos: wx.Point | None = None
+		self._dragStartPos: wx.Point | None = None
 		self._isDragging = False
 		self._selectionActive = False
+		self._keepSelectionOnClick = False
 		self._resultRect: tuple[int, int, int, int] | None = None
 
 		# Magnifier lens state. Positions are kept in client coordinates, which
@@ -171,6 +195,25 @@ class ScreenCaptureDialog(wx.Dialog):
 		# Use a crosshair cursor to indicate selection mode.
 		self.SetCursor(wx.Cursor(wx.CURSOR_CROSS))
 
+		# Start with the area of NVDA's mouse object selected, so the region the
+		# user last pointed at can be captured without drawing it again.
+		self._seedSelectionFromMouseObject()
+
+	def _seedSelectionFromMouseObject(self) -> None:
+		"""Select the area of NVDA's mouse object, when it reports one."""
+		mouseLocation = getattr(api.getMouseObject(), "location", None)
+		if not mouseLocation:
+			return
+		topLeft = self.ScreenToClient(wx.Point(mouseLocation.left, mouseLocation.top))
+		bottomRight = self.ScreenToClient(
+			wx.Point(mouseLocation.left + mouseLocation.width, mouseLocation.top + mouseLocation.height)
+		)
+		if not self._isSelectionUsable(normalizedRect(topLeft, bottomRight)):
+			return
+		self._anchorPos = topLeft
+		self._currentPos = bottomRight
+		self._selectionActive = True
+
 	def onEraseBackground(self, event: wx.EraseEvent) -> None:
 		"""Suppress background erasing; the paint handler redraws the whole window."""
 
@@ -194,11 +237,15 @@ class ScreenCaptureDialog(wx.Dialog):
 			self._drawLens(dc)
 
 	def onMouseLeftDown(self, event: wx.MouseEvent) -> None:
-		"""Record the mouse-down position and start a drag selection."""
-		self._anchorPos = event.GetPosition()
-		self._currentPos = None
+		"""Start a drag selection, or arm a click that accepts the current one."""
+		position = event.GetPosition()
+		self._dragStartPos = position
 		self._isDragging = True
-		self._selectionActive = False
+		# Clicking inside the current selection leaves it in place, so releasing
+		# the button without dragging confirms it.
+		self._keepSelectionOnClick = self._selectionActive and self._getSelectionRect().Contains(position)
+		if not self._keepSelectionOnClick:
+			self._startNewSelection(position)
 		self.CaptureMouse()
 
 	def onMouseMove(self, event: wx.MouseEvent) -> None:
@@ -207,13 +254,20 @@ class ScreenCaptureDialog(wx.Dialog):
 		The selection only becomes visible once the drag exceeds the minimum
 		size, which filters out accidental clicks.
 		"""
-		self._moveLens(event.GetPosition())
+		position = event.GetPosition()
+		self._moveLens(position)
 		if not (self._isDragging and event.Dragging()):
 			return
-		self._currentPos = event.GetPosition()
+		if self._keepSelectionOnClick:
+			# Small movements still count as a click that accepts the current
+			# selection; only a deliberate drag replaces it.
+			startPos = self._dragStartPos
+			if startPos is None or not self._isSelectionUsable(normalizedRect(startPos, position)):
+				return
+			self._startNewSelection(startPos)
+		self._currentPos = position
 		if not self._selectionActive:
-			rect = self._getSelectionRect()
-			if rect.width <= self._MIN_SELECTION_WIDTH or rect.height <= self._MIN_SELECTION_HEIGHT:
+			if not self._isSelectionUsable(self._getSelectionRect()):
 				return
 			self._selectionActive = True
 		self.Refresh(eraseBackground=False)
@@ -225,11 +279,17 @@ class ScreenCaptureDialog(wx.Dialog):
 		self._releaseCapture()
 		self._isDragging = False
 
+		if self._keepSelectionOnClick:
+			# A click inside the current selection accepts it as it stands.
+			self._keepSelectionOnClick = False
+			self._confirmCurrentSelection()
+			return
+
 		if not self._selectionActive:
 			self._resetSelection()
 			return
 		rect = self._getSelectionRect()
-		if rect.width <= self._MIN_SELECTION_WIDTH or rect.height <= self._MIN_SELECTION_HEIGHT:
+		if not self._isSelectionUsable(rect):
 			self._resetSelection()
 			return
 		# Positions are client coordinates, which align with the screenshot's
@@ -238,17 +298,25 @@ class ScreenCaptureDialog(wx.Dialog):
 		self.EndModal(wx.ID_OK)
 
 	def onMouseRightUp(self, event: wx.MouseEvent) -> None:
-		"""Clear the current selection without closing the dialog."""
-		if not self._isDragging:
-			return
+		"""Clear the current selection without closing the dialog.
+
+		This also drops a selection that was established before the dialog was
+		opened, so it must not depend on a left-button drag being in progress.
+		"""
 		self._releaseCapture()
 		self._resetSelection()
 
 	def onKeyUp(self, event: wx.KeyEvent) -> None:
-		"""Handle the magnifier shortcuts, Escape to cancel an in-progress selection."""
+		"""Handle the magnifier shortcuts, Enter to confirm and Escape to cancel."""
 		keyCode = event.GetKeyCode()
 		# C and P report the value under the cursor; holding Control copies it instead.
 		controlDown = event.ControlDown()
+		if controlDown and event.ShiftDown() and keyCode == ord("C"):
+			self._copySelectionImage()
+			return
+		if keyCode in (wx.WXK_RETURN, wx.WXK_NUMPAD_ENTER):
+			self._confirmCurrentSelection()
+			return
 		if keyCode == ord("M"):
 			self._lensEnabled = not self._lensEnabled
 			# Force the cached lens bitmap to be rebuilt when it is shown again.
@@ -288,8 +356,16 @@ class ScreenCaptureDialog(wx.Dialog):
 		if self.HasCapture():
 			self.ReleaseMouse()
 
+	def _startNewSelection(self, position: wx.Point) -> None:
+		"""Begin a new selection anchored at the given position."""
+		self._keepSelectionOnClick = False
+		self._anchorPos = position
+		self._currentPos = None
+		self._selectionActive = False
+
 	def _resetSelection(self) -> None:
 		"""Clear the in-progress selection and repaint the overlay."""
+		self._keepSelectionOnClick = False
 		self._anchorPos = None
 		self._currentPos = None
 		self._isDragging = False
@@ -301,6 +377,24 @@ class ScreenCaptureDialog(wx.Dialog):
 		if not self._anchorPos or not self._currentPos:
 			return wx.Rect(0, 0, 0, 0)
 		return normalizedRect(self._anchorPos, self._currentPos)
+
+	def _isSelectionUsable(self, rect: wx.Rect) -> bool:
+		"""Return True when the rectangle is large enough to be a deliberate selection."""
+		return rect.width > self._MIN_SELECTION_WIDTH and rect.height > self._MIN_SELECTION_HEIGHT
+
+	def _confirmCurrentSelection(self) -> None:
+		"""Confirm the current selection and close the dialog, when it is large enough."""
+		if not self._selectionActive:
+			return
+		rect = self._getSelectionRect()
+		if not self._isSelectionUsable(rect):
+			return
+		# Positions are client coordinates, which align with the screenshot's
+		# origin because the dialog covers the whole virtual screen.
+		self._releaseCapture()
+		self._isDragging = False
+		self._resultRect = (rect.x, rect.y, rect.width, rect.height)
+		self.EndModal(wx.ID_OK)
 
 	def _moveLens(self, position: wx.Point) -> None:
 		"""Track the cursor, moving the magnifier lens when it is shown."""
@@ -542,6 +636,33 @@ class ScreenCaptureDialog(wx.Dialog):
 		if position:
 			api.copyToClip(f"{position.x}, {position.y}", notify=True)
 
+	def _getSelectionImage(self) -> Image.Image | None:
+		"""Return the screenshot cropped to the current selection, if there is one."""
+		if not (self._selectionActive and self._anchorPos and self._currentPos):
+			return None
+		rect = self._getSelectionRect()
+		return cropToImage(self._fullScreenshot, rect.left, rect.top, rect.right, rect.bottom)
+
+	def _copySelectionImage(self) -> None:
+		"""Copy the currently selected screen region to the clipboard as an image."""
+		image = self._getSelectionImage()
+		if image is None:
+			# Translators: Reported when the selection image is requested but nothing is selected.
+			ui.message(_("No selection to copy"))
+			return
+		copied = False
+		if wx.TheClipboard.Open():
+			try:
+				copied = bool(wx.TheClipboard.SetData(wx.BitmapDataObject(pilToBitmap(image))))
+			finally:
+				wx.TheClipboard.Close()
+		if copied:
+			# Translators: Reported after the selected screen region has been copied as an image.
+			ui.message(_("Selection copied as an image"))
+		else:
+			# Translators: Reported when the selected screen region could not be copied.
+			ui.message(_("Could not copy the selection image"))
+
 	def _getInfoPanelLines(self) -> list[str]:
 		"""Return the text lines shown in the magnifier info panel."""
 		screenPosition = self._getCursorScreenPosition()
@@ -639,16 +760,17 @@ class ScreenCaptureDialog(wx.Dialog):
 		"""
 		if not self._resultRect:
 			return None
-
 		x, y, width, height = self._resultRect
-		# Clamp the crop to the screenshot bounds as a safety measure.
-		right = min(x + width, self._fullScreenshot.width)
-		bottom = min(y + height, self._fullScreenshot.height)
-		if right <= x or bottom <= y:
+		croppedImage = cropToImage(self._fullScreenshot, x, y, x + width, y + height)
+		if croppedImage is None:
 			return None
-
-		croppedImage = self._fullScreenshot.crop((x, y, right, bottom))
 		# Report the location in absolute screen coordinates by adding the
 		# virtual screen origin, matching other recognition sources.
-		imageInfo = RecogImageInfo(self._screenLeft + x, self._screenTop + y, right - x, bottom - y, 1)
+		imageInfo = RecogImageInfo(
+			self._screenLeft + x,
+			self._screenTop + y,
+			croppedImage.width,
+			croppedImage.height,
+			1,
+		)
 		return imageInfo, croppedImage
