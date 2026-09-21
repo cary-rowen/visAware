@@ -1,0 +1,170 @@
+name: Bug report
+description: Create a bug report to help us improve this add-on
+type: Bug
+labels: [bug]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### Attention!
+
+        Please read the instructions carefully before filling out this template.
+        Issues may be closed if required information is missing.
+        Attach an NVDA log file whenever possible to help us diagnose the problem faster.
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Brief summary
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproSteps
+    attributes:
+      label: Steps to reproduce
+      description: |
+        A clear and concise list of steps to reproduce the problem.
+        Include any sample files or links required to reproduce the issue.
+      placeholder: |
+        Example:
+        1. Press NVDA+control+X to open add-on dialog
+        2. Select "Settings" option
+        3. Press Enter
+    validations:
+      required: true
+
+  - type: textarea
+    id: actualBehavior
+    attributes:
+      label: Actual behavior
+      description: |
+        Describe what actually happens when these steps are taken.
+        Include verbatim speech/braille viewer output if relevant, or error sounds heard.
+      placeholder: |
+        Example:
+        An NVDA error sound is heard.
+        NVDA Speech: "error"
+    validations:
+      required: true
+
+  - type: textarea
+    id: expectedBehavior
+    attributes:
+      label: Expected behavior
+      description: |
+        Describe what you expected to happen when these steps are taken.
+      placeholder: |
+        Example:
+        The settings dialog should open without any error sound.
+    validations:
+      required: true
+
+  - type: textarea
+    id: attachedFiles
+    attributes:
+      label: NVDA logs and other attachments
+      description: |
+        In most cases an NVDA log file is incredibly helpful when trying to understand or fix an issue.
+        Please attach your NVDA log file or any relevant screenshots/files here.
+
+  - type: markdown
+    attributes:
+      value: |
+        ### System Configuration
+
+        Please provide information about your system and add-on setup.
+
+  - type: input
+    id: addonVersion
+    attributes:
+      label: Add-on version
+      description: |
+        Which version of this add-on are you using?
+        You can check this in NVDA's Add-on Store.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: nvdaType
+    attributes:
+      label: NVDA type
+      description: Is this reproduced with NVDA installed/portable/running from source?
+      multiple: true
+      options: ["installed copy", "portable copy", "installer/launcher copy", "source copy"]
+    validations:
+      required: true
+
+  - type: input
+    id: nvdaVersion
+    attributes:
+      label: NVDA version
+      description: |
+        Which version(s) of NVDA can you reproduce this issue with?
+        This can be copied from the NVDA About dialog (NVDA menu, Help, About).
+    validations:
+      required: true
+
+  - type: textarea
+    id: otherNvdaVersions
+    attributes:
+      label: Have you tried any other versions of NVDA? If so, please report their behaviors.
+      description: |
+        Knowing whether this issue occurs in previous releases helps us determine if a change in NVDA or this add-on introduced the problem.
+
+  - type: input
+    id: winVersion
+    attributes:
+      label: Windows version
+      description: |
+        The version of Windows you are using.
+      placeholder: |
+        Example: Windows 11 Version 25H2 Build 26220.8925
+    validations:
+      required: true
+
+  - type: textarea
+    id: otherVersions
+    attributes:
+      label: Name and version of other software in use when reproducing the issue
+      placeholder: |
+        Example: Chrome version 126.0.6478.127
+
+  - type: textarea
+    id: otherSysInfo
+    attributes:
+      label: Other information about your system
+
+  - type: markdown
+    attributes:
+      value: |
+        ### Troubleshooting steps
+
+  - type: dropdown
+    id: restart
+    validations:
+      required: true
+    attributes:
+      label: Does the issue still occur after restarting your computer?
+      options: [
+        "I have not restarted my computer",
+        "I have restarted my computer and the issue still occurs",
+        "Restarting my computer fixes the issue temporarily, but it comes back later",
+        "Restarting my computer fixed the issue",
+      ]
+
+  - type: dropdown
+    id: addonConflicts
+    validations:
+      required: true
+    attributes:
+      label: Does the issue still occur when other NVDA add-ons are disabled (keeping only this add-on active)?
+      description: |
+        Issues can sometimes be caused by conflicts between multiple add-ons.
+      options: [
+        "I have not tested with other add-ons disabled",
+        "I have disabled other add-ons and the issue still occurs with only this add-on enabled",
+        "The issue no longer occurs when other add-ons are disabled",
+        "I do not have any other NVDA add-ons installed",
+      ]
