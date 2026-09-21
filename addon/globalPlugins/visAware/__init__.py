@@ -45,6 +45,7 @@ from ._screenCapture import (
 )
 from .conversation import ConversationContext, makeConversationContext
 from .markdownRenderer import showMarkdownBrowseableMessage
+from .mouseCapture import ScreenCaptureDialog
 from .recogHandler import (
 	AutomaticRecognitionPanel,
 	CustomOCRHandler,
@@ -82,7 +83,7 @@ GENERAL_CONFIG_SPEC = {
 	"preferScreenshotForWebImages": "boolean(default=False)",
 	"verboseDebugLogging": "boolean(default=False)",
 	"engineType": 'option("OCR", "ImageDescriber", "Agent", default="OCR")',
-	"sourceType": 'option("navigatorObject", "clipboardImage", "wholeDesktop", "foreGroundWindow", default="navigatorObject")',
+	"sourceType": 'option("navigatorObject", "clipboardImage", "wholeDesktop", "foreGroundWindow", "mouseCaptureArea", default="navigatorObject")',
 	"excludedSourceTypes": "list(default=list())",
 	"nvdacnUser": "string(default='')",
 	"nvdacnPass": "string(default='')",
@@ -194,6 +195,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self._askQuestionFrame: AskQuestionFrame | None = None
 		self._askQuestionHistoryEntry: dict[str, Any] | None = None
 		self._askQuestionContext: ConversationContext | None = None
+		self._isMouseCaptureRunning: bool = False
+		self._mouseCaptureSimpleText: bool = True
+		self._mouseCaptureAreaImage: tuple[RecogImageInfo, Image.Image] | None = None
 		self.ocrSettingMenuItem: wx.MenuItem | None = None
 		if globalVars.appArgs.secure or config.isAppX:
 			return
@@ -434,6 +438,100 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			currentEngineType="OCR",
 			simpleText=False,
 		)
+
+	@script(
+		# Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
+		description=_("Recognizes the text in a mouse-selected screen area using OCR"),
+		category=CATEGORY_NAME,
+		gestures=[],
+	)
+	def script_recognizeMouseCaptureAreaWithOCREngine(self, gesture: "inputCore.InputGesture") -> None:
+		"""Recognize the text in a screen region selected by dragging the mouse.
+
+		Pressing the gesture again while the capture dialog is open switches the
+		result type.
+
+		:param gesture: The input gesture that triggered the command.
+		"""
+		self._handleMouseCaptureGesture(gesture, "OCR")
+
+	@script(
+		# Translators: Describes a command in the Input Gestures dialog for the Vis Aware add-on.
+		description=_("Describes the content of a mouse-selected screen area"),
+		category=CATEGORY_NAME,
+		gestures=[],
+	)
+	def script_describeMouseCaptureArea(self, gesture: "inputCore.InputGesture") -> None:
+		"""Describe the content of a screen region selected by dragging the mouse.
+
+		Pressing the gesture again while the capture dialog is open switches the
+		result type.
+
+		:param gesture: The input gesture that triggered the command.
+		"""
+		self._handleMouseCaptureGesture(gesture, "ImageDescriber")
+
+	def _handleMouseCaptureGesture(
+		self,
+		gesture: "inputCore.InputGesture",
+		engineType: str,
+		simpleText: bool = True,
+	) -> None:
+		"""Open the capture dialog, or switch the result type of an open one.
+
+		The first press opens the dialog with the requested result type.
+		Pressing the gesture again while the dialog is open toggles between a
+		simple text result and a rich result document.
+
+		:param gesture: The input gesture that triggered the command.
+		:param engineType: The engine type to use for recognition.
+		:param simpleText: Whether the initial capture should return a simple text result.
+		"""
+		if self._isMouseCaptureRunning:
+			self._mouseCaptureSimpleText = not self._mouseCaptureSimpleText
+			if self._mouseCaptureSimpleText:
+				# Translators: Reported when the mouse capture result is switched to a simple text result.
+				ui.message(_("Simple text result"))
+			else:
+				# Translators: Reported when the mouse capture result is switched to a rich result document.
+				ui.message(_("Rich result document"))
+			return
+		self._isMouseCaptureRunning = True
+		self._mouseCaptureSimpleText = simpleText
+		wx.CallAfter(self._runMouseCaptureRecognition, gesture, engineType)
+
+	def _runMouseCaptureRecognition(self, gesture: "inputCore.InputGesture", engineType: str) -> None:
+		"""Show the capture dialog and recognize the selected area on the main thread.
+
+		The result type can still be switched while the dialog is open, so it is
+		read only after the dialog has been dismissed.
+		"""
+		try:
+			gui.mainFrame.prePopup()
+			try:
+				dlg = ScreenCaptureDialog(gui.mainFrame)
+				try:
+					confirmed = dlg.ShowModal() == wx.ID_OK
+					capturedImage = dlg.getCapturedImage() if confirmed else None
+				finally:
+					dlg.Destroy()
+			finally:
+				gui.mainFrame.postPopup()
+			if capturedImage is not None:
+				self._mouseCaptureAreaImage = capturedImage
+				self.executeRecognition(
+					gesture,
+					"mouseCaptureArea",
+					engineType,
+					simpleText=self._mouseCaptureSimpleText,
+				)
+		except Exception:
+			log.error("Failed to capture and recognize the mouse selection area.", exc_info=True)
+			# Translators: Reported when the mouse capture area command fails.
+			ui.message(_("Failed to capture the mouse selection area."))
+		finally:
+			self._mouseCaptureAreaImage = None
+			self._isMouseCaptureRunning = False
 
 	def _makePreviousResultObject(self, historyEntry: dict[str, Any]) -> RecognitionResult | None:
 		"""Creates a display result from cached history data."""
@@ -772,6 +870,10 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if currentEngineType == "Agent":
 			self._promptAndStartAgent()
 			return
+		if currentSource == "mouseCaptureArea":
+			# This source needs the capture dialog before recognition can start.
+			self._handleMouseCaptureGesture(gesture, currentEngineType, simpleText=simpleText)
+			return
 		self.executeRecognition(
 			gesture=gesture,
 			currentSource=currentSource,
@@ -925,6 +1027,14 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		imageInfo = RecogImageInfo(0, 0, recognizeImage.width, recognizeImage.height, 1)
 		return imageInfo, recognizeImage
 
+	def _getImageFromMouseCaptureArea(self) -> tuple[RecogImageInfo, Image.Image] | None:
+		"""Return the most recently captured mouse-area image.
+
+		:returns: A ``(RecogImageInfo, PIL.Image.Image)`` tuple, or ``None`` when
+			no capture is available.
+		"""
+		return self._mouseCaptureAreaImage
+
 	def _getImageFromSource(
 		self,
 		currentSource: str,
@@ -939,6 +1049,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		"""
 		sourceHandlers = {
 			"clipboardImage": self._getImageFromClipboardSource,
+			"mouseCaptureArea": self._getImageFromMouseCaptureArea,
 			"navigatorObject": functools.partial(
 				self._prepareImageFromObject,
 				api.getNavigatorObject,
