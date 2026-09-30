@@ -195,7 +195,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self._askQuestionHistoryEntry: dict[str, Any] | None = None
 		self._askQuestionContext: ConversationContext | None = None
 		self.ocrSettingMenuItem: wx.MenuItem | None = None
-		if globalVars.appArgs.secure or config.isAppX:
+		if globalVars.appArgs.secure or getattr(config, "isAppX", False):
 			return
 		config.conf.spec["visAwareGeneral"] = GENERAL_CONFIG_SPEC
 		CustomOCRHandler.initialize()
