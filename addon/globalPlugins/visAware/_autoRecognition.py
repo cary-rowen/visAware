@@ -23,6 +23,7 @@ import ui
 import wx
 from contentRecog import RecogImageInfo, RecognitionResult
 from logHandler import log
+from NVDAObjects.behaviors import CandidateItem
 from PIL import Image, ImageGrab
 
 from . import recogHistory
@@ -384,6 +385,8 @@ def isWebContentObject(obj: Any) -> bool:
 
 
 def isScreenshotCandidateObject(obj: Any) -> bool:
+	if isinstance(obj, CandidateItem):
+		return False
 	if getattr(obj, "role", None) not in SCREENSHOT_OBJECT_ROLES:
 		return False
 	name = getattr(obj, "name", "") or ""

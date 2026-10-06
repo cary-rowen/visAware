@@ -35,6 +35,13 @@ def _installModuleStubs() -> None:
 	controlTypesModule.State = types.SimpleNamespace(INVISIBLE="invisible", OFFSCREEN="offscreen")
 	sys.modules["controlTypes"] = controlTypesModule
 
+	nvdaObjectsModule = types.ModuleType("NVDAObjects")
+	nvdaObjectsModule.__path__ = []  # type: ignore[attr-defined]
+	behaviorsModule = types.ModuleType("NVDAObjects.behaviors")
+	behaviorsModule.CandidateItem = type("CandidateItem", (), {})
+	sys.modules["NVDAObjects"] = nvdaObjectsModule
+	sys.modules["NVDAObjects.behaviors"] = behaviorsModule
+
 	textInfosModule = types.ModuleType("textInfos")
 	textInfosModule.POSITION_CARET = "caret"
 	textInfosModule.UNIT_CHARACTER = "character"
@@ -283,6 +290,20 @@ class AutoRecognitionP0TestCase(unittest.TestCase):
 
 		self.assertIsNotNone(key)
 		self.assertIn("screenshotTarget:", key)
+
+	def test_candidate_items_are_not_screenshot_candidates(self) -> None:
+		module = self.module
+
+		class _CandidateItem(module.CandidateItem):
+			role = module.controlTypes.Role.LISTITEM
+			name = ""
+
+		class _ImageListItem:
+			role = module.controlTypes.Role.LISTITEM
+			name = "Image"
+
+		self.assertFalse(module.isScreenshotCandidateObject(_CandidateItem()))
+		self.assertTrue(module.isScreenshotCandidateObject(_ImageListItem()))
 
 	def test_oldNvdaUsesImageGrabForNegativeCoordinates(self) -> None:
 		module = self.module
