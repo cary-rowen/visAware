@@ -31,41 +31,13 @@ addon_info = AddonInfo(
 		"""NVDA add-on for OCR, AI-powered image description, automatic recognition, and AI-assisted computer control.""",
 	),
 	# version
-	addon_version="0.9.9",
+	addon_version="0.9.10",
 	# Brief changelog for this version
 	# Translators: what's new content for the add-on version to be shown in the add-on store
 	addon_changelog=_(
-		"""### 0.9.9
+		"""### 0.9.10
 
-* Fixed Gemini compatibility across OCR, image description, and AI Agent engines.
-* Added sound cues to recognition and AI Agent workflows for start, waiting, actions, questions, success, cancellation, and error states.
-* Improved automatic recognition to show only engines that explicitly support it.
-* Added text CAPTCHA recognition through RuCaptcha and 2Captcha, with configurable recognition options and account balance checks.
-
-### 0.9.6
-
-* Updated the default DeepSeek vision model to `deepseek-flash` and added newer Gemini vision model presets.
-* Added Baimiao OCR and formula recognition, including shared account login, protected sessions, clickable text coordinates, and accessible MathML formula output.
-* Added OCR, image description, and AI Agent support in Screen Curtain mode on NVDA 2026.3 and later.
-* Improved automatic recognition settings so the selected engine is preserved correctly.
-
-### 0.9.0
-
-* Added DeepSeek image description and AI Agent engines, with configurable API endpoints and vision models.
-* Added a command to cycle automatic recognition between off, image description, and OCR; it has no default gesture.
-* Improved automatic recognition reliability by serializing background work, keeping only the latest pending task, propagating cancellation through network and OCR requests, and using shorter request timeouts.
-* Improved browse-mode automatic recognition for web graphics by recognizing current and lazy-loaded image URLs and falling back to screenshots when URLs are unavailable.
-* Improved automatic recognition result handling to ignore results after the active recognition target changes.
-
-### 0.8.1
-
-* Added Kimi image description, follow-up questions, OCR with structured coordinates, and AI Agent support through the OpenAI-compatible Kimi API.
-* Improved image-description prompts across supported engines with localized defaults.
-* Improved mathematical image descriptions by converting visible formulas to LaTeX and returning formula-only images as LaTeX formulas.
-* Improved automatic image recognition with concise 20 to 30 word descriptions without Markdown.
-* Improved browsable image-description output by using standard Markdown tables for tabular content and avoiding code fences.
-* Removed model and model-provider names from the follow-up dialog.
-* Added Copy and Close buttons to browsable recognition and follow-up result dialogs.""",
+* Fixed automatic recognition being triggered by Microsoft Pinyin candidate items.""",
 	),
 	# Author(s)
 	addon_author="cary-rowen <cary-rowen@outlook.com>",
