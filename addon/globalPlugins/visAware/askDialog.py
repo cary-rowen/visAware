@@ -7,7 +7,7 @@
 from __future__ import annotations
 
 from threading import Event, Thread
-from typing import Any, TYPE_CHECKING
+from typing import Any, Callable, TYPE_CHECKING
 
 import addonHandler
 import ui
@@ -41,13 +41,12 @@ class AskQuestionFrame(DpiScalingHelperMixinWithoutInit, wx.Frame):
 	def __init__(
 		self,
 		parent: wx.Window | None,
-		context: ConversationContext,
+		context: ConversationContext | None,
 		taskCues: TaskCueManager,
 	) -> None:
 		# Translators: The title of the follow-up question dialog.
 		super().__init__(parent=parent, title=_("Ask a Follow-up Question"))
 		self.SetName("visAwareAskQuestionFrame")
-		self._context = context
 		self._taskCues = taskCues
 		self._cueHandle: Event | None = None
 		self._cancellationEvent: Event | None = None
@@ -58,8 +57,13 @@ class AskQuestionFrame(DpiScalingHelperMixinWithoutInit, wx.Frame):
 		self._streamingAnswerTextStartPosition: int | None = None
 		self._streamingAnswerText = ""
 		self._formattedContent = ""
+		# First-question pending mode: when set, the next send triggers an image
+		# recognition via the callback instead of a follow-up model call, and the
+		# recognition result is back-filled as the answer to this question.
+		self._pendingDescribe: ConversationContext | None = None
+		self._onPendingDescribeSend: Callable[[str], None] | None = None
 		self._makeControls()
-		self.setContext(context)
+		self._setContext(context)
 		self.SetMinSize(self.scaleSize(self.MIN_FRAME_SIZE))
 		self.SetSize(self.scaleSize(self.FRAME_SIZE))
 		self.CenterOnScreen()
@@ -123,34 +127,156 @@ class AskQuestionFrame(DpiScalingHelperMixinWithoutInit, wx.Frame):
 		self.SetSizer(frameSizer)
 		self.Bind(wx.EVT_CHAR_HOOK, self._onCharHook)
 
-	def setContext(self, context: ConversationContext) -> None:
+	def _setContext(self, context: ConversationContext | None) -> None:
 		"""
-		Loads a new conversation context into the frame.
+		Loads a new conversation context into the frame and resets pending-first-question mode.
 
-		:param context: The context to display and use for future questions.
+		:param context: The context to display and use for future questions, or ``None``
+			to start in an empty (placeholder) state.
 		"""
 		self._cancelWorker()
 		self._context = context
+		# Loading a context always leaves pending-first-question mode; use
+		# setPendingDescribe to enter it separately.
+		self._pendingDescribe = None
+		self._onPendingDescribeSend = None
 		self._messagesText.SetValue("")
-		self._formattedContent = context.initialText
-		# Translators: The sender label for the original image description in the follow-up dialog.
-		self._appendMessage(_("Image description"), context.initialText, report=False)
-		for turn in context.turns:
-			if turn.role == "user":
-				# Translators: The sender label for the user in the follow-up dialog.
-				sender = _("You")
-			else:
-				sender = ANSWER_SENDER
-				if turn.role == ROLE_ASSISTANT:
-					self._formattedContent = turn.text
-			self._appendMessage(sender, turn.text, report=False)
+		self._formattedContent = context.initialText if context else ""
+		if context:
+			# Translators: The sender label for the original image description in the follow-up dialog.
+			self._appendMessage(_("Image description"), context.initialText, report=False)
+			for turn in context.turns:
+				if turn.role == "user":
+					# Translators: The sender label for the user in the follow-up dialog.
+					sender = _("You")
+				else:
+					sender = ANSWER_SENDER
+					if turn.role == ROLE_ASSISTANT:
+						self._formattedContent = turn.text
+				self._appendMessage(sender, turn.text, report=False)
 		self._questionText.SetValue("")
 		self._setSendButtonEnabled(True)
 		self.Layout()
 
+	def setContext(self, context: ConversationContext | None) -> None:
+		"""Public wrapper for :meth:`_setContext` (used by the global plugin)."""
+		self._setContext(context)
+
+	@property
+	def pendingDescribeActive(self) -> bool:
+		"""Whether the frame is waiting for a describe-before question to be sent."""
+		return self._pendingDescribe is not None
+
+	def setPendingDescribe(
+		self,
+		context: ConversationContext,
+		onSend: Callable[[str], None],
+	) -> None:
+		"""
+		Puts the frame into "pending first question" mode for a describe-before question.
+
+		While pending, the conversation history shows the image description as the
+		original context, but sending a question does NOT start a follow-up model call.
+		Instead the question becomes the describe prompt (via the one-shot
+		``engine._initialPromptForDescribe``) and the callback is invoked to trigger an
+		image recognition. Once ``backfillPendingDescribe`` is called with the result,
+		the frame switches to normal follow-up mode.
+
+		:param context: The context that will be used for follow-up questions after
+			the recognition completes. It may carry the to-be-described image.
+		:param onSend: Called on the main thread with the question text when the user
+			presses send while the frame is still pending.
+		"""
+		# Show an empty conversation history until the first question is answered.
+		self._setContext(None)
+		self._pendingDescribe = context
+		self._onPendingDescribeSend = onSend
+
+	def backfillPendingDescribe(self, question: str, result: Any) -> None:
+		"""
+		Back-fills the result of a pending describe-before question into the frame.
+
+		This is called by the recognition result handler (on the main thread) once the
+		image recognition triggered by a pending first question has finished. The
+		question/answer pair is appended to the conversation history as the first
+		exchange, a real context for future follow-ups is established, and the frame
+		switches out of pending first-question mode.
+
+		:param question: The question that was sent while the frame was pending.
+		:param result: The recognition result whose text is used as the answer.
+		"""
+		pendingContext = self._pendingDescribe
+		if pendingContext is None:
+			return
+		answer = getattr(result, "text", None) or ""
+		if not isinstance(answer, str) or not answer.strip():
+			# An unusable result: lift the in-flight guard but stay in pending mode
+			# so the user can send a new question.
+			self._activeRequestSequence = None
+			self._cancellationEvent = None
+			self._setSendButtonEnabled(True)
+			return
+		self._pendingDescribe = None
+		self._onPendingDescribeSend = None
+		if not self._context:
+			self._context = pendingContext
+		if self._context is pendingContext:
+			pendingContext.initialText = pendingContext.initialText or answer
+			pendingContext.addExchange(question, answer)
+			self._formattedContent = answer
+		# The "You" half of the exchange was already appended on send; add only the answer.
+		# Speech is left to the normal result display chain, which announces the text.
+		self._appendMessage(ANSWER_SENDER, answer, report=False)
+		# The pending send was answered by the recognition back-fill, so lift the
+		# in-flight guard and let the next send go through immediately.
+		self._activeRequestSequence = None
+		self._cancellationEvent = None
+		self._setSendButtonEnabled(True)
+
+	def failPendingDescribe(self, message: str, report: bool = True) -> None:
+		"""
+		Reports a failed or cancelled describe-before recognition in the frame.
+
+		The frame stays in pending mode, so sending a new question re-triggers the
+		recognition via the original callback. The error is shown in the history and
+		sending is re-enabled.
+
+		:param message: The error message to show as the failed answer.
+		:param report: Whether to announce the error via ``ui.message`` as well.
+		"""
+		if self._pendingDescribe is None:
+			return
+		self._activeRequestSequence = None
+		self._cancellationEvent = None
+		if message:
+			# Translators: The sender label for an error shown in the follow-up dialog.
+			self._appendMessage(_("Error"), message, report=report)
+		self._setSendButtonEnabled(True)
+
 	def focusQuestionInput(self) -> None:
 		"""Moves focus to the question edit field."""
 		self._questionText.SetFocus()
+
+	def _restoreHistoryCaret(self, caret: int) -> None:
+		"""Puts the history caret back where the user left it, anchored in view."""
+		self._messagesText.SetInsertionPoint(caret)
+		self._messagesText.ShowPosition(caret)
+
+	def _appendToHistory(self, text: str) -> None:
+		"""Appends text to the conversation history without moving the caret.
+
+		``AppendText`` implicitly moves the insertion point to the end of the
+		control (dragging the view along with it), so the caret is restored
+		afterwards to wherever the user left it. Freshly arrived text simply
+		grows below the reading position, like an overflowing browser page.
+		"""
+		caret = self._messagesText.GetInsertionPoint()
+		self._messagesText.Freeze()
+		try:
+			self._messagesText.AppendText(text)
+			self._restoreHistoryCaret(caret)
+		finally:
+			self._messagesText.Thaw()
 
 	def _appendMessage(self, sender: str, text: str, report: bool = True) -> None:
 		if not text:
@@ -158,10 +284,10 @@ class AskQuestionFrame(DpiScalingHelperMixinWithoutInit, wx.Frame):
 		currentText = self._messagesText.GetValue()
 		displayMessageText = f"{sender}:\n{text}"
 		if currentText:
-			self._messagesText.AppendText(f"\n\n{displayMessageText}")
+			self._appendToHistory(f"\n\n{displayMessageText}")
 		else:
 			self._messagesText.SetValue(displayMessageText)
-		self._messagesText.SetInsertionPointEnd()
+		# Keep the caret where the user left it (no auto-scroll to the end).
 		if report:
 			ui.message(f"{sender}: {text}")
 
@@ -171,6 +297,28 @@ class AskQuestionFrame(DpiScalingHelperMixinWithoutInit, wx.Frame):
 		if self._activeRequestSequence is not None:
 			# Translators: Reported while a follow-up question is still being answered.
 			ui.message(_("Waiting for answer."))
+			return
+		if self._pendingDescribe is not None:
+			callback = self._onPendingDescribeSend
+			if callback is None:
+				# Translators: Reported while a follow-up question is still being answered.
+				ui.message(_("Waiting for answer."))
+				return
+			question = self._questionText.GetValue().strip()
+			if not question:
+				# Translators: Reported when the user tries to send an empty follow-up question.
+				ui.message(_("Enter a question."))
+				self._questionText.SetFocus()
+				return
+			self._questionText.SetValue("")
+			# Translators: The sender label for the user in the follow-up dialog.
+			self._appendMessage(_("You"), question, report=False)
+			self._activeRequestSequence = self._requestSequence + 1
+			self._requestSequence = self._activeRequestSequence
+			self._setSendButtonEnabled(False)
+			# Translators: Reported while a follow-up question is being answered.
+			ui.message(_("Waiting for answer."))
+			callback(question)
 			return
 		self._cancelStreamingAnswer()
 		question = self._questionText.GetValue().strip()
@@ -257,16 +405,14 @@ class AskQuestionFrame(DpiScalingHelperMixinWithoutInit, wx.Frame):
 			self._streamingSpeechPresenter.start()
 			self._streamingSpeechPresenter.addText(text)
 			return
-		self._messagesText.AppendText(text)
-		self._messagesText.SetInsertionPointEnd()
+		self._appendToHistory(text)
 		self._streamingAnswerText += text
 		self._streamingSpeechPresenter.addText(text)
 
 	def _startStreamingAnswer(self, requestSequence: int) -> None:
 		currentText = self._messagesText.GetValue()
 		messagePrefix = "\n\n" if currentText else ""
-		self._messagesText.AppendText(f"{messagePrefix}{ANSWER_SENDER}:\n")
-		self._messagesText.SetInsertionPointEnd()
+		self._appendToHistory(f"{messagePrefix}{ANSWER_SENDER}:\n")
 		self._streamingAnswerRequestSequence = requestSequence
 		self._streamingAnswerTextStartPosition = self._messagesText.GetLastPosition()
 		self._streamingAnswerText = ""
@@ -276,8 +422,10 @@ class AskQuestionFrame(DpiScalingHelperMixinWithoutInit, wx.Frame):
 		if self._streamingAnswerTextStartPosition is None:
 			return
 		currentText = self._messagesText.GetValue()
+		caret = self._messagesText.GetInsertionPoint()
 		self._messagesText.SetValue(f"{currentText[: self._streamingAnswerTextStartPosition]}{text}")
-		self._messagesText.SetInsertionPointEnd()
+		# SetValue resets the caret to the start; keep it where the user left it.
+		self._messagesText.SetInsertionPoint(min(caret, self._messagesText.GetLastPosition()))
 		self._streamingAnswerText = text
 
 	def _finishStreamingAnswer(self, requestSequence: int, answer: str) -> bool:
@@ -290,8 +438,7 @@ class AskQuestionFrame(DpiScalingHelperMixinWithoutInit, wx.Frame):
 			elif answer.startswith(self._streamingAnswerText):
 				missingText = answer[len(self._streamingAnswerText) :]
 			if missingText:
-				self._messagesText.AppendText(missingText)
-				self._messagesText.SetInsertionPointEnd()
+				self._appendToHistory(missingText)
 				self._streamingAnswerText += missingText
 				self._streamingSpeechPresenter.addText(missingText)
 		self._streamingSpeechPresenter.finish()

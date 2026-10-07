@@ -7,6 +7,7 @@ import api
 import core
 import NVDAObjects
 import config
+import copy
 import globalPluginHandler
 import globalVars
 import gui
@@ -80,6 +81,7 @@ GENERAL_CONFIG_SPEC = {
 	"autoSayAllOnResult": "boolean(default=False)",
 	"autoRecognitionEngine": "string(default='off')",
 	"preferScreenshotForWebImages": "boolean(default=False)",
+	"askQuestionBeforeDescribe": "boolean(default=False)",
 	"verboseDebugLogging": "boolean(default=False)",
 	"engineType": 'option("OCR", "ImageDescriber", "Agent", default="OCR")',
 	"sourceType": 'option("navigatorObject", "clipboardImage", "wholeDesktop", "foreGroundWindow", default="navigatorObject")',
@@ -194,6 +196,16 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self._askQuestionFrame: AskQuestionFrame | None = None
 		self._askQuestionHistoryEntry: dict[str, Any] | None = None
 		self._askQuestionContext: ConversationContext | None = None
+		self._askBeforeDescribeDialogActive = False
+		# Pending describe-before-question state: while these are set, the next
+		# recognition result that arrives is treated as the answer to the question
+		# that prompted the describe, and is back-filled into the ask-question frame.
+		self._pendingDescribeContext: ConversationContext | None = None
+		self._pendingDescribeQuestion: str | None = None
+		self._pendingDescribeAwaiting = False
+		# Image captured up front, before the panel opens, so the panel never
+		# appears in the shot. Kept on failure so re-sending targets the same image.
+		self._pendingDescribeImageData: tuple | None = None
 		self.ocrSettingMenuItem: wx.MenuItem | None = None
 		if globalVars.appArgs.secure or getattr(config, "isAppX", False):
 			return
@@ -583,6 +595,169 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 		wx.CallAfter(showDialog)
 
+	def _promptBeforeDescribe(self, currentSource: str, simpleText: bool) -> None:
+		"""Shows the ask-question frame so the user can prompt the upcoming image description.
+
+		The image is captured up front, before the frame becomes visible, so the
+		panel itself never appears in the shot.
+
+		The gesture is idempotent per cycle: pressing it again while the frame is
+		visible just refocuses the frame (the panel is never re-captured into the
+		shot), pressing it while a description is still being generated reports that
+		we are waiting, and after the frame was closed (e.g. with Escape) the next
+		press starts a completely new cycle with a fresh capture.
+		"""
+		frame = self._askQuestionFrame
+		if frame is not None and frame.IsShown():
+			# The panel is currently visible: this belongs to the cycle in progress.
+			if self._pendingDescribeAwaiting or frame.pendingDescribeActive:
+				if self._pendingDescribeAwaiting:
+					# Translators: Reported while a follow-up question is still being answered.
+					ui.message(_("Waiting for answer."))
+				frame.Raise()
+				frame.focusQuestionInput()
+				return
+			# An idle frame left over from a finished cycle (or opened via the
+			# follow-up command): hide it first so it cannot appear in the new
+			# capture, then fall through to start a completely new cycle.
+			frame.Hide()
+			self._askBeforeDescribeDialogActive = False
+		elif self._askBeforeDescribeDialogActive:
+			# The frame is hidden but the flag is still stuck: recover it. While a
+			# description is still being generated its result is back-filled into
+			# the frame when done, so a new cycle must not start yet.
+			if self._pendingDescribeAwaiting:
+				# Translators: Reported while a follow-up question is still being answered.
+				ui.message(_("Waiting for answer."))
+				return
+			self._askBeforeDescribeDialogActive = False
+		engine = self.descHandler.getCurrentEngine() if hasattr(self, "descHandler") else None
+		if not engine or engine.name == "empty":
+			# Translators: A message indicating that no recognition engine is configured.
+			ui.message(_("No recognition engine is configured."))
+			return
+		if currentSource != "clipboardImage" and self._isScreenCurtainRunning() and not isScreenCurtainCaptureSupported():
+			# Translators: A message shown when trying to recognize with screen curtain enabled.
+			ui.message(_("Please disable screen curtain before recognition."))
+			return
+		imageData = self._getImageFromSource(currentSource, engine)
+		if not imageData:
+			# Acquisition helpers have already reported the failure.
+			return
+		pendingContext = ConversationContext(
+			engine=engine,
+			image=None,
+			response={},
+			initialText="",
+			engineName=getattr(engine, "name", ""),
+			engineDescription=getattr(engine, "description", ""),
+		)
+
+		def onSend(question: str) -> None:
+			# One-shot consumption: the recognition triggered below uses this
+			# question as its prompt, then clears it.
+			if hasattr(engine, "_initialPromptForDescribe"):
+				engine._initialPromptForDescribe = question
+			self._pendingDescribeContext = pendingContext
+			self._pendingDescribeQuestion = question
+			self._pendingDescribeAwaiting = True
+			# Reference the up-front capture so recognition uses exactly this frame.
+			self._pendingDescribeImageData = imageData
+			wx.CallLater(
+				250,
+				self.executeRecognition,
+				None,
+				currentSource,
+				"ImageDescriber",
+				simpleText,
+				imageData,
+			)
+
+		self._askBeforeDescribeDialogActive = True
+		self._askQuestionContext = None
+		self._askQuestionHistoryEntry = None
+
+		def showDialog():
+			try:
+				if not self._askQuestionFrame:
+					self._askQuestionFrame = AskQuestionFrame(gui.mainFrame, None, self._taskCues)
+				self._askQuestionFrame.setPendingDescribe(pendingContext, onSend)
+				gui.mainFrame.prePopup()
+				try:
+					self._askQuestionFrame.Show()
+					self._askQuestionFrame.Raise()
+					self._askQuestionFrame.focusQuestionInput()
+				finally:
+					gui.mainFrame.postPopup()
+			except Exception:
+				log.error("Could not open the describe-before-question frame.", exc_info=True)
+				# Translators: Reported when the follow-up question dialog cannot be opened.
+				ui.message(_("Could not open the follow-up question dialog."))
+				self._askBeforeDescribeDialogActive = False
+
+		wx.CallAfter(showDialog)
+
+	def _backfillPendingDescribeResult(self, result: Any) -> None:
+		"""
+		Treats a finished recognition result as the answer to the pending describe-before question.
+
+		While awaiting, the pending context is patched with the recognized image/response so
+		it can support follow-up questions, and the question/answer pair is filled into the
+		ask-question frame as the first exchange.
+
+		:param result: The finished recognition result.
+		"""
+		if not self._pendingDescribeAwaiting or not self._pendingDescribeContext:
+			return
+		frame = self._askQuestionFrame
+		if frame is None:
+			return
+		ctx = self._pendingDescribeContext
+		payload = recogHistory.getAttachedEntry(result)
+		if payload is not None:
+			image = payload.image
+			if hasattr(image, "copy"):
+				image = image.copy()
+			ctx.image = image
+			response = payload.response
+			ctx.response = copy.deepcopy(response) if isinstance(response, dict) else {}
+		else:
+			# No attached payload (should not happen for ImageDescriber) — still back-fill
+			# the text so the answer is not lost.
+			ctx.response = {}
+		try:
+			ctx.engineName = getattr(ctx.engine, "name", "")
+			ctx.engineDescription = getattr(ctx.engine, "description", "")
+			self._askQuestionContext = ctx
+			self._askQuestionHistoryEntry = payload
+			frame.backfillPendingDescribe(self._pendingDescribeQuestion or "", result)
+		except Exception:
+			log.error("Could not back-fill the describe-before result into the frame.", exc_info=True)
+		finally:
+			self._pendingDescribeAwaiting = False
+			self._pendingDescribeQuestion = None
+			self._pendingDescribeContext = None
+			self._pendingDescribeImageData = None
+			self._askBeforeDescribeDialogActive = False
+
+	def _failPendingDescribe(self, message: str) -> None:
+		"""
+		Reports a failed or cancelled describe-before recognition in the ask-question frame.
+
+		:param message: The error message to surface in the frame.
+		"""
+		if not self._pendingDescribeAwaiting:
+			return
+		self._pendingDescribeAwaiting = False
+		self._pendingDescribeQuestion = None
+		self._pendingDescribeContext = None
+		self._pendingDescribeImageData = None
+		self._askBeforeDescribeDialogActive = False
+		frame = self._askQuestionFrame
+		if frame is not None:
+			frame.failPendingDescribe(message, report=False)
+
+
 	def _startAgent(self, goal: str) -> None:
 		if self._agentSession and self._agentSession.isRunning:
 			return
@@ -771,6 +946,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		currentEngineType = getConfigChoiceValue(conf, "engineType", ENGINE_TYPES)
 		if currentEngineType == "Agent":
 			self._promptAndStartAgent()
+			return
+		if currentEngineType == "ImageDescriber" and conf["askQuestionBeforeDescribe"]:
+			self._promptBeforeDescribe(currentSource, simpleText)
 			return
 		self.executeRecognition(
 			gesture=gesture,
@@ -1002,6 +1180,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 					if getattr(result.event, "is_user_initiated", True):
 						# Translators: Reported when a recognition task is cancelled by the user.
 						ui.message(_("Recognition cancelled"))
+					self._failPendingDescribe(_("Recognition cancelled"))
 					return
 				elif isinstance(result, AuthenticationError):
 					# Translators: An error message for authentication failures. The placeholder is the specific error.
@@ -1017,21 +1196,32 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 					# Translators: A message for an unexpected error during recognition.
 					message = _("Recognition failed with an unexpected error.")
 				ui.message(message)
+				self._failPendingDescribe(message)
 				return
 			if not isinstance(result, RecognitionResult):
 				log.error(f"Received an unknown result type from recognition: {type(result)}")
 				# Translators: An error message for an unknown result type.
 				ui.message(_("Recognition returned an unknown result type."))
+				self._failPendingDescribe(_("Recognition returned an unknown result type."))
 				return
 			historyEntry = recogHistory.getAttachedEntry(result)
 			if historyEntry:
 				recogHistory.addEntry(historyEntry, result=result)
+			# When a describe-before recognition is back-filled into the ask panel,
+			# the answer already lives in the conversation history: skip the popup
+			# UI below (browseable message / result document), which steals focus.
+			wasPendingDescribe = self._pendingDescribeAwaiting and bool(self._pendingDescribeContext)
+			self._backfillPendingDescribeResult(result)
 			conf = config.conf["visAwareGeneral"]
 			if conf["copyToClipboard"]:
 				api.copyToClip(result.text, notify=True)
 			if isinstance(result, SimpleTextResult):
 				forceVirtualDocument = getattr(result, "forceVirtualDocument", False)
-				if getattr(result, "forceBrowseableMessage", False) or (
+				if wasPendingDescribe:
+					# The back-filled panel history is the display surface for
+					# this answer; popups would steal focus from the panel.
+					pass
+				elif getattr(result, "forceBrowseableMessage", False) or (
 					conf["useBrowseableMessage"] and not forceVirtualDocument
 				):
 					# Translators: The title for the browsable message showing the recognition result.
@@ -1043,7 +1233,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 					)
 				else:
 					ui.message(result.text)
-			else:
+			elif not wasPendingDescribe:
 				# Use the standard NVDA UI for displaying navigable results.
 				self._showRecognitionResultDocument(
 					result,
@@ -1069,6 +1259,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			try:
 				if result.historyEntry:
 					recogHistory.addEntry(result.historyEntry, text=result.text)
+				self._backfillPendingDescribeResult(result)
 				finalMessage = None
 				if result.incompleteReason:
 					# Translators: Reported after partial streaming output when the service stopped before completing.
@@ -1128,6 +1319,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		currentSource: str,
 		currentEngineType: str,
 		simpleText: bool,
+		imageData: tuple | None = None,
 	) -> None:
 		"""
 		Orchestrates the recognition process from initiation to result handling.
@@ -1136,6 +1328,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		:param currentSource: The configured source of the image.
 		:param currentEngineType: The configured type of engine to use.
 		:param simpleText: Whether to request a simple text result.
+		:param imageData: Optional pre-captured (RecogImageInfo, Image) tuple. When given,
+			it is used as-is instead of capturing from the source, so the image is
+			whatever was on screen before a panel was shown.
 		"""
 		try:
 			self._cancelCurrentRecognition(isUserInitiated=False)
@@ -1168,13 +1363,17 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			)
 			engine.textResult = simpleText
 			engine.streamResult = shouldStream
-			# The unified image acquisition process
-			imageData = self._getImageFromSource(currentSource, engine)
-			if not imageData:
+			# The unified image acquisition process. A pre-captured frame (e.g. from the
+			# describe-before-question flow) is used verbatim when provided.
+			if imageData is not None:
+				acquiredImage = imageData
+			else:
+				acquiredImage = self._getImageFromSource(currentSource, engine)
+			if not acquiredImage:
 				engine.streamResult = False
 				self._activeEngine = None
 				return
-			imageInfo, recognizeImage = imageData
+			imageInfo, recognizeImage = acquiredImage
 			pixels = recognizeImage.tobytes("raw", "BGRX")
 			# Translators: Reporting when content recognition (e.g. OCR) begins.
 			ui.message(_("Recognizing"))

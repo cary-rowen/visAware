@@ -408,21 +408,30 @@ class BaseRecognizer(ContentRecognizer, AbstractEngine, ABC):
 	def _buildRecognitionRequest(self, isAutomaticRecognition: bool = False) -> RecognitionRequest:
 		"""Captures request options, including the effective image-description prompt."""
 		prompt = getattr(self, "prompt", None)
+		# A question captured before recognition (if any) overrides the configured prompt
+		# for this single request only.
+		effectivePrompt = getattr(self, "_initialPromptForDescribe", None)
+		if effectivePrompt:
+			self._initialPromptForDescribe = None
+		elif isinstance(prompt, str) and prompt.strip():
+			effectivePrompt = prompt
+		else:
+			effectivePrompt = None
 		if (
 			self.configSectionName == "ImageDescriber"
 			and self.textResult
-			and isinstance(prompt, str)
-			and prompt.strip()
+			and isinstance(effectivePrompt, str)
+			and effectivePrompt.strip()
 			and not isAutomaticRecognition
 		):
-			prompt = buildImageDescriptionPrompt(
-				prompt,
+			effectivePrompt = buildImageDescriptionPrompt(
+				effectivePrompt,
 				useMarkdown=bool(config.conf["visAwareGeneral"]["useBrowseableMessage"]),
 			)
 		return RecognitionRequest(
 			textResult=self.textResult,
 			streamResult=self.streamResult,
-			prompt=prompt if isinstance(prompt, str) and prompt.strip() else None,
+			prompt=effectivePrompt if isinstance(effectivePrompt, str) and effectivePrompt.strip() else None,
 			isAutomaticRecognition=isAutomaticRecognition,
 		)
 
@@ -916,6 +925,8 @@ class BaseDescriber(BaseRecognizer):
 	supportsQuestions: bool = False
 	supportsQuestionStreaming: bool = False
 	_autoRecognitionPrompt: str = DEFAULT_AUTO_RECOGNITION_PROMPT
+	#: A question captured before recognition, consumed once by the next request.
+	_initialPromptForDescribe: str | None = None
 
 	def applyAutoRecognitionOverrides(self) -> None:
 		"""Applies automatic settings and the concise default image prompt."""
@@ -1099,6 +1110,38 @@ class ImageDescriberPanel(AbstractEngineSettingsPanel):
 	# Translators: The title of the Image Describer engine settings panel.
 	title = _("Image description")
 	handler = ImageDescriberHandler
+
+	def makeGeneralSettings(self, settingsSizerHelper: BoxSizerHelper) -> None:
+		conf = config.conf["visAwareGeneral"]
+		# Translators: The label for a checkbox that asks a question before recognition starts.
+		self.askQuestionBeforeDescribeCheckBox = settingsSizerHelper.addItem(
+			wx.CheckBox(self, label=_("&Ask a question before recognition")),
+		)
+		self.askQuestionBeforeDescribeCheckBox.SetValue(conf["askQuestionBeforeDescribe"])
+		self.askQuestionBeforeDescribeCheckBox.Bind(
+			wx.EVT_CHECKBOX,
+			self._onAskQuestionBeforeDescribeToggled,
+		)
+		super().makeGeneralSettings(settingsSizerHelper)
+
+	def _onAskQuestionBeforeDescribeToggled(self, _evt: wx.Event) -> None:
+		"""Hides or shows the custom prompt control when the checkbox is toggled."""
+		self._engineSettingPanel.updateDriverSettings()
+
+	def shouldSuppressPromptSetting(self) -> bool:
+		checkBox = getattr(self, "askQuestionBeforeDescribeCheckBox", None)
+		return bool(checkBox and checkBox.GetValue())
+
+	def onSave(self) -> None:
+		conf = config.conf["visAwareGeneral"]
+		conf["askQuestionBeforeDescribe"] = self.askQuestionBeforeDescribeCheckBox.GetValue()
+		super().onSave()
+
+	def onDiscard(self) -> None:
+		self.askQuestionBeforeDescribeCheckBox.SetValue(
+			config.conf["visAwareGeneral"]["askQuestionBeforeDescribe"],
+		)
+		super().onDiscard()
 
 
 def getEffectiveAutoRecognitionEngine() -> str:

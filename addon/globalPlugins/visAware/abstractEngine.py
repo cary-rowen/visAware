@@ -613,6 +613,11 @@ class SpecificEnginePanel(SettingsPanel):
 		for setting in engine.supportedSettings:
 			if setting.name.startswith("autoRecognition") or not engine.isSupported(setting.name):
 				continue
+			if setting.name == "prompt" and self.shouldSuppressPromptSetting():
+				# The panel hides the custom prompt when a question is asked before recognition.
+				if setting.name in self._sizerDict:
+					self.settingsSizer.Hide(self._sizerDict[setting.name])
+				continue
 			if setting.name == changedSetting:
 				continue
 			if setting.name in self._sizerDict:
@@ -621,6 +626,16 @@ class SpecificEnginePanel(SettingsPanel):
 				self._createControl(setting, engine)
 
 		self.settingsSizer.Layout()
+
+	def shouldSuppressPromptSetting(self) -> bool:
+		"""
+		Returns True when the engine-specific "prompt" setting should be hidden.
+
+		The policy is decided by the parent panel, which may override this method;
+		panel hierarchies that do not override it keep the prompt visible.
+		"""
+		checker = getattr(self.Parent, "shouldSuppressPromptSetting", None)
+		return bool(checker()) if callable(checker) else False
 
 	def _createControl(self, setting: EngineSetting, engine: AbstractEngine) -> None:
 		"""
