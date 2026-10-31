@@ -4,6 +4,7 @@
 
 import addonHandler
 import api
+import copy
 import core
 import NVDAObjects
 import config
@@ -29,6 +30,7 @@ import ui
 import vision
 
 from ._autoRecognition import AutoRecognitionController, getNextAutoRecognitionSetting
+from ._screenCapture import isScreenCurtainCaptureSupported
 from ._taskCues import TaskCueManager
 from .askDialog import AskQuestionFrame
 from .agent.engine import AgentHandler
@@ -167,6 +169,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self._askQuestionFrame: AskQuestionFrame | None = None
 		self._askQuestionHistoryEntry: dict[str, Any] | None = None
 		self._askQuestionContext: ConversationContext | None = None
+		self._askBeforeDescribeDialogActive = False
+		self._pendingDescribeContext: ConversationContext | None = None
+		self._pendingDescribeQuestion: str | None = None
+		self._pendingDescribeAwaiting = False
+		self._pendingDescribeImageData: tuple | None = None
 		self.ocrSettingMenuItem: wx.MenuItem | None = None
 		self._recognitionRuntime = RecognitionRuntime(
 			self._taskCues,
@@ -175,6 +182,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			None,
 			self._cancelRecognitionOutsideRuntime,
 		)
+		self._recognitionRuntime.resultHook = self._handleRecognitionResultHook
 		if globalVars.appArgs.secure or getattr(config, "isAppX", False):
 			return
 		config.conf.spec["visAwareGeneral"] = GENERAL_CONFIG_SPEC
@@ -535,6 +543,189 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		finally:
 			gui.mainFrame.postPopup()
 
+	@script(
+		# Translators: Describes the command to ask a question before image description.
+		description=_("Asks a question before image description"),
+		category=CATEGORY_NAME,
+		gestures=["kb:NVDA+shift+alt+space"],
+	)
+	def script_askQuestionBeforeDescribe(self, gesture: "inputCore.InputGesture") -> None:
+		conf = config.conf["visAwareGeneral"]
+		currentEngineType = getConfigChoiceValue(conf, "engineType", ENGINE_TYPES)
+		if currentEngineType != "ImageDescriber":
+			# Translators: Reported when asking a question before recognition is invoked outside of image description mode.
+			ui.message(_("This operation is only supported in image description mode."))
+			return
+		engine = self.descHandler.getCurrentEngine() if hasattr(self, "descHandler") else None
+		if not engine or not engine.isSupported("prompt"):
+			# Translators: Reported when the active model does not support initial custom prompts.
+			ui.message(_("This model doesn't support the operation."))
+			return
+		currentSource = getValidSourceType(conf)
+		self._promptBeforeDescribe(currentSource, simpleText=False)
+
+	def _promptBeforeDescribe(self, currentSource: str, simpleText: bool) -> None:
+		"""Shows the ask-question frame so the user can prompt the upcoming image description.
+
+		The image is captured up front, before the frame becomes visible, so the
+		panel itself never appears in the shot.
+		"""
+		frame = self._askQuestionFrame
+		if frame is not None and frame.IsShown():
+			if self._pendingDescribeAwaiting or frame.pendingDescribeActive:
+				if self._pendingDescribeAwaiting:
+					# Translators: Reported while a follow-up question is still being answered.
+					ui.message(_("Waiting for answer."))
+				frame.Raise()
+				frame.focusQuestionInput()
+				return
+			frame.Hide()
+			self._askBeforeDescribeDialogActive = False
+		elif self._askBeforeDescribeDialogActive:
+			if self._pendingDescribeAwaiting:
+				# Translators: Reported while a follow-up question is still being answered.
+				ui.message(_("Waiting for answer."))
+				return
+			self._askBeforeDescribeDialogActive = False
+		engine = self.descHandler.getCurrentEngine() if hasattr(self, "descHandler") else None
+		if not engine or engine.name == "empty":
+			# Translators: A message indicating that no recognition engine is configured.
+			ui.message(_("No recognition engine is configured."))
+			return
+		if currentSource != "clipboardImage" and self._isScreenCurtainRunning() and not isScreenCurtainCaptureSupported():
+			# Translators: A message shown when trying to recognize with screen curtain enabled.
+			ui.message(_("Please disable screen curtain before recognition."))
+			return
+		imageData = self._recognitionRuntime.getImageFromSource(currentSource, engine)
+		if not imageData:
+			return
+		pendingContext = ConversationContext(
+			engine=engine,
+			image=None,
+			response={},
+			initialText="",
+			engineName=getattr(engine, "name", ""),
+			engineDescription=getattr(engine, "description", ""),
+		)
+
+		def onSend(question: str) -> None:
+			if hasattr(engine, "_initialPromptForDescribe"):
+				engine._initialPromptForDescribe = question
+			self._pendingDescribeContext = pendingContext
+			self._pendingDescribeQuestion = question
+			self._pendingDescribeAwaiting = True
+			self._pendingDescribeImageData = imageData
+			wx.CallLater(
+				250,
+				self.executeRecognition,
+				None,
+				currentSource,
+				"ImageDescriber",
+				simpleText,
+				imageData,
+			)
+
+		self._askBeforeDescribeDialogActive = True
+		self._askQuestionContext = None
+		self._askQuestionHistoryEntry = None
+
+		def showDialog():
+			if not self._askBeforeDescribeDialogActive:
+				return
+			if not self._askQuestionFrame:
+				self._askQuestionFrame = AskQuestionFrame(gui.mainFrame, None, self._taskCues)
+			self._askQuestionFrame.setPendingDescribe(pendingContext, onSend)
+			gui.mainFrame.prePopup()
+			try:
+				self._askQuestionFrame.Show()
+				self._askQuestionFrame.Raise()
+				self._askQuestionFrame.focusQuestionInput()
+			except Exception:
+				log.error("Could not show describe-before ask question frame.", exc_info=True)
+				# Translators: Reported when the follow-up question dialog cannot be opened.
+				ui.message(_("Could not open the follow-up question dialog."))
+				self._askBeforeDescribeDialogActive = False
+			finally:
+				gui.mainFrame.postPopup()
+
+		wx.CallAfter(showDialog)
+
+	def _handleRecognitionResultHook(self, result: Any) -> bool:
+		"""Intercepts recognition results when awaiting a describe-before question."""
+		if not self._pendingDescribeAwaiting or not self._pendingDescribeContext:
+			return False
+		if isinstance(result, Exception):
+			from .exceptions import AuthenticationError, NetworkError, CancellationError
+			if isinstance(result, CancellationError):
+				message = _("Recognition cancelled")
+			elif isinstance(result, AuthenticationError):
+				message = _("Authentication failed: {}").format(result)
+			elif isinstance(result, NetworkError):
+				message = _("Network error: {}").format(result)
+			elif isinstance(result, ApiError):
+				message = _("Recognition failed: {}").format(result)
+			else:
+				message = _("Recognition failed with an unexpected error.")
+			self._failPendingDescribe(message)
+			return False
+		if not isinstance(result, RecognitionResult):
+			self._failPendingDescribe(_("Recognition returned an unknown result type."))
+			return False
+		historyEntry = recogHistory.getAttachedEntry(result)
+		if historyEntry:
+			recogHistory.addEntry(historyEntry, result=result)
+		conf = config.conf["visAwareGeneral"]
+		if conf["copyToClipboard"]:
+			api.copyToClip(result.text, notify=True)
+		self._backfillPendingDescribeResult(result)
+		return True
+
+	def _backfillPendingDescribeResult(self, result: Any) -> None:
+		"""Back-fills the recognition result into the ask-question frame."""
+		if not self._pendingDescribeAwaiting or not self._pendingDescribeContext:
+			return
+		frame = self._askQuestionFrame
+		if frame is None:
+			return
+		ctx = self._pendingDescribeContext
+		payload = recogHistory.getAttachedEntry(result)
+		if payload is not None:
+			image = payload.image
+			if hasattr(image, "copy"):
+				image = image.copy()
+			ctx.image = image
+			response = payload.response
+			ctx.response = copy.deepcopy(response) if isinstance(response, dict) else {}
+		else:
+			ctx.response = {}
+		try:
+			ctx.engineName = getattr(ctx.engine, "name", "")
+			ctx.engineDescription = getattr(ctx.engine, "description", "")
+			self._askQuestionContext = ctx
+			self._askQuestionHistoryEntry = payload
+			frame.backfillPendingDescribe(self._pendingDescribeQuestion or "", result)
+		except Exception:
+			log.error("Could not back-fill the describe-before result into the frame.", exc_info=True)
+		finally:
+			self._pendingDescribeAwaiting = False
+			self._pendingDescribeQuestion = None
+			self._pendingDescribeContext = None
+			self._pendingDescribeImageData = None
+			self._askBeforeDescribeDialogActive = False
+
+	def _failPendingDescribe(self, message: str) -> None:
+		"""Reports a failed describe-before recognition in the frame."""
+		if not self._pendingDescribeAwaiting:
+			return
+		self._pendingDescribeAwaiting = False
+		self._pendingDescribeQuestion = None
+		self._pendingDescribeContext = None
+		self._pendingDescribeImageData = None
+		self._askBeforeDescribeDialogActive = False
+		frame = self._askQuestionFrame
+		if frame is not None:
+			frame.failPendingDescribe(message, report=False)
+
 	def _promptAndStartAgent(self) -> None:
 		self._agentController.promptAndStart()
 
@@ -582,12 +773,19 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def executeRecognition(
 		self,
-		gesture: "inputCore.InputGesture",
+		gesture: "inputCore.InputGesture | None",
 		currentSource: str,
 		currentEngineType: str,
 		simpleText: bool,
+		imageData: tuple | None = None,
 	) -> None:
-		self._recognitionRuntime.execute(gesture, currentSource, currentEngineType, simpleText)
+		self._recognitionRuntime.execute(
+			gesture,
+			currentSource,
+			currentEngineType,
+			simpleText,
+			imageData=imageData,
+		)
 
 	@script(
 		# Translators: Describes the command to cancel an ongoing recognition task.

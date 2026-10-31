@@ -6,6 +6,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from threading import Event, Thread
 from typing import Any, TYPE_CHECKING
 
@@ -38,10 +39,13 @@ class AskQuestionFrame(DpiScalingHelperMixinWithoutInit, wx.Frame):
 	MESSAGE_MIN_SIZE = (620, 360)
 	QUESTION_MIN_SIZE = (460, 80)
 
+	_pendingDescribe: ConversationContext | None = None
+	_onPendingDescribeSend: Callable[[str], None] | None = None
+
 	def __init__(
 		self,
 		parent: wx.Window | None,
-		context: ConversationContext,
+		context: ConversationContext | None,
 		taskCues: TaskCueManager,
 	) -> None:
 		# Translators: The title of the follow-up question dialog.
@@ -58,6 +62,8 @@ class AskQuestionFrame(DpiScalingHelperMixinWithoutInit, wx.Frame):
 		self._streamingAnswerTextStartPosition: int | None = None
 		self._streamingAnswerText = ""
 		self._formattedContent = ""
+		self._pendingDescribe: ConversationContext | None = None
+		self._onPendingDescribeSend: Callable[[str], None] | None = None
 		self._makeControls()
 		self.setContext(context)
 		self.SetMinSize(self.scaleSize(self.MIN_FRAME_SIZE))
@@ -123,31 +129,93 @@ class AskQuestionFrame(DpiScalingHelperMixinWithoutInit, wx.Frame):
 		self.SetSizer(frameSizer)
 		self.Bind(wx.EVT_CHAR_HOOK, self._onCharHook)
 
-	def setContext(self, context: ConversationContext) -> None:
+	def setContext(self, context: ConversationContext | None) -> None:
 		"""
 		Loads a new conversation context into the frame.
 
-		:param context: The context to display and use for future questions.
+		:param context: The context to display and use for future questions, or None for empty.
 		"""
 		self._cancelWorker()
 		self._context = context
+		self._pendingDescribe = None
+		self._onPendingDescribeSend = None
 		self._messagesText.SetValue("")
-		self._formattedContent = context.initialText
-		# Translators: The sender label for the original image description in the follow-up dialog.
-		self._appendMessage(_("Image description"), context.initialText, report=False)
-		for turn in context.turns:
-			if turn.role == "user":
-				# Translators: The sender label for the user in the follow-up dialog.
-				sender = _("You")
-			else:
-				sender = ANSWER_SENDER
-				if turn.role == ROLE_ASSISTANT:
-					self._formattedContent = turn.text
-			self._appendMessage(sender, turn.text, report=False)
-		self._restoreHistoryCaret(self._messagesText.GetLastPosition())
+		self._formattedContent = context.initialText if context else ""
+		if context:
+			# Translators: The sender label for the original image description in the follow-up dialog.
+			self._appendMessage(_("Image description"), context.initialText, report=False)
+			for turn in context.turns:
+				if turn.role == "user":
+					# Translators: The sender label for the user in the follow-up dialog.
+					sender = _("You")
+				else:
+					sender = ANSWER_SENDER
+					if turn.role == ROLE_ASSISTANT:
+						self._formattedContent = turn.text
+				self._appendMessage(sender, turn.text, report=False)
+			self._restoreHistoryCaret(self._messagesText.GetLastPosition())
 		self._questionText.SetValue("")
 		self._setSendButtonEnabled(True)
 		self.Layout()
+
+	@property
+	def pendingDescribeActive(self) -> bool:
+		"""Whether the frame is waiting for a describe-before question to be sent."""
+		return self._pendingDescribe is not None
+
+	def setPendingDescribe(
+		self,
+		context: ConversationContext,
+		onSend: Callable[[str], None],
+	) -> None:
+		"""
+		Puts the frame into pending mode for a describe-before question.
+
+		:param context: The placeholder context for future follow-ups.
+		:param onSend: Callback invoked with the question text when user sends.
+		"""
+		self.setContext(None)
+		self._pendingDescribe = context
+		self._onPendingDescribeSend = onSend
+
+	def backfillPendingDescribe(self, question: str, result: Any) -> None:
+		"""
+		Back-fills the result of a pending describe-before question into the frame.
+
+		:param question: The question that was sent while pending.
+		:param result: The recognition result whose text is used as the answer.
+		"""
+		pendingContext = self._pendingDescribe
+		if pendingContext is None:
+			return
+		answer = getattr(result, "text", None) or ""
+		if not isinstance(answer, str) or not answer.strip():
+			self._activeRequestSequence = None
+			self._cancellationEvent = None
+			self._setSendButtonEnabled(True)
+			return
+		self._pendingDescribe = None
+		self._onPendingDescribeSend = None
+		if not self._context:
+			self._context = pendingContext
+		if self._context is pendingContext:
+			pendingContext.initialText = pendingContext.initialText or answer
+			pendingContext.addExchange(question, answer)
+			self._formattedContent = answer
+		self._appendMessage(ANSWER_SENDER, answer, report=False)
+		self._activeRequestSequence = None
+		self._cancellationEvent = None
+		self._setSendButtonEnabled(True)
+
+	def failPendingDescribe(self, message: str, report: bool = True) -> None:
+		"""Reports a failed or cancelled describe-before recognition in the frame."""
+		if self._pendingDescribe is None:
+			return
+		self._activeRequestSequence = None
+		self._cancellationEvent = None
+		if message:
+			self._appendMessage(_("Error"), message, report=report)
+		self._setSendButtonEnabled(True)
 
 	def focusQuestionInput(self) -> None:
 		"""Moves focus to the question edit field."""
@@ -195,6 +263,28 @@ class AskQuestionFrame(DpiScalingHelperMixinWithoutInit, wx.Frame):
 			ui.message(_("Waiting for answer."))
 			return
 		self._cancelStreamingAnswer()
+		if getattr(self, "_pendingDescribe", None) is not None:
+			callback = getattr(self, "_onPendingDescribeSend", None)
+			if callback is None:
+				# Translators: Reported while a follow-up question is still being answered.
+				ui.message(_("Waiting for answer."))
+				return
+			question = self._questionText.GetValue().strip()
+			if not question:
+				# Translators: Reported when the user tries to send an empty follow-up question.
+				ui.message(_("Enter a question."))
+				self._questionText.SetFocus()
+				return
+			self._questionText.SetValue("")
+			# Translators: The sender label for the user in the follow-up dialog.
+			self._appendMessage(_("You"), question, report=False)
+			self._activeRequestSequence = self._requestSequence + 1
+			self._requestSequence = self._activeRequestSequence
+			self._setSendButtonEnabled(False)
+			# Translators: Reported while a follow-up question is being answered.
+			ui.message(_("Waiting for answer."))
+			callback(question)
+			return
 		question = self._questionText.GetValue().strip()
 		if not question:
 			# Translators: Reported when the user tries to send an empty follow-up question.

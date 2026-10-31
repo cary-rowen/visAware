@@ -320,7 +320,12 @@ class BaseRecognizer(ContentRecognizer, AbstractEngine, ABC):
 		cancellationChecker: Callable[[], None] | None = None,
 	) -> RecognitionRequest:
 		"""Captures request options, including the effective image-description prompt."""
-		prompt = getattr(self, "prompt", None)
+		initialPrompt = getattr(self, "_initialPromptForDescribe", None)
+		if initialPrompt:
+			self._initialPromptForDescribe = None
+			prompt = initialPrompt
+		else:
+			prompt = getattr(self, "prompt", None)
 		if (
 			self.configSectionName == "ImageDescriber"
 			and self.textResult
@@ -832,6 +837,7 @@ class BaseDescriber(BaseRecognizer):
 	supportsQuestions: bool = False
 	supportsQuestionStreaming: bool = False
 	_autoRecognitionPrompt: str = DEFAULT_AUTO_RECOGNITION_PROMPT
+	_initialPromptForDescribe: str | None = None
 
 	def applyAutoRecognitionOverrides(self) -> None:
 		"""Applies automatic settings and the concise default image prompt."""
