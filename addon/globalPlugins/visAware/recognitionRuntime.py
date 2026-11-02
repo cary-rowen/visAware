@@ -71,6 +71,7 @@ class RecognitionRuntime:
 		self._activeRecognitionSequence = 0
 		self._recognitionCue: Any | None = None
 		self._terminated = False
+		self.resultHook: Callable[[Any], bool] | None = None
 
 	def setHandlers(self, ocrHandler: Any, descHandler: Any) -> None:
 		self._ocrHandler = ocrHandler
@@ -237,6 +238,12 @@ class RecognitionRuntime:
 
 	def _onRecognitionResult(self, result: Any) -> None:
 		try:
+			if self.resultHook is not None:
+				try:
+					if self.resultHook(result):
+						return
+				except Exception:
+					log.error("Error in recognition result hook.", exc_info=True)
 			if isinstance(result, Exception):
 				if isinstance(result, CancellationError):
 					if getattr(result.event, "is_user_initiated", True):
@@ -338,6 +345,7 @@ class RecognitionRuntime:
 		currentSource: str,
 		currentEngineType: str,
 		simpleText: bool,
+		imageData: tuple | None = None,
 	) -> None:
 		if getattr(self, "_terminated", False):
 			return
@@ -371,9 +379,12 @@ class RecognitionRuntime:
 			)
 			engine.textResult = simpleText
 			engine.streamResult = shouldStream
-			imageData = self.getImageFromSource(currentSource, engine)
+			if imageData is None:
+				imageData = self.getImageFromSource(currentSource, engine)
 			if not imageData:
 				engine.streamResult = False
+				if hasattr(engine, "_initialPromptForDescribe"):
+					engine._initialPromptForDescribe = None
 				self._activeEngine = None
 				return
 			imageInfo, recognizeImage = imageData
@@ -391,6 +402,8 @@ class RecognitionRuntime:
 				self._streamingSpeechPresenter.cancel()
 			if "engine" in locals() and engine:
 				engine.streamResult = False
+				if hasattr(engine, "_initialPromptForDescribe"):
+					engine._initialPromptForDescribe = None
 			ui.message(
 				_("An error occurred before starting recognition. Please check your settings and try again."),
 			)
