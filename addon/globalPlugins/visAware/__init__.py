@@ -29,6 +29,7 @@ import ui
 import vision
 
 from ._autoRecognition import AutoRecognitionController, getNextAutoRecognitionSetting
+from ._screenCapture import isScreenCurtainCaptureSupported
 from ._taskCues import TaskCueManager
 from .askDialog import AskQuestionFrame
 from .agent.engine import AgentHandler
@@ -524,14 +525,102 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		context = self._askQuestionContext
 		if not self._askQuestionFrame:
 			self._askQuestionFrame = AskQuestionFrame(gui.mainFrame, context, self._taskCues)
-			contextChanged = False
-		elif contextChanged:
+		else:
 			self._askQuestionFrame.setContext(context)
 		gui.mainFrame.prePopup()
 		try:
 			self._askQuestionFrame.Show()
 			self._askQuestionFrame.Raise()
 			self._askQuestionFrame.focusQuestionInput()
+		finally:
+			gui.mainFrame.postPopup()
+
+	@script(
+		# Translators: Describes the command to ask a question before image description.
+		description=_("Asks a question before image description"),
+		category=CATEGORY_NAME,
+		gestures=[],
+	)
+	def script_askQuestionBeforeDescribe(self, gesture: "inputCore.InputGesture") -> None:
+		conf = config.conf["visAwareGeneral"]
+		currentEngineType = getConfigChoiceValue(conf, "engineType", ENGINE_TYPES)
+		if currentEngineType != "ImageDescriber":
+			# Translators: Reported when asking a question before recognition is invoked outside of image description mode.
+			ui.message(_("This operation is only supported in image description mode."))
+			return
+		engine = self.descHandler.getCurrentEngine() if hasattr(self, "descHandler") else None
+		if not engine or not engine.isSupported("prompt"):
+			# Translators: Reported when the active model does not support initial custom prompts.
+			ui.message(_("This model doesn't support the operation."))
+			return
+		currentSource = getValidSourceType(conf)
+		self._promptBeforeDescribe(currentSource)
+
+	def _promptBeforeDescribe(self, currentSource: str) -> None:
+		frame = self._askQuestionFrame
+		if frame is not None and frame.IsShown():
+			frame.Raise()
+			frame.focusQuestionInput()
+			return
+		engine = self.descHandler.getCurrentEngine()
+		if (
+			currentSource != "clipboardImage"
+			and self._isScreenCurtainRunning()
+			and not isScreenCurtainCaptureSupported()
+		):
+			ui.message(_("Please disable screen curtain before recognition."))
+			return
+		imageData = self._recognitionRuntime.getImageFromSource(currentSource, engine)
+		if not imageData:
+			return
+		if frame is None:
+			frame = self._askQuestionFrame = AskQuestionFrame(gui.mainFrame, None, self._taskCues)
+
+		def onSend(question: str) -> Callable[[], None] | None:
+			if self.descHandler.getCurrentEngine() is not engine:
+				# Translators: The engine changed while the initial question window was open.
+				ui.message(_("The recognition engine has changed. Close this window and try again."))
+				frame.finishPendingDescribe(None)
+				return None
+
+			def onFinished(result: RecognitionResult | None) -> None:
+				context = None
+				try:
+					if (
+						result is not None
+						and recogHistory.getAttachedEntry(result) is not None
+						and getattr(engine, "supportsQuestions", False)
+					):
+						entry = recogHistory.getPreviousResult()
+						entry["initialPrompt"] = question
+						context = makeConversationContext(entry)
+						self._askQuestionHistoryEntry = entry
+						self._askQuestionContext = context
+				except Exception:
+					log.error("Could not create follow-up question context.", exc_info=True)
+					ui.message(_("Could not open the follow-up question dialog."))
+				finally:
+					frame.finishPendingDescribe(result, context)
+
+			sequence = self._recognitionRuntime.execute(
+				None,
+				currentSource,
+				"ImageDescriber",
+				False,
+				imageData=imageData,
+				prompt=question,
+				onFinished=onFinished,
+			)
+			if sequence is None:
+				return None
+			return lambda: self._recognitionRuntime.cancel(False, recognitionSequence=sequence)
+
+		frame.setPendingDescribe(onSend)
+		gui.mainFrame.prePopup()
+		try:
+			frame.Show()
+			frame.Raise()
+			frame.focusQuestionInput()
 		finally:
 			gui.mainFrame.postPopup()
 

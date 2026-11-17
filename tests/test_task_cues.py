@@ -50,7 +50,11 @@ def loadMethods(fileName, className, methodNames, namespace):
 	tree = ast.parse((PLUGIN_DIR / fileName).read_text(encoding="utf-8"))
 	cls = next(node for node in tree.body if isinstance(node, ast.ClassDef) and node.name == className)
 	cls.bases = []
-	cls.body = [node for node in cls.body if isinstance(node, ast.FunctionDef) and node.name in methodNames]
+	cls.body = [
+		node
+		for node in cls.body
+		if isinstance(node, ast.FunctionDef) and (methodNames is None or node.name in methodNames)
+	]
 	for method in cls.body:
 		method.decorator_list = []
 	tree = ast.Module(
@@ -268,7 +272,7 @@ class TaskCuesTestCase(unittest.TestCase):
 		runtimeCls = loadMethods(
 			"recognitionRuntime.py",
 			"RecognitionRuntime",
-			{"makeRecognitionCallback", "execute", "cancel", "terminate"},
+			{"makeRecognitionCallback", "execute", "cancel", "terminate", "_finishRecognition"},
 			{
 				"StreamText": streamText,
 				"log": self.log,
@@ -285,6 +289,7 @@ class TaskCuesTestCase(unittest.TestCase):
 		runtime._activeRecognitionSequence = 1
 		runtime._activeEngine = None
 		runtime._terminated = False
+		runtime._onFinished = None
 		runtime._cancelOtherTasks = lambda _isUserInitiated: False
 		plugin._recognitionRuntime = runtime
 		plugin._cancelRecognitionOutsideRuntime = lambda _isUserInitiated: False
@@ -391,6 +396,8 @@ class TaskCuesTestCase(unittest.TestCase):
 			},
 		)
 		frame = cls()
+		frame._onPendingDescribeSend = None
+		frame._cancelPendingDescribe = None
 		frame._taskCues = self.cues
 		frame._cueHandle = None
 		frame._activeRequestSequence = None

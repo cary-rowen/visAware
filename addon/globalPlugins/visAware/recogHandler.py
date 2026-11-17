@@ -318,9 +318,11 @@ class BaseRecognizer(ContentRecognizer, AbstractEngine, ABC):
 		self,
 		isAutomaticRecognition: bool = False,
 		cancellationChecker: Callable[[], None] | None = None,
+		prompt: str | None = None,
 	) -> RecognitionRequest:
 		"""Captures request options, including the effective image-description prompt."""
-		prompt = getattr(self, "prompt", None)
+		if prompt is None:
+			prompt = getattr(self, "prompt", None)
 		if (
 			self.configSectionName == "ImageDescriber"
 			and self.textResult
@@ -346,6 +348,7 @@ class BaseRecognizer(ContentRecognizer, AbstractEngine, ABC):
 		imageInfo: RecogImageInfo,
 		onResult: Callable,
 		*,
+		prompt: str | None = None,
 		isAutomaticRecognition: bool = False,
 		runInBackground: bool = True,
 		cancellationEvent: Event | None = None,
@@ -364,6 +367,7 @@ class BaseRecognizer(ContentRecognizer, AbstractEngine, ABC):
 		request = self._buildRecognitionRequest(
 			isAutomaticRecognition,
 			lambda: self._checkCancelled(cancellationEvent),
+			prompt=prompt,
 		)
 		self._cancellationEvent = cancellationEvent
 		if not runInBackground:
