@@ -31,17 +31,15 @@ addon_info = AddonInfo(
 		"""NVDA add-on for OCR, AI-powered image description, automatic recognition, and AI-assisted computer control.""",
 	),
 	# version
-	addon_version="1.0.0",
+	addon_version="1.1.0",
 	# Brief changelog for this version
 	# Translators: what's new content for the add-on version to be shown in the add-on store
 	addon_changelog=_(
-		"""### 1.0.0
+		"""### 1.1.0
 
-* Added fully offline text and table recognition with RapidOCR.
-* Added Be My AI image descriptions and follow-up questions.
-* Added OpenAI-compatible OCR, image description, and AI Agent engines.
-* Added model fetching for Gemini and Gemma, and improved Kimi endpoint and model detection.
-* Simplified engine names and settings.""",
+* Added a command to ask a question before image description, for engines that support custom prompts. Assign a shortcut in NVDA's Input Gestures dialog.
+* Fixed the conversation history caret jumping to the end when new replies arrive, so you can keep your reading position.
+* Automatic recognition now remembers your engine choice for OCR and image description when switching modes or turning automatic recognition off and on.""",
 	),
 	# Author(s)
 	addon_author="cary-rowen <cary-rowen@outlook.com>",
