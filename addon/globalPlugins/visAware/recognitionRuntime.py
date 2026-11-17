@@ -71,7 +71,7 @@ class RecognitionRuntime:
 		self._activeRecognitionSequence = 0
 		self._recognitionCue: Any | None = None
 		self._terminated = False
-		self.resultHook: Callable[[Any], bool] | None = None
+		self._onFinished: Callable[[RecognitionResult | None], None] | None = None
 
 	def setHandlers(self, ocrHandler: Any, descHandler: Any) -> None:
 		self._ocrHandler = ocrHandler
@@ -118,8 +118,10 @@ class RecognitionRuntime:
 			return None
 		return imageInfo, recognizeImage
 
-	def cancel(self, isUserInitiated: bool = True) -> bool:
+	def cancel(self, isUserInitiated: bool = True, *, recognitionSequence: int | None = None) -> bool:
 		"""Cancel the active manual recognition task, if any."""
+		if recognitionSequence is not None and recognitionSequence != self._activeRecognitionSequence:
+			return False
 		if self._activeEngine:
 			self._activeRecognitionSequence += 1
 			self._taskCues.stop(self._recognitionCue)
@@ -129,7 +131,7 @@ class RecognitionRuntime:
 			if activeEngine._recognitionThread and activeEngine._recognitionThread.is_alive():
 				activeEngine._recognitionThread.join(timeout=0.2)
 			self._streamingSpeechPresenter.cancel()
-			self._activeEngine = None
+			self._finishRecognition()
 			if isUserInitiated:
 				ui.message(_("Recognition cancelled"))
 			return True
@@ -236,14 +238,16 @@ class RecognitionRuntime:
 
 		return screenCurtainController is not None and screenCurtainController.enabled
 
+	def _finishRecognition(self, result: RecognitionResult | None = None) -> None:
+		self._activeEngine = None
+		callback = self._onFinished
+		self._onFinished = None
+		if callback is not None:
+			callback(result)
+
 	def _onRecognitionResult(self, result: Any) -> None:
+		acceptedResult = None
 		try:
-			if self.resultHook is not None:
-				try:
-					if self.resultHook(result):
-						return
-				except Exception:
-					log.error("Error in recognition result hook.", exc_info=True)
 			if isinstance(result, Exception):
 				if isinstance(result, CancellationError):
 					if getattr(result.event, "is_user_initiated", True):
@@ -270,6 +274,9 @@ class RecognitionRuntime:
 			conf = config.conf["visAwareGeneral"]
 			if conf["copyToClipboard"]:
 				api.copyToClip(result.text, notify=True)
+			acceptedResult = result
+			if self._onFinished is not None:
+				return
 			if self.showHtmlRecognitionResult(result):
 				return
 			if isinstance(result, SimpleTextResult):
@@ -286,7 +293,7 @@ class RecognitionRuntime:
 				self.showRecognitionResultDocument(result, autoSayAll=conf["autoSayAllOnResult"])
 		finally:
 			log.debug("Recognition task completed. Clearing active engine reference.")
-			self._activeEngine = None
+			self._finishRecognition(acceptedResult)
 
 	def _onStreamingRecognitionResult(self, result: Any) -> None:
 		if isinstance(result, StreamText):
@@ -348,12 +355,16 @@ class RecognitionRuntime:
 		imageData: tuple | None = None,
 		*,
 		prompt: str | None = None,
-	) -> None:
+		onFinished: Callable[[RecognitionResult | None], None] | None = None,
+	) -> int | None:
 		if getattr(self, "_terminated", False):
-			return
+			if onFinished is not None:
+				onFinished(None)
+			return None
 		try:
 			self._cancelOtherTasks(False)
 			self.cancel(isUserInitiated=False)
+			self._onFinished = onFinished
 			self._taskCues.stop(self._recognitionCue)
 			self._recognitionCue = None
 			engine = self.getCurrentEngine(currentEngineType)
@@ -362,19 +373,20 @@ class RecognitionRuntime:
 			self._activeEngine = engine
 			if not engine or engine.name == "empty":
 				ui.message(_("No recognition engine is configured."))
-				self._activeEngine = None
-				return
+				self._finishRecognition()
+				return None
 			if (
 				currentSource != "clipboardImage"
 				and self.isScreenCurtainRunning()
 				and not isScreenCurtainCaptureSupported()
 			):
 				ui.message(_("Please disable screen curtain before recognition."))
-				self._activeEngine = None
-				return
+				self._finishRecognition()
+				return None
 			conf = config.conf["visAwareGeneral"]
 			shouldStream = (
-				simpleText
+				onFinished is None
+				and simpleText
 				and not conf["useBrowseableMessage"]
 				and bool(getattr(engine, "supportsStreaming", False))
 				and bool(getattr(engine, "isStreaming", False))
@@ -385,8 +397,8 @@ class RecognitionRuntime:
 				imageData = self.getImageFromSource(currentSource, engine)
 			if not imageData:
 				engine.streamResult = False
-				self._activeEngine = None
-				return
+				self._finishRecognition()
+				return None
 			imageInfo, recognizeImage = imageData
 			pixels = recognizeImage.tobytes("raw", "BGRX")
 			ui.message(_("Recognizing"))
@@ -398,6 +410,7 @@ class RecognitionRuntime:
 				engine.recognize(pixels, imageInfo, onResult)
 			else:
 				engine.recognize(pixels, imageInfo, onResult, prompt=prompt)
+			return recognitionSequence
 		except Exception as e:
 			self._taskCues.stop(self._recognitionCue)
 			log.error(f"Error preparing for recognition: {e!r}", exc_info=True)
@@ -408,4 +421,4 @@ class RecognitionRuntime:
 			ui.message(
 				_("An error occurred before starting recognition. Please check your settings and try again."),
 			)
-			self._activeEngine = None
+			self._finishRecognition()

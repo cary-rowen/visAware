@@ -105,6 +105,9 @@ def makeConversationContext(historyEntry: dict[str, Any]) -> ConversationContext
 		contextEngine = copy.copy(engine)
 	except Exception:
 		contextEngine = engine
+	initialPrompt = historyEntry.get("initialPrompt")
+	if contextEngine is not engine and isinstance(initialPrompt, str):
+		contextEngine.prompt = initialPrompt
 	try:
 		initialText = contextEngine.extractText(response).strip()
 	except Exception as e:
@@ -125,4 +128,5 @@ def makeConversationContext(historyEntry: dict[str, Any]) -> ConversationContext
 		initialText=initialText,
 		engineName=getattr(contextEngine, "name", ""),
 		engineDescription=getattr(contextEngine, "description", ""),
+		metadata={"initialPrompt": initialPrompt} if isinstance(initialPrompt, str) else {},
 	)

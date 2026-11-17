@@ -268,7 +268,7 @@ class TaskCuesTestCase(unittest.TestCase):
 		runtimeCls = loadMethods(
 			"recognitionRuntime.py",
 			"RecognitionRuntime",
-			{"makeRecognitionCallback", "execute", "cancel", "terminate"},
+			{"makeRecognitionCallback", "execute", "cancel", "terminate", "_finishRecognition"},
 			{
 				"StreamText": streamText,
 				"log": self.log,
@@ -285,6 +285,7 @@ class TaskCuesTestCase(unittest.TestCase):
 		runtime._activeRecognitionSequence = 1
 		runtime._activeEngine = None
 		runtime._terminated = False
+		runtime._onFinished = None
 		runtime._cancelOtherTasks = lambda _isUserInitiated: False
 		plugin._recognitionRuntime = runtime
 		plugin._cancelRecognitionOutsideRuntime = lambda _isUserInitiated: False
@@ -391,6 +392,8 @@ class TaskCuesTestCase(unittest.TestCase):
 			},
 		)
 		frame = cls()
+		frame._onPendingDescribeSend = None
+		frame._cancelPendingDescribe = None
 		frame._taskCues = self.cues
 		frame._cueHandle = None
 		frame._activeRequestSequence = None
