@@ -95,6 +95,7 @@ Gestures** dialog:
 
 * Describe the content of the current navigator object
 * Describe images on the clipboard
+* Ask a question before image description
 * Recognize the content of the current navigator object using OCR
 * Recognize text in images on the clipboard using OCR
 * Show the previous recognition result
