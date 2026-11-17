@@ -32,6 +32,8 @@ from .recogHandler import (
 	getAutoRecognitionTypeAndEngine,
 	getAutoRecognitionHandler,
 	getEffectiveAutoRecognitionEngine,
+	getAutoRecognitionEngineSelections,
+	saveAutoRecognitionEngineSelections,
 	getConfigChoiceValue,
 	getExcludedSourceTypes,
 	setExcludedSourceTypes,
@@ -91,6 +93,7 @@ class AutomaticRecognitionPanel(SettingsPanel):
 		"""
 		settingsSizerHelper = BoxSizerHelper(self, sizer=sizer)
 		conf = config.conf["visAwareGeneral"]
+		self._autoRecognitionEngines = getAutoRecognitionEngineSelections()
 		(
 			self.autoRecognitionTypeChoices,
 			self.autoRecognitionEngineChoices,
@@ -213,11 +216,20 @@ class AutomaticRecognitionPanel(SettingsPanel):
 
 	def _onAutoRecognitionTypeChanged(self, evt: wx.CommandEvent) -> None:
 		autoRecognitionType = self._getSelectedAutoRecognitionType()
-		self._setAutoRecognitionEngineChoices(getAutoRecognitionEngineChoices(autoRecognitionType))
+		choices = getAutoRecognitionEngineChoices(autoRecognitionType)
+		engineName = self._autoRecognitionEngines.get(autoRecognitionType)
+		selection = next(
+			(index for index, (name, _description) in enumerate(choices) if name == engineName),
+			0,
+		)
+		self._setAutoRecognitionEngineChoices(choices, selection)
 		self._updateAutoRecognitionOverrideControls()
 
 	def _onAutoRecognitionEngineChanged(self, evt: wx.CommandEvent) -> None:
 		evt.Skip()
+		self._autoRecognitionEngines[self._getSelectedAutoRecognitionType()] = (
+			self._getSelectedAutoRecognitionEngineName()
+		)
 		self._updateAutoRecognitionOverrideControls()
 
 	def _getSelectedAutoRecognitionEngineName(self) -> str:
@@ -333,7 +345,9 @@ class AutomaticRecognitionPanel(SettingsPanel):
 			autoRecognitionEngine = f"{AUTO_RECOGNITION_OCR_PREFIX}{engineName}"
 		else:
 			autoRecognitionEngine = AUTO_RECOGNITION_OFF
-		conf["autoRecognitionEngine"] = autoRecognitionEngine
+		if autoRecognitionType != AUTO_RECOGNITION_OFF:
+			self._autoRecognitionEngines[autoRecognitionType] = engineName
+		saveAutoRecognitionEngineSelections(autoRecognitionEngine, self._autoRecognitionEngines)
 		conf["preferScreenshotForWebImages"] = self.preferScreenshotForWebImagesCheckBox.GetValue()
 		engine = getattr(self, "_autoRecognitionEngine", None) or self._getSelectedAutoRecognitionEngine()
 		if not engine:

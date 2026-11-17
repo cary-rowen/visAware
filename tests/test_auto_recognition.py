@@ -107,8 +107,8 @@ def _installModuleStubs() -> None:
 
 	recogHandlerModule = types.ModuleType("addon.globalPlugins.visAware.recogHandler")
 	recogHandlerModule.AUTO_RECOGNITION_CURRENT_ENGINE_NAME = "current"
-	recogHandlerModule.AUTO_RECOGNITION_CURRENT_IMAGE_DESCRIBER = "imageDescriber:current"
-	recogHandlerModule.AUTO_RECOGNITION_CURRENT_OCR = "ocr:current"
+	recogHandlerModule.AUTO_RECOGNITION_IMAGE_DESCRIBER_MODE = "imageDescriber"
+	recogHandlerModule.AUTO_RECOGNITION_OCR_MODE = "ocr"
 	recogHandlerModule.AUTO_RECOGNITION_IMAGE_DESCRIBER_PREFIX = "imageDescriber:"
 	recogHandlerModule.AUTO_RECOGNITION_OCR_PREFIX = "ocr:"
 	recogHandlerModule.AUTO_RECOGNITION_OFF = "off"
@@ -135,7 +135,8 @@ def loadAutoRecognitionModule():
 	_installModuleStubs()
 	loggingPath = Path(__file__).resolve().parents[1] / "addon/globalPlugins/visAware/requestLogging.py"
 	loggingSpec = importlib.util.spec_from_file_location(
-		"addon.globalPlugins.visAware.requestLogging", loggingPath,
+		"addon.globalPlugins.visAware.requestLogging",
+		loggingPath,
 	)
 	loggingModule = importlib.util.module_from_spec(loggingSpec)
 	sys.modules[loggingSpec.name] = loggingModule
@@ -163,10 +164,12 @@ class AutoRecognitionP0TestCase(unittest.TestCase):
 
 	def test_automatic_recognition_setting_cycle(self) -> None:
 		getNextSetting = self.module.getNextAutoRecognitionSetting
-		self.assertEqual(getNextSetting("off"), "imageDescriber:current")
-		self.assertEqual(getNextSetting("imageDescriber:gemini"), "ocr:current")
-		self.assertEqual(getNextSetting("ocr:paddleOCR"), "off")
-		self.assertEqual(getNextSetting("invalid"), "imageDescriber:current")
+		for imageEngine, ocrEngine in (("current", "current"), ("gemini", "paddleOCR")):
+			engines = {"imageDescriber": imageEngine, "ocr": ocrEngine}
+			self.assertEqual(getNextSetting("off", engines), f"imageDescriber:{imageEngine}")
+			self.assertEqual(getNextSetting(f"imageDescriber:{imageEngine}", engines), f"ocr:{ocrEngine}")
+			self.assertEqual(getNextSetting(f"ocr:{ocrEngine}", engines), "off")
+			self.assertEqual(getNextSetting("invalid", engines), f"imageDescriber:{imageEngine}")
 
 	def test_capability_check_applies_to_saved_current_and_queued_engines(self) -> None:
 		recogHandler = load_recog_handler_module()

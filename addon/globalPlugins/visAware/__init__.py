@@ -46,6 +46,8 @@ from .recogHandler import (
 	getCycleSourceTypes,
 	getAutoRecognitionTypeAndEngine,
 	getAutoRecognitionTypeChoices,
+	getAutoRecognitionEngineSelections,
+	saveAutoRecognitionEngineSelections,
 	getConfigChoiceValue,
 	getEffectiveAutoRecognitionEngine,
 	getValidSourceType,
@@ -68,6 +70,8 @@ GENERAL_CONFIG_SPEC = {
 	"useBrowseableMessage": "boolean(default=False)",
 	"autoSayAllOnResult": "boolean(default=False)",
 	"autoRecognitionEngine": "string(default='off')",
+	"autoRecognitionImageDescriberEngine": "string(default='current')",
+	"autoRecognitionOCREngine": "string(default='current')",
 	"preferScreenshotForWebImages": "boolean(default=False)",
 	"verboseDebugLogging": "boolean(default=False)",
 	"engineType": 'option("OCR", "ImageDescriber", "Agent", default="OCR")',
@@ -748,9 +752,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		gestures=[],
 	)
 	def script_cycleAutomaticRecognitionMode(self, gesture: "inputCore.InputGesture") -> None:
-		conf = config.conf["visAwareGeneral"]
-		nextSetting = getNextAutoRecognitionSetting(getEffectiveAutoRecognitionEngine())
-		conf["autoRecognitionEngine"] = nextSetting
+		engines = getAutoRecognitionEngineSelections()
+		nextSetting = getNextAutoRecognitionSetting(getEffectiveAutoRecognitionEngine(), engines)
+		saveAutoRecognitionEngineSelections(nextSetting, engines)
 		if self._autoRecognitionController:
 			self._autoRecognitionController.cancel()
 		nextType, _engineName = getAutoRecognitionTypeAndEngine(nextSetting)

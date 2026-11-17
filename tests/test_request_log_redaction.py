@@ -403,6 +403,17 @@ class AutoRecognitionSettingsTestCase(unittest.TestCase):
 		self.assertEqual(typesList[typeSelection][0], "ocr")
 		self.assertEqual(choices[engineSelection][0], "current")
 
+	def test_engine_choices_survive_off_without_saving_discarded_edits(self) -> None:
+		self.conf["autoRecognitionEngine"] = "imageDescriber:supported"
+		engines = self.module.getAutoRecognitionEngineSelections()
+		self.assertEqual(engines, {"imageDescriber": "supported", "ocr": "current"})
+		engines["ocr"] = "supported"
+		self.assertEqual(self.module.getAutoRecognitionEngineSelections()["ocr"], "current")
+		self.module.saveAutoRecognitionEngineSelections("off", engines)
+		self.assertEqual(self.conf["autoRecognitionEngine"], "off")
+		self.module.config.conf = {"visAwareGeneral": type(self.conf)(self.conf)}
+		self.assertEqual(self.module.getAutoRecognitionEngineSelections(), engines)
+
 	def test_settings_do_not_instantiate_unsupported_current_or_explicit_engine(self) -> None:
 		panel = object.__new__(self.ui.AutomaticRecognitionPanel)
 		panel._getSelectedAutoRecognitionType = lambda: "ocr"

@@ -57,10 +57,10 @@ AUTO_RECOGNITION_OCR_MODE = "ocr"
 AUTO_RECOGNITION_CURRENT_ENGINE_NAME = "current"
 AUTO_RECOGNITION_IMAGE_DESCRIBER_PREFIX = "imageDescriber:"
 AUTO_RECOGNITION_OCR_PREFIX = "ocr:"
-AUTO_RECOGNITION_CURRENT_IMAGE_DESCRIBER = (
-	f"{AUTO_RECOGNITION_IMAGE_DESCRIBER_PREFIX}{AUTO_RECOGNITION_CURRENT_ENGINE_NAME}"
-)
-AUTO_RECOGNITION_CURRENT_OCR = f"{AUTO_RECOGNITION_OCR_PREFIX}{AUTO_RECOGNITION_CURRENT_ENGINE_NAME}"
+AUTO_RECOGNITION_ENGINE_CONFIG_KEYS = {
+	AUTO_RECOGNITION_IMAGE_DESCRIBER_MODE: "autoRecognitionImageDescriberEngine",
+	AUTO_RECOGNITION_OCR_MODE: "autoRecognitionOCREngine",
+}
 AUTO_RECOGNITION_REQUEST_TIMEOUT = (3, 30)
 
 
@@ -1054,6 +1054,26 @@ def getAutoRecognitionTypeAndEngine(value: str) -> Tuple[str, str]:
 	if value.startswith(AUTO_RECOGNITION_OCR_PREFIX):
 		return AUTO_RECOGNITION_OCR_MODE, value.removeprefix(AUTO_RECOGNITION_OCR_PREFIX)
 	return AUTO_RECOGNITION_OFF, AUTO_RECOGNITION_CURRENT_ENGINE_NAME
+
+
+def getAutoRecognitionEngineSelections() -> dict[str, str]:
+	conf = config.conf["visAwareGeneral"]
+	engines = {
+		mode: conf.get(key, AUTO_RECOGNITION_CURRENT_ENGINE_NAME)
+		for mode, key in AUTO_RECOGNITION_ENGINE_CONFIG_KEYS.items()
+	}
+	# The active setting also preserves engine choices from older configurations.
+	mode, engineName = getAutoRecognitionTypeAndEngine(getEffectiveAutoRecognitionEngine())
+	if mode in engines:
+		engines[mode] = engineName
+	return engines
+
+
+def saveAutoRecognitionEngineSelections(setting: str, engines: dict[str, str]) -> None:
+	conf = config.conf["visAwareGeneral"]
+	for mode, key in AUTO_RECOGNITION_ENGINE_CONFIG_KEYS.items():
+		conf[key] = engines[mode]
+	conf["autoRecognitionEngine"] = setting
 
 
 def getAutoRecognitionEngineList(handler: type[AbstractEngineHandler]) -> List[Tuple[str, str]]:
