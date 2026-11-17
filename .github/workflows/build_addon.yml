@@ -18,6 +18,8 @@ jobs:
     if: github.repository != 'nvaccess/addonTemplate'
 
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
     - name: Checkout repo
@@ -33,7 +35,21 @@ jobs:
         uv sync
 
     - name: Code checks
-      run: export PREK_SKIP=no-commit-to-branch,pyright; uv run prek run --all-files
+      env:
+        PREK_SKIP: no-commit-to-branch,pyright
+      run: |
+        if uv run prek run --all-files; then
+          exit 0
+        fi
+        if [[ "$GITHUB_EVENT_NAME" != "push" || "$GITHUB_REF_TYPE" != "branch" ]] || git diff --quiet; then
+          exit 1
+        fi
+        uv run prek run --all-files
+        uv run pytest -q tests
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git commit -am "Apply automatic code formatting"
+        git push origin "HEAD:$GITHUB_REF"
 
     - name: building addon
       run: uv run scons && uv run scons pot
