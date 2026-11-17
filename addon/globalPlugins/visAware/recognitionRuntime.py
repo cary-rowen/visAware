@@ -346,6 +346,8 @@ class RecognitionRuntime:
 		currentEngineType: str,
 		simpleText: bool,
 		imageData: tuple | None = None,
+		*,
+		prompt: str | None = None,
 	) -> None:
 		if getattr(self, "_terminated", False):
 			return
@@ -383,8 +385,6 @@ class RecognitionRuntime:
 				imageData = self.getImageFromSource(currentSource, engine)
 			if not imageData:
 				engine.streamResult = False
-				if hasattr(engine, "_initialPromptForDescribe"):
-					engine._initialPromptForDescribe = None
 				self._activeEngine = None
 				return
 			imageInfo, recognizeImage = imageData
@@ -394,7 +394,10 @@ class RecognitionRuntime:
 			if shouldStream:
 				self._streamingSpeechPresenter.start()
 			onResult = self.makeRecognitionCallback(recognitionSequence, shouldStream)
-			engine.recognize(pixels, imageInfo, onResult)
+			if prompt is None:
+				engine.recognize(pixels, imageInfo, onResult)
+			else:
+				engine.recognize(pixels, imageInfo, onResult, prompt=prompt)
 		except Exception as e:
 			self._taskCues.stop(self._recognitionCue)
 			log.error(f"Error preparing for recognition: {e!r}", exc_info=True)
@@ -402,8 +405,6 @@ class RecognitionRuntime:
 				self._streamingSpeechPresenter.cancel()
 			if "engine" in locals() and engine:
 				engine.streamResult = False
-				if hasattr(engine, "_initialPromptForDescribe"):
-					engine._initialPromptForDescribe = None
 			ui.message(
 				_("An error occurred before starting recognition. Please check your settings and try again."),
 			)

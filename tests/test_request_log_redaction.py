@@ -134,7 +134,8 @@ def load_recog_handler_module():
 	_install_module_stubs()
 	loggingPath = Path(__file__).resolve().parents[1] / "addon/globalPlugins/visAware/requestLogging.py"
 	loggingSpec = importlib.util.spec_from_file_location(
-		"addon.globalPlugins.visAware.requestLogging", loggingPath,
+		"addon.globalPlugins.visAware.requestLogging",
+		loggingPath,
 	)
 	loggingModule = importlib.util.module_from_spec(loggingSpec)
 	sys.modules[loggingSpec.name] = loggingModule
@@ -158,7 +159,8 @@ def load_recognition_settings_module():
 	sys.modules[uiModule.__name__] = uiModule
 	modulePath = Path(__file__).resolve().parents[1] / "addon/globalPlugins/visAware/recognitionSettings.py"
 	spec = importlib.util.spec_from_file_location(
-		"addon.globalPlugins.visAware.recognitionSettings", modulePath,
+		"addon.globalPlugins.visAware.recognitionSettings",
+		modulePath,
 	)
 	module = importlib.util.module_from_spec(spec)
 	sys.modules[spec.name] = module
@@ -226,8 +228,8 @@ class RequestLogRedactionTestCase(unittest.TestCase):
 
 	def test_markdown_instruction_only_applies_to_simple_image_results(self) -> None:
 		self.module.config.conf = {"visAwareGeneral": {"useBrowseableMessage": True}}
-		self.module.buildImageDescriptionPrompt = (
-			lambda prompt, useMarkdown: f"{prompt} [markdown={useMarkdown}]"
+		self.module.buildImageDescriptionPrompt = lambda prompt, useMarkdown: (
+			f"{prompt} [markdown={useMarkdown}]"
 		)
 		testDescriber = type(
 			"TestDescriber",
@@ -253,6 +255,14 @@ class RequestLogRedactionTestCase(unittest.TestCase):
 		engine.textResult = False
 		richRequest = engine._buildRecognitionRequest()
 		self.assertEqual(richRequest.prompt, "Describe the image.")
+
+		engine._cancellationEvent = None
+		engine.cancel()
+		customRequest = engine._buildRecognitionRequest(prompt="Read the price.")
+		self.assertEqual(customRequest.prompt, "Read the price.")
+		engine.cancel()
+		self.assertEqual(customRequest.prompt, "Read the price.")
+		self.assertEqual(engine._buildRecognitionRequest().prompt, "Describe the image.")
 
 		automaticRequest = engine._buildRecognitionRequest(isAutomaticRecognition=True)
 		self.assertTrue(automaticRequest.isAutomaticRecognition)
@@ -314,14 +324,15 @@ class RequestLogRedactionTestCase(unittest.TestCase):
 	def test_automatic_recognition_can_reuse_the_controller_worker(self) -> None:
 		workerThreads = []
 		engine = types.SimpleNamespace(
-			_buildRecognitionRequest=lambda _automatic,
-			_cancellationChecker=None: self.module.RecognitionRequest(
-				False,
-				False,
+			_buildRecognitionRequest=lambda _automatic, _cancellationChecker=None: (
+				self.module.RecognitionRequest(
+					False,
+					False,
+				)
 			),
 		)
-		engine._recognitionImageWorker = (
-			lambda _image, _onResult, _cancellationEvent, _request: workerThreads.append(
+		engine._recognitionImageWorker = lambda _image, _onResult, _cancellationEvent, _request: (
+			workerThreads.append(
 				engine._recognitionThread,
 			)
 		)

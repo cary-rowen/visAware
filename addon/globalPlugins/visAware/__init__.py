@@ -612,8 +612,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		)
 
 		def onSend(question: str) -> None:
-			if hasattr(engine, "_initialPromptForDescribe"):
-				engine._initialPromptForDescribe = question
 			self._pendingDescribeContext = pendingContext
 			self._pendingDescribeQuestion = question
 			self._pendingDescribeAwaiting = True
@@ -625,6 +623,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				"ImageDescriber",
 				False,
 				imageData,
+				prompt=question,
 			)
 
 		self._askBeforeDescribeDialogActive = True
@@ -717,9 +716,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def _failPendingDescribe(self, message: str) -> None:
 		"""Reports a failed describe-before recognition in the frame."""
-		engine = self.descHandler.getCurrentEngine() if hasattr(self, "descHandler") else None
-		if engine and hasattr(engine, "_initialPromptForDescribe"):
-			engine._initialPromptForDescribe = None
 		if not self._pendingDescribeAwaiting:
 			return
 		self._pendingDescribeAwaiting = False
@@ -782,6 +778,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		currentEngineType: str,
 		simpleText: bool,
 		imageData: tuple | None = None,
+		*,
+		prompt: str | None = None,
 	) -> None:
 		self._recognitionRuntime.execute(
 			gesture,
@@ -789,6 +787,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			currentEngineType,
 			simpleText,
 			imageData=imageData,
+			prompt=prompt,
 		)
 
 	@script(
