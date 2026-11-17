@@ -50,7 +50,11 @@ def loadMethods(fileName, className, methodNames, namespace):
 	tree = ast.parse((PLUGIN_DIR / fileName).read_text(encoding="utf-8"))
 	cls = next(node for node in tree.body if isinstance(node, ast.ClassDef) and node.name == className)
 	cls.bases = []
-	cls.body = [node for node in cls.body if isinstance(node, ast.FunctionDef) and node.name in methodNames]
+	cls.body = [
+		node
+		for node in cls.body
+		if isinstance(node, ast.FunctionDef) and (methodNames is None or node.name in methodNames)
+	]
 	for method in cls.body:
 		method.decorator_list = []
 	tree = ast.Module(

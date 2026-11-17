@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import ast
 from dataclasses import dataclass
 import importlib.util
 import sys
@@ -12,11 +11,20 @@ from unittest.mock import Mock, patch
 from tests.test_task_cues import loadMethods, PLUGIN_DIR
 
 
-def loadModule(name, file):
+def loadModule(name, file, **dependencies):
 	spec = importlib.util.spec_from_file_location(name, PLUGIN_DIR / file)
 	module = importlib.util.module_from_spec(spec)
-	with patch.dict(sys.modules, {name: module, "logHandler": SimpleNamespace(log=Mock())}):
+	with patch.dict(
+		sys.modules,
+		{
+			name: module,
+			"logHandler": SimpleNamespace(log=Mock()),
+			"addonHandler": SimpleNamespace(initTranslation=lambda: None),
+			**dependencies,
+		},
+	):
 		spec.loader.exec_module(module)
+	module._ = lambda value: value
 	return module
 
 
@@ -28,6 +36,12 @@ class Result:
 class InitialQuestionTests(unittest.TestCase):
 	def setUp(self):
 		self.history = loadModule("initialQuestionHistory", "recogHistory.py")
+		exceptions = loadModule("initialQuestion.exceptions", "exceptions.py")
+		conversation = loadModule(
+			"initialQuestion.conversation",
+			"conversation.py",
+			**{"initialQuestion.exceptions": exceptions},
+		)
 		self.ui = Mock()
 		self.config = SimpleNamespace(
 			conf={
@@ -38,7 +52,6 @@ class InitialQuestionTests(unittest.TestCase):
 				},
 			},
 		)
-		self.wx = SimpleNamespace(CommandEvent=type("CommandEvent", (), {}))
 		self.env = {
 			"log": Mock(),
 			"ui": self.ui,
@@ -48,18 +61,21 @@ class InitialQuestionTests(unittest.TestCase):
 			"recogHistory": self.history,
 			"RecognitionResult": Result,
 			"SimpleTextResult": Result,
-			"StreamText": type("StreamText", (), {}),
-			"StreamFinished": type("StreamFinished", (), {}),
-			"CancellationError": type("CancellationError", (Exception,), {}),
-			"AuthenticationError": type("AuthenticationError", (Exception,), {}),
-			"NetworkError": type("NetworkError", (Exception,), {}),
-			"ApiError": type("ApiError", (Exception,), {}),
+			"CancellationError": exceptions.CancellationError,
+			"AuthenticationError": exceptions.AuthenticationError,
+			"NetworkError": exceptions.NetworkError,
+			"ApiError": exceptions.ApiError,
+			"makeConversationContext": conversation.makeConversationContext,
 			"isScreenCurtainCaptureSupported": lambda: True,
 			"Event": Event,
 			"Thread": Mock(),
-			"wx": self.wx,
+			"wx": SimpleNamespace(CommandEvent=type("CommandEvent", (), {})),
 			"ANSWER_SENDER": "Answer",
 			"ROLE_ASSISTANT": "assistant",
+			"gui": SimpleNamespace(mainFrame=Mock()),
+			"getConfigChoiceValue": lambda conf, key, choices: conf[key],
+			"ENGINE_TYPES": [],
+			"getValidSourceType": lambda conf: "clipboardImage",
 		}
 		self.runtime = self.loadClass("recognitionRuntime.py", "RecognitionRuntime")(
 			Mock(),
@@ -98,41 +114,14 @@ class InitialQuestionTests(unittest.TestCase):
 		self.frame._formattedContent = ""
 		self.frame._questionText = Mock()
 		self.frame._messagesText = Mock()
-		self.frame._setSendButtonEnabled = Mock()
-		self.frame._cancelStreamingAnswer = Mock()
+		self.frame._sendButton = Mock()
+		self.frame._streamingSpeechPresenter = Mock(isActive=False)
 		self.frame._appendMessage = Mock()
 		self.frame.Layout = Mock()
 		self.frame.Hide = Mock()
 		self.frame.Show = Mock()
 		self.frame.Raise = Mock()
 		self.frame.IsShown = Mock(return_value=False)
-		self.env.update(
-			{
-				"gui": SimpleNamespace(mainFrame=Mock()),
-				"Callable": object,
-				"getConfigChoiceValue": lambda conf, key, choices: conf[key],
-				"ENGINE_TYPES": [],
-				"getValidSourceType": lambda conf: "clipboardImage",
-			},
-		)
-		# Exercise the existing context builder, including copying the engine and image.
-		spec = importlib.util.spec_from_file_location(
-			"initialQuestionConversation.conversation",
-			PLUGIN_DIR / "conversation.py",
-		)
-		module = importlib.util.module_from_spec(spec)
-		module.__package__ = "initialQuestionConversation"
-		with patch.dict(
-			sys.modules,
-			{
-				"initialQuestionConversation.conversation": module,
-				"initialQuestionConversation.exceptions": SimpleNamespace(ApiError=self.env["ApiError"]),
-				"addonHandler": SimpleNamespace(initTranslation=lambda: None),
-			},
-		):
-			spec.loader.exec_module(module)
-		module._ = lambda value: value
-		self.env["makeConversationContext"] = module.makeConversationContext
 		self.plugin = self.loadClass(
 			"__init__.py",
 			"GlobalPlugin",
@@ -150,12 +139,7 @@ class InitialQuestionTests(unittest.TestCase):
 		self.plugin._isScreenCurtainRunning = lambda: False
 
 	def loadClass(self, file, name, methods=None):
-		if methods is None:
-			tree = ast.parse((PLUGIN_DIR / file).read_text(encoding="utf-8"))
-			cls = next(node for node in tree.body if isinstance(node, ast.ClassDef) and node.name == name)
-			methods = {node.name for node in cls.body if isinstance(node, ast.FunctionDef)}
-		cls = loadMethods(file, name, methods, dict(self.env))
-		return cls
+		return loadMethods(file, name, methods, dict(self.env))
 
 	def send(self, question="Read the price"):
 		self.frame._questionText.GetValue.return_value = question
@@ -282,7 +266,7 @@ class InitialQuestionTests(unittest.TestCase):
 					self.engine.recognize.call_args.args[2](result)
 				self.assertIsNone(self.frame._activeRequestSequence)
 				self.assertIsNone(self.runtime._onFinished)
-				self.frame._setSendButtonEnabled.assert_called_with(True)
+				self.frame._sendButton.Enable.assert_called_with(True)
 				self.engine.recognize.side_effect = None
 				self.send("retry")
 				self.finish()
@@ -320,10 +304,9 @@ class InitialQuestionTests(unittest.TestCase):
 		self.plugin.script_askQuestionBeforeDescribe(None)
 		self.send()
 		self.finish()
-		self.frame._setSendButtonEnabled.assert_called_with(False)
-		count = self.engine.recognize.call_count
+		self.frame._sendButton.Enable.assert_called_with(False)
 		self.send("another question")
-		self.assertEqual(self.engine.recognize.call_count, count)
+		self.env["Thread"].assert_not_called()
 
 	def test_capability_and_engine_change_guards_do_not_start_requests(self):
 		self.config.conf["visAwareGeneral"]["engineType"] = "OCR"
