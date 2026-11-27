@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: visAware 1.1.0\n"
+"Project-Id-Version: visAware 1.1.1\n"
 "Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
-"POT-Creation-Date: 2026-11-18 02:41+0800\n"
+"POT-Creation-Date: 2026-11-27 18:46+0800\n"
 "PO-Revision-Date: 2026-11-18 02:41+0800\n"
 "Last-Translator: Larry Wang <larry.wang.801@gmail.com>\n"
 "Language-Team: \n"
@@ -657,7 +657,7 @@ msgstr "无法捕获屏幕图像。"
 
 #. Translators: Reported when a recognition task is cancelled by the user.
 #: addon\globalPlugins\visAware\recognitionRuntime.py:136
-#: addon\globalPlugins\visAware\recognitionRuntime.py:254
+#: addon\globalPlugins\visAware\recognitionRuntime.py:258
 #: addon\globalPlugins\visAware\__init__.py:652
 msgid "Recognition cancelled"
 msgstr "识别已取消"
@@ -673,54 +673,54 @@ msgid "Already in a content recognition result"
 msgstr "已处于内容识别结果区域"
 
 #. Translators: The title for the browsable message showing the recognition result.
-#: addon\globalPlugins\visAware\recognitionRuntime.py:233
-#: addon\globalPlugins\visAware\recognitionRuntime.py:287
+#: addon\globalPlugins\visAware\recognitionRuntime.py:237
+#: addon\globalPlugins\visAware\recognitionRuntime.py:291
 #: addon\globalPlugins\visAware\__init__.py:497
 msgid "Recognition result"
 msgstr "识别结果"
 
-#: addon\globalPlugins\visAware\recognitionRuntime.py:257
+#: addon\globalPlugins\visAware\recognitionRuntime.py:261
 #, python-brace-format
 msgid "Authentication failed: {}"
 msgstr "身份验证失败：{}"
 
-#: addon\globalPlugins\visAware\recognitionRuntime.py:259
+#: addon\globalPlugins\visAware\recognitionRuntime.py:263
 #, python-brace-format
 msgid "Network error: {}"
 msgstr "网络错误：{}"
 
-#: addon\globalPlugins\visAware\recognitionRuntime.py:261
+#: addon\globalPlugins\visAware\recognitionRuntime.py:265
 #, python-brace-format
 msgid "Recognition failed: {}"
 msgstr "识别失败：{}"
 
-#: addon\globalPlugins\visAware\recognitionRuntime.py:264
+#: addon\globalPlugins\visAware\recognitionRuntime.py:268
 msgid "Recognition failed with an unexpected error."
 msgstr "识别失败，发生意外错误。"
 
-#: addon\globalPlugins\visAware\recognitionRuntime.py:269
-#: addon\globalPlugins\visAware\recognitionRuntime.py:325
+#: addon\globalPlugins\visAware\recognitionRuntime.py:273
+#: addon\globalPlugins\visAware\recognitionRuntime.py:329
 msgid "Recognition returned an unknown result type."
 msgstr "识别返回了未知的结果类型。"
 
-#: addon\globalPlugins\visAware\recognitionRuntime.py:311
+#: addon\globalPlugins\visAware\recognitionRuntime.py:315
 msgid "Recognition was interrupted. The result may be incomplete."
 msgstr "识别过程中断，结果可能不完整。"
 
-#: addon\globalPlugins\visAware\recognitionRuntime.py:375
+#: addon\globalPlugins\visAware\recognitionRuntime.py:384
 msgid "No recognition engine is configured."
 msgstr "未配置识别引擎。"
 
-#: addon\globalPlugins\visAware\recognitionRuntime.py:383
+#: addon\globalPlugins\visAware\recognitionRuntime.py:392
 #: addon\globalPlugins\visAware\__init__.py:575
 msgid "Please disable screen curtain before recognition."
 msgstr "请在识别之前关闭黑屏。"
 
-#: addon\globalPlugins\visAware\recognitionRuntime.py:404
+#: addon\globalPlugins\visAware\recognitionRuntime.py:413
 msgid "Recognizing"
 msgstr "正在识别"
 
-#: addon\globalPlugins\visAware\recognitionRuntime.py:422
+#: addon\globalPlugins\visAware\recognitionRuntime.py:431
 msgid ""
 "An error occurred before starting recognition. Please check your settings "
 "and try again."
@@ -3186,23 +3186,16 @@ msgstr "为 NVDA 提供 OCR、AI 图像描述、自动识别和 AI 辅助计算�
 
 #: buildVars.py:38
 msgid ""
-"### 1.1.0\n"
+"### 1.1.1\n"
 "\n"
-"* Added a command to ask a question before image description, for engines "
-"that support custom prompts. Assign a shortcut in NVDA's Input Gestures "
-"dialog.\n"
-"* Fixed the conversation history caret jumping to the end when new replies "
-"arrive, so you can keep your reading position.\n"
-"* Automatic recognition now remembers your engine choice for OCR and image "
-"description when switching modes or turning automatic recognition off and on."
+"* Fixed OCR results stacking when recognition was triggered again while "
+"reading a result. visAware now announces that you are already in a "
+"recognition result instead of opening another."
 msgstr ""
-"### 1.1.0\n"
+"### 1.1.1\n"
 "\n"
-"* 新增“在图像描述前提问”命令，适用于支持自定义提示词的引擎。可在 NVDA 的"
-"“按键与手势”对话框中为其分配快捷键。\n"
-"* 修复收到新回复时对话记录中的光标跳到末尾的问题，保留当前阅读位置。\n"
-"* 自动识别会分别记住 OCR 和图像描述所选的引擎，切换模式或关闭后重新开启时"
-"不再重置。"
+"* 修复阅读识别结果时再次触发 OCR 导致结果文档叠加的问题。现在 visAware 会提示"
+"“已处于内容识别结果区域”，不再打开新的结果文档。"
 
 #~ msgid ""
 #~ "### 0.9.10\n"
