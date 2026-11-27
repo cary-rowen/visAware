@@ -274,6 +274,8 @@ class TaskCuesTestCase(unittest.TestCase):
 			"RecognitionRuntime",
 			{"makeRecognitionCallback", "execute", "cancel", "terminate", "_finishRecognition"},
 			{
+				"api": types.SimpleNamespace(getFocusObject=lambda: None),
+				"recogUi": types.SimpleNamespace(RecogResultNVDAObject=type("RecogResultNVDAObject", (), {})),
 				"StreamText": streamText,
 				"log": self.log,
 				"ui": Mock(),
