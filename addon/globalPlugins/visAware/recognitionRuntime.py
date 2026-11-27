@@ -222,6 +222,10 @@ class RecognitionRuntime:
 		return None
 
 	def showRecognitionResultDocument(self, result: RecognitionResult, autoSayAll: bool = False) -> None:
+		if isinstance(api.getFocusObject(), recogUi.RecogResultNVDAObject):
+			# Translators: Reported when recognition is attempted while reading a recognition result.
+			ui.message(_("Already in a content recognition result"))
+			return
 		resultObjectClass = _AutoSayAllRecogResultNVDAObject if autoSayAll else recogUi.RecogResultNVDAObject
 		displayObject = resultObjectClass(result=result)
 		displayObject.setFocus()
@@ -362,6 +366,11 @@ class RecognitionRuntime:
 				onFinished(None)
 			return None
 		try:
+			if currentEngineType == "OCR" and isinstance(api.getFocusObject(), recogUi.RecogResultNVDAObject):
+				ui.message(_("Already in a content recognition result"))
+				if onFinished is not None:
+					onFinished(None)
+				return None
 			self._cancelOtherTasks(False)
 			self.cancel(isUserInitiated=False)
 			self._onFinished = onFinished

@@ -666,6 +666,12 @@ msgstr "识别已取消"
 msgid "No image in clipboard"
 msgstr "剪贴板中没有图像"
 
+#. Translators: Reported when recognition is attempted while reading a recognition result.
+#: addon\globalPlugins\visAware\recognitionRuntime.py:227
+#: addon\globalPlugins\visAware\recognitionRuntime.py:370
+msgid "Already in a content recognition result"
+msgstr "已处于内容识别结果区域"
+
 #. Translators: The title for the browsable message showing the recognition result.
 #: addon\globalPlugins\visAware\recognitionRuntime.py:233
 #: addon\globalPlugins\visAware\recognitionRuntime.py:287
